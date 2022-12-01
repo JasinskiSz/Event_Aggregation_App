@@ -1,34 +1,34 @@
 package com.sda.eventapp.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Event {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 65535) //todo: przetestować czy da się wpisać opis dłuższy niż 255
+    @Column(length = 65535) //todo: test longer than varchar (255)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = true)
     private User owner;
 
     @Column(name = "starting_date")
@@ -40,15 +40,15 @@ public class Event {
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY) // cascade = CascadeType.PERSIST
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) //
     @JoinTable(name = "events_comments",
             joinColumns = {
                     @JoinColumn(name = "event_id", referencedColumnName = "id",
-                            nullable = false)},
+                            nullable = true)},
             inverseJoinColumns = {
                     @JoinColumn(name = "comment_id", referencedColumnName = "id",
-                            nullable = false)})
+                            nullable = true)})
     private Set<Comment> comments = new HashSet<>();
 
-    //todo: byc moze starting_time, ending_time, enum ONLINE/INPLACE, capacity, venueId
+    //todo: optional: starting_time, ending_time, enum ONLINE/INPLACE, capacity, venueId
 }
