@@ -24,7 +24,7 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 65535) //todo: test longer than varchar (255)
+    @Column(length = 65535)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
