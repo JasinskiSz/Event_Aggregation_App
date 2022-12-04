@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,18 +23,18 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 65535) //todo: test longer than varchar (255)
+    @Column(length = 65535)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = true)
     private User owner;
 
-    @Column(name = "starting_date")
-    private LocalDateTime startingDate;
+    @Column(name = "starting_date_time")
+    private LocalDateTime startingDateTime;
 
-    @Column(name = "ending_date")
-    private LocalDateTime endingDate;
+    @Column(name = "ending_date_time")
+    private LocalDateTime endingDateTime;
 
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
