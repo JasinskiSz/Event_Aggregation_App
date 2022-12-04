@@ -40,6 +40,7 @@ public class Event {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) //
     @JoinTable(name = "events_comments",
+            // TODO: check if there is need to set property nullable = false;
             joinColumns = {
                     @JoinColumn(name = "event_id", referencedColumnName = "id")},
             inverseJoinColumns = {
