@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
 @Getter
 @Setter
@@ -27,7 +26,7 @@ public class Event {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = true)
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @Column(name = "starting_date_time")
@@ -42,11 +41,9 @@ public class Event {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) //
     @JoinTable(name = "events_comments",
             joinColumns = {
-                    @JoinColumn(name = "event_id", referencedColumnName = "id",
-                            nullable = true)},
+                    @JoinColumn(name = "event_id", referencedColumnName = "id")},
             inverseJoinColumns = {
-                    @JoinColumn(name = "comment_id", referencedColumnName = "id",
-                            nullable = true)})
+                    @JoinColumn(name = "comment_id", referencedColumnName = "id")})
     private Set<Comment> comments = new HashSet<>();
 
     //todo: optional: starting_time, ending_time, enum ONLINE/INPLACE, capacity, venueId

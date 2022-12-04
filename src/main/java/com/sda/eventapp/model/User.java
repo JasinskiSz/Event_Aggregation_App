@@ -6,8 +6,6 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
-//todo Builders must have ALLARGSCONSTRUCTOR
-
 @Entity
 @Getter
 @Setter
@@ -36,12 +34,12 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "users_events",
-    joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id",
-            nullable = false)},
-    inverseJoinColumns = {
-            @JoinColumn(name = "event_id", referencedColumnName = "id",
-            nullable = false)})
+            joinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id",
+                            nullable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "event_id", referencedColumnName = "id",
+                            nullable = false)})
     private Set<Event> attendingEvents = new HashSet<>();
 
 
