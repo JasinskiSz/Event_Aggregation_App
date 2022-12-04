@@ -2,32 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
     <title>Register</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap-grid.min.css">
-    <script src="webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
-    <form th:object="${user}" th:action="@{/mvc/user}" method="post">
+    <form th:object="${user}" th:action="@{/home/register}" method="post">
         <div class="mb-3">
             <label for="username" class="form-label">Username:</label>
-            <input type="text" class="form-control" id="username">
+            <input th:field="*{username}" id="username" class="form-control" type="text" placeholder="Enter username">
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email:</label>
-            <input type="text" class="form-control" id="email">
+            <input th:field="*{email}" id="email" class="form-control" type="email" placeholder="Enter email">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password:</label>
-            <input type="password" class="form-control" id="password">
+            <input th:field="*{password}" id="password" class="form-control" type="password" placeholder="Enter password">
         </div>
         <div class="mb-3">
             <label for="passwordConfirm" class="form-label">Confirm Password:</label>
-            <input type="password" class="form-control" id="passwordConfirm">
+            <input id="passwordConfirm" class="form-control" type="password" placeholder="Confirm password">
         </div>
-        <div class="mb-3">
-            <input type="submit" value="Save">
-        </div>
+        <input type="submit" class="btn btn-primary" value="Submit">
     </form>
 </div>
 </body>
