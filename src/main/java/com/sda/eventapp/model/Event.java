@@ -3,7 +3,7 @@ package com.sda.eventapp.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Event {
+
+    public Event(String title, String description, Date startingDateTime, Date endingDateTime) {
+        this.title = title;
+        this.description = description;
+        this.startingDateTime = startingDateTime;
+        this.endingDateTime = endingDateTime;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +36,12 @@ public class Event {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    // TODO: Need to change type Data to LocalDataTime. LocalDataTime now doesn't work with Create Event Form, because of calender field.
     @Column(name = "starting_date_time")
-    private LocalDateTime startingDateTime;
+    private Date startingDateTime;
 
     @Column(name = "ending_date_time")
-    private LocalDateTime endingDateTime;
+    private Date endingDateTime;
 
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
