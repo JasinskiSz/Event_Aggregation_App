@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 //todo Builders must have ALLARGSCONSTRUCTOR
@@ -38,11 +39,22 @@ public class User {
     @JoinTable(name = "users_events",
     joinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id",
-            nullable = false)},
+            nullable = true)},
     inverseJoinColumns = {
             @JoinColumn(name = "event_id", referencedColumnName = "id",
-            nullable = false)})
+            nullable = true)})
     private Set<Event> attendingEvents = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
