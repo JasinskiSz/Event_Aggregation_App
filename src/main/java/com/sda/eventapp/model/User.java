@@ -14,7 +14,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class User {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -42,5 +41,9 @@ public class User {
                             nullable = false)})
     private Set<Event> attendingEvents = new HashSet<>();
 
-
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }
