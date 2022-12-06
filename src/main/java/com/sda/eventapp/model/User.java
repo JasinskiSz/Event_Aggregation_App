@@ -13,12 +13,16 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username")
     private String username;
 
     private String password;
@@ -40,10 +44,4 @@ public class User {
                     @JoinColumn(name = "event_id", referencedColumnName = "id",
                             nullable = false)})
     private Set<Event> attendingEvents = new HashSet<>();
-
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-    }
 }
