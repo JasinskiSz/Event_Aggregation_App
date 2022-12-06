@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping({"/createEvent"})
+@RequestMapping({"/create/event"})
 @RequiredArgsConstructor
-
 public class EventController {
     private final EventService eventService;
-
 
     @GetMapping
     public String createEvent(ModelMap model) {
@@ -30,7 +28,7 @@ public class EventController {
     }
 
     @PostMapping
-    public String createEvenyByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
+    public String createEventByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
         if (errors.hasErrors()) {
             return "create-event";
         }

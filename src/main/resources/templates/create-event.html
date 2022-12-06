@@ -9,7 +9,6 @@
 </head>
 <body>
 <div class="container">
-
     <form th:object="${event}" th:action="@{/createEvent}" method="post">
         <div class="mb-3">
             <label for="Title" class="form-label">Title:</label>
@@ -42,7 +41,6 @@
         <div>
             <input type="submit" class="btn btn-primary" value="Send">
         </div>
-
     </form>
 </div>
 </body>

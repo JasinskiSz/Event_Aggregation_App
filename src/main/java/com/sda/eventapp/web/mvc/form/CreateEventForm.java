@@ -17,6 +17,6 @@ public class CreateEventForm {
     private String title;
     private LocalDateTime startEventDate;
     private LocalDateTime endEventDate;
-    @Size(min = 20, message = "Description must be min 20 characters long.")
+    @Size(min = 20, message = "Description must be at least 20 characters long.")
     private String description;
 }
