@@ -3,6 +3,7 @@ package com.sda.eventapp.web;
 
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.service.EventRepositoryService;
+import com.sda.eventapp.web.mappers.EventMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,6 @@ public class EventRestController {
 
     @GetMapping
     public List<Event> getAllEvents(){
-        return eventRepositoryService.findAll();
+        return EventMapper.toWebpage(eventRepositoryService.findAll());
     }
 }
