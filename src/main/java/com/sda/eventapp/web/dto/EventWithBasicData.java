@@ -9,11 +9,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class EventDTO {
+public class EventWithBasicData {
 
     private String title;
-
-    private String description;
 
     private LocalDateTime startingDateTime;
 

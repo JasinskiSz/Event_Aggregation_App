@@ -27,6 +27,10 @@ public class EventRepositoryService implements CommandLineRunner {
         return StreamSupport.stream(eventRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 
+    public List<Event> findAllByTitle(String title){
+        return StreamSupport.stream(eventRepository.findAllByTitle(title).spliterator(), false).collect(Collectors.toList());
+    }
+
     @Override
     public void run(String... args) throws Exception {
 
