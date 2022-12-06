@@ -5,21 +5,14 @@
     <title>Create user</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
-    <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
 </head>
 <body>
 <div class="container">
 
-
     <form th:object="${event}" th:action="@{/createEvent}" method="post">
         <div class="mb-3">
-            <label for="Title" class="form-label">Title</label>
+            <label for="Title" class="form-label">Title:</label>
             <input id="Title" class="form-control" type="text" th:field="*{title}"/>
             <div
                     th:if="${#fields.hasErrors('title')}"
@@ -35,27 +28,16 @@
                     th:text="${#fields.errors('description')}"
                     class="invalid-feedback-custom">
             </div>
-
         </div>
         <div class="mb-3">
-            <label for="eventTimeStart" class="form-label">Start Time Event:</label>
-            <div class='input-group date' id="eventTimeStart">
-                <input type='text' th:field="*{startEventDate}" class="form-control"/>
-                <span class="input-group-addon">
-                     <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-            </div>
+            <label for="startDateEvent" class="form-label">Start Date Event:</label>
+            <input id="startDateEvent" type="datetime-local" class="form-control" th:field="*{startEventDate}"
+                   required/>
         </div>
+
         <div class="mb-3">
-            <label for="eventTimeEnd" class="form-label">End Time Event:</label>
-            <div class='input-group date' id="eventTimeEnd">
-                <input type='text' th:field="*{endEventDate}" class="form-control"/>
-
-                <span class="input-group-addon">
-                     <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-
-            </div>
+            <label for="endDateEvent" class="form-label">End Date Event:</label>
+            <input id="endDateEvent" type="datetime-local" class="form-control" th:field="*{endEventDate}" required/>
         </div>
         <div>
             <input type="submit" class="btn btn-primary" value="Send">
@@ -63,13 +45,5 @@
 
     </form>
 </div>
-<script>
-    $(function () {
-        $('#eventTimeStart').datetimepicker();
-    });
-    $(function () {
-        $('#eventTimeEnd').datetimepicker();
-    });
-</script>
 </body>
 </html>
