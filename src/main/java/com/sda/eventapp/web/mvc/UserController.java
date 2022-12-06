@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/home/register")
+@RequestMapping("/create/user")
 public class UserController {
     private final UserService userService;
 
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping
-    public String handleCreate(@ModelAttribute @Valid CreateUserForm form, Errors errors) {
+    public String handleCreate(@ModelAttribute("user") @Valid CreateUserForm form, Errors errors) {
         log.info("Creating user from form: {}", form);
         if (errors.hasErrors()) {
             return "create-user";
