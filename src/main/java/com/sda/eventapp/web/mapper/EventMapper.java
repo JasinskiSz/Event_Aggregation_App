@@ -1,7 +1,7 @@
 package com.sda.eventapp.web.mapper;
 
 import com.sda.eventapp.model.Event;
-import com.sda.eventapp.web.dto.EventDTO;
+import com.sda.eventapp.web.dto.EventWithBasicData;
 
 import java.util.List;
 
@@ -10,19 +10,17 @@ import java.util.List;
 //todo: or there can be multiple methods like toEntity or toWebpage?
 
 public class EventMapper {
-    public static EventDTO toWebpage(Event event){
-        return EventDTO.builder()
+    public static EventWithBasicData toWebpage(Event event){
+        return EventWithBasicData.builder()
                 .title(event.getTitle())
-                .description(event.getDescription())
                 .startingDateTime(event.getStartingDateTime())
                 .endingDateTime(event.getEndingDateTime())
                 .build();
     }
     //todo: overloading? is it a good practice?
-    public static List<EventDTO> toWebpage(List<Event> events){
-        return events.stream().map(event -> EventDTO.builder()
+    public static List<EventWithBasicData> toWebpage(List<Event> events){
+        return events.stream().map(event -> EventWithBasicData.builder()
                 .title(event.getTitle())
-                .description(event.getDescription())
                 .startingDateTime(event.getStartingDateTime())
                 .endingDateTime(event.getEndingDateTime())
                 .build()).toList();
