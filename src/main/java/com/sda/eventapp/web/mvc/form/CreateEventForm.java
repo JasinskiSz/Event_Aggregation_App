@@ -15,8 +15,8 @@ public class CreateEventForm {
     private Long id;
     @NotBlank(message = "Field title is required.")
     private String title;
-    private LocalDateTime startEventDate;
-    private LocalDateTime endEventDate;
+    private LocalDateTime startingDateTime;
+    private LocalDateTime endingDateTime;
     @Size(min = 20, message = "Description must be min 20 characters long.")
     private String description;
 }
