@@ -10,18 +10,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
+
     public Event save(Event event) {
         return eventRepository.save(event);
     }
 
     public Event findById(Long id) {
-        return eventRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
     public Event updateByModify(Event event, CreateEventForm form) {
-        event = eventRepository.findById(form.getId()).
-                orElseThrow(() -> new RuntimeException("Event not found"));
+        event = eventRepository.findById(form.getId())
+                .orElseThrow(() -> new RuntimeException("Event not found"));
         event.setId((form.getId()));
         event.setTitle((form.getTitle()));
         event.setDescription(form.getDescription());
@@ -29,6 +30,5 @@ public class EventService {
         event.setEndingDateTime(form.getEndingDateTime());
 
         return eventRepository.save(event);
-
     }
 }
