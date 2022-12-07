@@ -15,6 +15,13 @@ import java.util.Set;
 @AllArgsConstructor
 public class Event {
 
+    public Event(String title, String description, LocalDateTime startingDateTime, LocalDateTime endingDateTime) {
+        this.title = title;
+        this.description = description;
+        this.startingDateTime = startingDateTime;
+        this.endingDateTime = endingDateTime;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

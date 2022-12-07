@@ -14,7 +14,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class User {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -41,6 +40,4 @@ public class User {
                     @JoinColumn(name = "event_id", referencedColumnName = "id",
                             nullable = false)})
     private Set<Event> attendingEvents = new HashSet<>();
-
-
 }
