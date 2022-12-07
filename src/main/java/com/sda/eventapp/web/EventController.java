@@ -23,7 +23,7 @@ public class EventController {
     @GetMapping
     public String getAllEvents(ModelMap map, @Param("title") String title){
 
-        List<EventWithBasicData> events = EventMapper.toWebpage(eventRepositoryService.findAll());
+        List<EventWithBasicData> events = EventMapper.toWebpage(eventRepositoryService.findAllAfterCurrentDateTime());
 
         map.addAttribute("title", title);
         if(title != null){
