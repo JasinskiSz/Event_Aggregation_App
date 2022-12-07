@@ -1,5 +1,6 @@
-package com.sda.eventapp.web.mvc.controller;
+package com.sda.eventapp.web.mvc;
 
+import com.sda.eventapp.model.Event;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import com.sda.eventapp.web.mvc.mapper.EventMapper;
@@ -9,30 +10,47 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
-@RequestMapping({"/create/event"})
+@RequestMapping({"/event"})
 @RequiredArgsConstructor
+
 public class EventController {
     private final EventService eventService;
 
-    @GetMapping
-    public String create(ModelMap model) {
+
+    @GetMapping("/create")
+    public String createEvent(ModelMap model) {
         model.addAttribute("event", new CreateEventForm());
         return "create-event";
     }
 
-    @PostMapping
-    public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
+    @PostMapping("/create")
+    public String createEvenyByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
         if (errors.hasErrors()) {
             return "create-event";
         }
         eventService.save(EventMapper.toEntity(form));
+        return "index";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateEvent(ModelMap model, @PathVariable Long id) {
+        model.addAttribute("event", new CreateEventForm());
+        Event foundEvent = eventService.findById(id);
+        model.addAttribute("event", foundEvent);
+        return "update-event";
+    }
+
+    @PostMapping("/update")
+    public String updateEventByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, RedirectAttributes redirectAttributes) {
+        if (errors.hasErrors()) {
+            return "update-event";
+        }
+        eventService.updateByModify(EventMapper.toEntity(form), form);
         return "index";
     }
 }
