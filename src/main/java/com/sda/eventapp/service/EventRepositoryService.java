@@ -1,8 +1,6 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.model.Comment;
 import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -23,37 +19,85 @@ import java.util.stream.StreamSupport;
 public class EventRepositoryService implements CommandLineRunner {
 
     private final EventRepository eventRepository;
-    //private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public List<Event> findAll(){
-        return StreamSupport.stream(eventRepository.findAll().spliterator(), false).collect(Collectors.toList());
+    //todo: default should return ongoing and future events
+    public List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
+        //future
+        if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllFutureEvents().spliterator(), false).collect(Collectors.toList());
+        }
+        //ongoing
+        else if (!futureEventsFilter && ongoingEventsFilter && !pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllOngoingEvents().spliterator(), false).collect(Collectors.toList());
+        }
+        //past
+        else if (!futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllPastEvents().spliterator(), false).collect(Collectors.toList());
+        }
+
+        //future past
+        else if (futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllFutureAndPastEvents().spliterator(), false).collect(Collectors.toList());
+        }
+        //ongoing past
+        else if (!futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllOngoingAndPastEvents().spliterator(), false).collect(Collectors.toList());
+        }
+        //future ongoing past
+        else if (futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        }
+        //default - ongoing + future
+        else {
+            return StreamSupport.stream(eventRepository.findAllOngoingAndFutureEvents().spliterator(), false).collect(Collectors.toList());
+        }
     }
 
-    public List<Event> findAllByTitle(String title){
-        return StreamSupport.stream(eventRepository.findAllByTitle(title).spliterator(), false).collect(Collectors.toList());
+    public List<Event> findAllByTitleWithFilters(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
+        //future
+        if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllFutureEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+        }
+        //ongoing
+        else if (!futureEventsFilter && ongoingEventsFilter && !pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllOngoingEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+        }
+        //past
+        else if (!futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllPastEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+        }
+        //future past
+        else if (futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllFutureAndPastEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+        }
+        //ongoing past
+        else if (!futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllOngoingAndPastEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+        }
+        //future ongoing past
+        else if (futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+            return StreamSupport.stream(eventRepository.findAllByTitle(title).spliterator(), false).collect(Collectors.toList());
+        }
+        //default - ongoing + future
+        else {
+            return StreamSupport.stream(eventRepository.findAllOngoingAndFutureEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+        }
     }
 
-    public List<Event> findAllAfterCurrentDateTime(){
-        return StreamSupport.stream(eventRepository.findAllAfterCurrentDateTime().spliterator(), false).collect(Collectors.toList());
-    }
 
     @Override
     public void run(String... args) throws Exception {
 
         //adding test events
         /*eventRepository.save(Event.builder()
-                .title("Beata Kozidrak LIVE")
-                .description("X anniversary concert. Lorem ipsum dolor sit amet, consectetur adipiscing elit," +
-                        " sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad" +
-                        " minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea" +
-                        " commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit" +
-                        " esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat" +
-                        " non proident, sunt in culpa qui officia deserunt mollit anim id est laborum")
-                .owner(userRepository.findById(2))
-                .startingDateTime(LocalDateTime.of(2023,5,9,19,30))
-                .endingDateTime(LocalDateTime.of(2023,5,9,22,0))
-                .build());
-        eventRepository.save(Event.builder()
+                .title("Event from November 22 to March 23")
+                .description("It is very interesting event. This is the event from November 22 to March 23.")
+                .owner(userRepository.findById(1))
+                .startingDateTime(LocalDateTime.of(2022,11,1,6,30))
+                .endingDateTime(LocalDateTime.of(2023,3,31,22,0))
+                .build());*/
+        /*eventRepository.save(Event.builder()
                 .title("Unsound Festival 2023")
                 .description("Unsound focuses on a broad swath of contemporary music — emerging, experimental, and leftfield —" +
                         " whose sweep doesn't follow typical genre constraints. Influential, it has developed a reputation" +
