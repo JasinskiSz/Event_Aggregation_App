@@ -17,10 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping({"/event"})
 @RequiredArgsConstructor
-
 public class EventController {
     private final EventService eventService;
-
 
     @GetMapping("/create")
     public String createEvent(ModelMap model) {

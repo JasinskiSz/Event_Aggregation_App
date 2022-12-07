@@ -31,6 +31,4 @@ public class Comment {
 
     @ManyToMany(mappedBy = "comments", fetch = FetchType.LAZY)
     private Set<Event> events = new HashSet<>();
-
-
 }
