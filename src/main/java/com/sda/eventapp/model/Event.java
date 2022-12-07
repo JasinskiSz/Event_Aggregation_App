@@ -2,6 +2,7 @@ package com.sda.eventapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -37,9 +38,11 @@ public class Event {
     private User owner;
 
     @Column(name = "starting_date_time")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startingDateTime;
 
     @Column(name = "ending_date_time")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endingDateTime;
 
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
