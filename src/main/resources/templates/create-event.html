@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create user</title>
+    <title>Create event</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
 
@@ -10,7 +10,7 @@
 <body>
 <div class="container">
 
-    <form th:object="${event}" th:action="@{/createEvent}" method="post">
+    <form th:object="${event}" th:action="@{/event/create}" method="post">
         <div class="mb-3">
             <label for="Title" class="form-label">Title:</label>
             <input id="Title" class="form-control" type="text" th:field="*{title}"/>
@@ -30,14 +30,14 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="startDateEvent" class="form-label">Start Date Event:</label>
-            <input id="startDateEvent" type="datetime-local" class="form-control" th:field="*{startEventDate}"
+            <label for="startEventDate" class="form-label">Start Date Event:</label>
+            <input id="startEventDate" type="datetime-local" class="form-control" th:field="*{startEventDate}"
                    required/>
         </div>
 
         <div class="mb-3">
-            <label for="endDateEvent" class="form-label">End Date Event:</label>
-            <input id="endDateEvent" type="datetime-local" class="form-control" th:field="*{endEventDate}" required/>
+            <label for="endEventDate" class="form-label">End Date Event:</label>
+            <input id="endEventDate" type="datetime-local" class="form-control" th:field="*{endEventDate}" required/>
         </div>
         <div>
             <input type="submit" class="btn btn-primary" value="Send">
