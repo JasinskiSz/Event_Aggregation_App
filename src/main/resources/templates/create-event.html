@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-    <form th:object="${event}" th:action="@{/createEvent}" method="post">
+    <form th:object="${event}" th:action="@{/create/event}" method="post">
         <div class="mb-3">
             <label for="Title" class="form-label">Title:</label>
             <input id="Title" class="form-control" type="text" th:field="*{title}"/>

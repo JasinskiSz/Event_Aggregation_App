@@ -22,13 +22,13 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public String createEvent(ModelMap model) {
+    public String create(ModelMap model) {
         model.addAttribute("event", new CreateEventForm());
         return "create-event";
     }
 
     @PostMapping
-    public String createEventByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
+    public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
         if (errors.hasErrors()) {
             return "create-event";
         }
