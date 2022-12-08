@@ -1,4 +1,4 @@
-package com.sda.eventapp.web;
+package com.sda.eventapp.web.mvc;
 
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mapper.EventMapper;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/homepage")
 @RequiredArgsConstructor
-public class EventController {
+public class HomepageController {
     private final EventService eventService;
 
     @GetMapping

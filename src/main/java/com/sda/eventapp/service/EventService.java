@@ -17,6 +17,9 @@ public class EventService{
 
     private final EventRepository eventRepository;
 
+    public Event save(Event event) {
+        return eventRepository.save(event);
+    }
 
     //todo: default should return ongoing and future events
     public List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
