@@ -20,8 +20,8 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
-    public Event updateByModify(Event event, CreateEventForm form) {
-        event = eventRepository.findById(form.getId())
+    public Event updateByModify(CreateEventForm form) {
+        Event event = eventRepository.findById(form.getId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
         event.setId((form.getId()));
         event.setTitle((form.getTitle()));
