@@ -44,7 +44,7 @@ public class EventController {
     }
 
     @PostMapping("/update")
-    public String updateEventByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, RedirectAttributes redirectAttributes) {
+    public String updateEventByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
         if (errors.hasErrors()) {
             return "update-event";
         }
