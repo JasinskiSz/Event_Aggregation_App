@@ -25,24 +25,24 @@ public class EventRepositoryService implements CommandLineRunner {
     public List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
         if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllFutureEvents().spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllFutureEvents();
         }
         //ongoing
         else if (!futureEventsFilter && ongoingEventsFilter && !pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllOngoingEvents().spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllOngoingEvents();
         }
         //past
         else if (!futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllPastEvents().spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllPastEvents();
         }
 
         //future past
         else if (futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllFutureAndPastEvents().spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllFutureAndPastEvents();
         }
         //ongoing past
         else if (!futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllOngoingAndPastEvents().spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllOngoingAndPastEvents();
         }
         //future ongoing past
         else if (futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
@@ -50,38 +50,38 @@ public class EventRepositoryService implements CommandLineRunner {
         }
         //default - ongoing + future
         else {
-            return StreamSupport.stream(eventRepository.findAllOngoingAndFutureEvents().spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllOngoingAndFutureEvents();
         }
     }
 
     public List<Event> findAllByTitleWithFilters(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
         if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllFutureEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllFutureEventsByTitle(title);
         }
         //ongoing
         else if (!futureEventsFilter && ongoingEventsFilter && !pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllOngoingEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllOngoingEventsByTitle(title);
         }
         //past
         else if (!futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllPastEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllPastEventsByTitle(title);
         }
         //future past
         else if (futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllFutureAndPastEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllFutureAndPastEventsByTitle(title);
         }
         //ongoing past
         else if (!futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllOngoingAndPastEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllOngoingAndPastEventsByTitle(title);
         }
         //future ongoing past
         else if (futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(eventRepository.findAllByTitle(title).spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllByTitle(title);
         }
         //default - ongoing + future
         else {
-            return StreamSupport.stream(eventRepository.findAllOngoingAndFutureEventsByTitle(title).spliterator(), false).collect(Collectors.toList());
+            return eventRepository.findAllOngoingAndFutureEventsByTitle(title);
         }
     }
 
