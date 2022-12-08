@@ -35,4 +35,6 @@ public class EventController {
         eventService.save(EventMapper.toEntity(form));
         return "index";
     }
+
+
 }

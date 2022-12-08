@@ -46,7 +46,7 @@ public class Event {
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) //
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "events_comments",
             // TODO: check if there is need to set property nullable = false;
             joinColumns = {

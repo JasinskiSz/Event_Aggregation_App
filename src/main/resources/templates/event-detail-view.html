@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Event detail view</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+    <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Start time</th>
+                <th>End time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:object="${event}">
+                <td th:text="${event.title}"></td>
+                <td th:text="${#strings.abbreviate(event.description,50)}" ></td>
+                <td th:text="${event.startingDateTime}"></td>
+                <td th:text="${event.endingDateTime}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

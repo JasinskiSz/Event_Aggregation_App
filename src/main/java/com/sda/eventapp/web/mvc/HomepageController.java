@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -16,7 +17,7 @@ public class HomepageController {
     private final EventService eventService;
 
     @GetMapping
-    public String getAllEvents(ModelMap map, @Param("title") String title, @Param("futureEventsFilter") boolean futureEventsFilter, @Param("ongoingEventsFilter") boolean ongoingEventsFilter, @Param("pastEventsFilter") boolean pastEventsFilter) {
+    public String getAllEventsView(ModelMap map, @Param("title") String title, @Param("futureEventsFilter") boolean futureEventsFilter, @Param("ongoingEventsFilter") boolean ongoingEventsFilter, @Param("pastEventsFilter") boolean pastEventsFilter) {
         map.addAttribute("title", title);
         if (title != null && !title.equals("")) {
             map.addAttribute("events", EventMapper.toWebpage(eventService.findAllByTitleWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter)));
@@ -24,5 +25,11 @@ public class HomepageController {
             map.addAttribute("events", EventMapper.toWebpage(eventService.findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter)));
         }
         return "homepage";
+    }
+
+    @GetMapping("/detail-view/{id}")
+    public String getDetailEventView(ModelMap map, @PathVariable("id") Long id){
+        map.addAttribute("event", EventMapper.toWebpage(eventService.findById(id)));
+        return "event-detail-view";
     }
 }
