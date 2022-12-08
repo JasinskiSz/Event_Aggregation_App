@@ -9,6 +9,7 @@
 
 <body>
     <div class="container">
+        <p id="id" name="id" th:value="${event.id}"></p>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -21,7 +22,7 @@
             <tbody>
             <tr th:object="${event}">
                 <td th:text="${event.title}"></td>
-                <td th:text="${#strings.abbreviate(event.description,50)}" ></td>
+                <td th:text="${event.description}" ></td>
                 <td th:text="${event.startingDateTime}"></td>
                 <td th:text="${event.endingDateTime}"></td>
             </tr>

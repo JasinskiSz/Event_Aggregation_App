@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Builder
 public class EventWithBasicData {
 
+    private long id;
+
     private String title;
 
     private String description;

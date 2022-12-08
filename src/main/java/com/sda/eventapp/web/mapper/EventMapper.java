@@ -12,6 +12,7 @@ import java.util.List;
 public class EventMapper {
     public static EventWithBasicData toWebpage(Event event){
         return EventWithBasicData.builder()
+                .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
                 .startingDateTime(event.getStartingDateTime())
@@ -21,6 +22,7 @@ public class EventMapper {
     //todo: overloading? is it a good practice?
     public static List<EventWithBasicData> toWebpage(List<Event> events){
         return events.stream().map(event -> EventWithBasicData.builder()
+                .id(event.getId())
                 .title(event.getTitle())
                 .description(event.getDescription())
                 .startingDateTime(event.getStartingDateTime())
