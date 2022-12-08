@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -54,5 +55,19 @@ public class Event {
                     @JoinColumn(name = "comment_id", referencedColumnName = "id")})
     private Set<Comment> comments = new HashSet<>();
 
-    //todo: optional: starting_time, ending_time, enum ONLINE/INPLACE, capacity, venueId
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return id == event.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+
+//todo: optional: starting_time, ending_time, enum ONLINE/INPLACE, capacity, venueId
 }
