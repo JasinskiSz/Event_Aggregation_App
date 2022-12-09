@@ -13,12 +13,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username")
     private String username;
 
     private String password;
