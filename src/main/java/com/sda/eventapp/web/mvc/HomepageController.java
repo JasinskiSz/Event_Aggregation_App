@@ -26,10 +26,4 @@ public class HomepageController {
         }
         return "homepage";
     }
-
-//    @GetMapping("/detail-view/{id}")
-//    public String getDetailEventView(ModelMap map, @PathVariable("id") Long id){
-//        map.addAttribute("event", EventMapper.toWebpage(eventService.findById(id)));
-//        return "event-detail-view";
-//    }
 }
