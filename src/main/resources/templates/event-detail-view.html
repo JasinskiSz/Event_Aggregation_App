@@ -41,7 +41,22 @@
         </form>
     </div>
 
-
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Writing date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${comments}">
+                <td th:text="${c.text}"></td>
+                <td th:text="${c.writingDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 
 
