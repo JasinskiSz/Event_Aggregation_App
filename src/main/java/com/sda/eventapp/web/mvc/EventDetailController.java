@@ -1,6 +1,8 @@
 package com.sda.eventapp.web.mvc;
 
+import com.sda.eventapp.service.CommentService;
 import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.web.mapper.CommentMapper;
 import com.sda.eventapp.web.mapper.EventMapper;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class EventDetailController {
 
     private final EventService eventService;
+    private final CommentService commentService;
 
     @GetMapping("/{id}")
     public String getDetailEventView(ModelMap map, @PathVariable("id") Long id){
         map.addAttribute("event", EventMapper.toWebpage(eventService.findById(id)));
         map.addAttribute("comment", new CreateCommentForm());
+        map.addAttribute("comments", CommentMapper.toWebpage(commentService.findAll()));
         return "event-detail-view";
     }
 
@@ -26,6 +30,7 @@ public class EventDetailController {
     @PostMapping("/{id}")
     public String addComment(@ModelAttribute CreateCommentForm commentForm,  @PathVariable("id") Long id){
 
+        commentService.save(CommentMapper.toEntity(commentForm));
         return "redirect:/detail-view/" + id;
     }
 

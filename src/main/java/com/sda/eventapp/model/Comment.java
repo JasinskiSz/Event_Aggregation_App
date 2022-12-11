@@ -19,8 +19,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    //todo: nullable false, delete cascade - only for testing
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     @Column(length = 500)
@@ -29,6 +30,7 @@ public class Comment {
     @Column(name = "writing_date")
     private LocalDateTime writingDate;
 
+    //todo comments ManyToOne?
     @ManyToMany(mappedBy = "comments", fetch = FetchType.LAZY)
     private Set<Event> events = new HashSet<>();
 }
