@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
-    List<Comment> findAllByEvent_Id(long event_id);
+    List<Comment> findAllByEvent_IdOrderByWritingDateDesc(long event_id);
 }

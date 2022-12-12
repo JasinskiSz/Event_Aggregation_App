@@ -15,7 +15,6 @@ import java.util.List;
 
 
 //todo: bind with User
-@Service
 @RequiredArgsConstructor
 public class CommentMapper {
 

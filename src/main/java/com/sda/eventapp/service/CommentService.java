@@ -27,6 +27,6 @@ public class CommentService {
     }
 
     public List<Comment> findByEventId(Long id) {
-        return commentRepository.findAllByEvent_Id(id);
+        return commentRepository.findAllByEvent_IdOrderByWritingDateDesc(id);
     }
 }
