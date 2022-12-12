@@ -31,6 +31,9 @@ public class Comment {
     private LocalDateTime writingDate;
 
     //todo comments ManyToOne?
-    @ManyToMany(mappedBy = "comments", fetch = FetchType.LAZY)
-    private Set<Event> events = new HashSet<>();
+    /*@ManyToMany(mappedBy = "comments", fetch = FetchType.LAZY)
+    private Set<Event> events = new HashSet<>();*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

@@ -25,4 +25,8 @@ public class CommentService {
     public List<Comment> findAll() {
         return StreamSupport.stream(commentRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
+
+    public List<Comment> findByEventId(Long id) {
+        return commentRepository.findAllByEvent_Id(id);
+    }
 }

@@ -22,7 +22,7 @@ public class EventDetailController {
     public String getDetailEventView(ModelMap map, @PathVariable("id") Long id){
         map.addAttribute("event", EventMapper.toWebpage(eventService.findById(id)));
         map.addAttribute("comment", new CreateCommentForm());
-        map.addAttribute("comments", CommentMapper.toWebpage(commentService.findAll()));
+        map.addAttribute("comments", CommentMapper.toWebpage(commentService.findByEventId(id)));
         return "event-detail-view";
     }
 
@@ -30,7 +30,9 @@ public class EventDetailController {
     @PostMapping("/{id}")
     public String addComment(@ModelAttribute CreateCommentForm commentForm,  @PathVariable("id") Long id){
 
-        commentService.save(CommentMapper.toEntity(commentForm));
+        CommentMapper commentMapper = new CommentMapper(eventService);
+
+        commentService.save(commentMapper.toEntity(commentForm, id));
         return "redirect:/detail-view/" + id;
     }
 
