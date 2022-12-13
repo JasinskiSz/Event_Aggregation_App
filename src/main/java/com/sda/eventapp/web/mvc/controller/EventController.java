@@ -50,7 +50,7 @@ public class EventController {
         if (errors.hasErrors()) {
             return "update-event";
         }
-        eventService.updateByModify(EventMapper.toEntity(form), form);
+        eventService.updateByModify(form);
         return "index";
     }
 }
