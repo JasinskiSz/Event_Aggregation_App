@@ -30,11 +30,11 @@ public class EventDetailController {
 
 
     @PostMapping("/{id}")
-    public String addComment(@ModelAttribute ("comment") @Valid CreateCommentForm commentForm, @PathVariable("id") Long id, Errors errors){
+    public String addComment(@ModelAttribute ("comment") @Valid CreateCommentForm commentForm, Errors errors, @PathVariable("id") Long id){
 
         //todo fix errors validation
         if(errors.hasErrors()){
-            return "event-detail-view";
+            return "redirect:/detail-view/" + id;
         }
         CommentMapper commentMapper = new CommentMapper(eventService);
         commentService.save(commentMapper.toEntity(commentForm, id));
