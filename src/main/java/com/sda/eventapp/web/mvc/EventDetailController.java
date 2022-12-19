@@ -25,6 +25,7 @@ public class EventDetailController {
         map.addAttribute("event", EventMapper.toWebpage(eventService.findById(id)));
         map.addAttribute("comment", new CreateCommentForm());
         map.addAttribute("comments", CommentMapper.toWebpage(commentService.findByEventId(id)));
+
         return "event-detail-view";
     }
 
