@@ -29,6 +29,16 @@
             </tbody>
         </table>
     </div>
+
+    <div class="container">
+        <div class="col-md-3" th:object="${event.image}">
+            <img alt="" th:src="${'img/'+ *{name}}">
+
+        </div>
+
+    </div>
+
+
     <div>
         <form th:object="${comment}" th:action="@{/detail-view/__${event.id}__}" method="post">
             <div>
@@ -40,6 +50,8 @@
             </div>
         </form>
     </div>
+
+
 
     <div class="container">
         <table class="table table-striped">

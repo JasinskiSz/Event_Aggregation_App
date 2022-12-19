@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EventAggregationAppApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EventAggregationAppApplication.class, args);
+          SpringApplication.run(EventAggregationAppApplication.class, args);
     }
 
 }

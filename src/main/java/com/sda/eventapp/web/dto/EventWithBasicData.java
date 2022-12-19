@@ -2,6 +2,7 @@ package com.sda.eventapp.web.dto;
 
 
 
+import com.sda.eventapp.model.Image;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,4 +22,6 @@ public class EventWithBasicData {
     private LocalDateTime startingDateTime;
 
     private LocalDateTime endingDateTime;
+
+    private Image image;
 }

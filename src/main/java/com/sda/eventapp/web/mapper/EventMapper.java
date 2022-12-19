@@ -17,6 +17,7 @@ public class EventMapper {
                 .description(event.getDescription())
                 .startingDateTime(event.getStartingDateTime())
                 .endingDateTime(event.getEndingDateTime())
+                .image(event.getImage())
                 .build();
     }
     //todo: overloading? is it a good practice?

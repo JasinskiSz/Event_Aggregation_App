@@ -51,6 +51,10 @@ public class Event {
                     @JoinColumn(name = "comment_id", referencedColumnName = "id")})
     private Set<Comment> comments = new HashSet<>();*/
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="image_id",referencedColumnName = "id")
+    private Image image;
+
 
 
 
