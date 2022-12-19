@@ -10,7 +10,10 @@
     <title>Homepage</title>
 </head>
 <body>
-<h1>Welcome <span sec:authentication="name" th:remove="tag">thymeleaf</span>!</h1>
+<div sec:authorize="hasRole('ROLE_USER')">
+    <h1>Welcome <span sec:authentication="name">imie</span>!</h1>
+    <span sec:authentication="principal.authorities">roleeee</span>
+</div>
 
 <p>This is the homepage.</p>
 
