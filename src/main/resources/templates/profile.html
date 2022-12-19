@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<h1 th:inline="text">Hello <span sec:authentication="name" th:remove="tag">thymeleaf</span>!</h1>
+<form method="post" th:action="@{/logout}">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

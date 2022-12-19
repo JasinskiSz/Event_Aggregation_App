@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Homepage</title>
 </head>
 <body>
-    <p>TEST OK</p>
+<h1>Welcome <span sec:authentication="name" th:remove="tag">thymeleaf</span>!</h1>
+
+<p>This is the homepage.</p>
+
+<br><br>
+
+<p>Join us! -> <a th:href="@{/user/register}">register!</a></p>
+<p>Already joined us? -> <a th:href="@{/login}">login.</a></p>
 </body>
 </html>
