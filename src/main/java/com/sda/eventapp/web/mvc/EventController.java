@@ -38,72 +38,37 @@ public class EventController {
 
     @PostMapping
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, @RequestParam MultipartFile img) {
-        Image image = Image.builder()
-                .name(img.getOriginalFilename())
-                .build();
-
-
-        if (errors.hasErrors()) {
-            return "create-event";
-        }
-        Event addedEvent = eventService.save(EventMapper.toEntity(form, image));
-
-        //todo: managing saving file and creating directory
-
-        if(addedEvent != null){
-
-
-            /*File f = new File("/Users/pavankumar/Desktop/Testing/Java.txt");
-            f.createNewFile();*/
-
-
-
-
-            try {
-                //MultipartFile multipartFile = new MockMultipartFile("sourceFile.tmp", "Hello World".getBytes());
-
-                //File file = new File("src/main/resources/targetFile.tmp");
-
-
-                String pathName = "src/main/resources/static/images/";
-                new File(pathName).mkdir();
-                File f = new File(pathName + img.getOriginalFilename());
-                //File f = new File("src/main/resources/static/images/" + img.getOriginalFilename());
-                img.transferTo(f );
-                f.createNewFile();
-
-
-                //File saveFile = new ClassPathResource("/Users/apple/Desktop/SDA_kurs_Javy/Spring/Event_Aggregation_Service/src/main/resources/static/eventImage").getFile();
-               /* Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + img.getOriginalFilename());
-                Files.copy(img.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);*/
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-
-
-
-
-            /*String newPath = "/Users/apple/Desktop/SDA_kurs_Javy/Spring/Event_Aggregation_Service/src/main/resources/static/eventImage";
-            File directory = new File(newPath);
-            if(!directory.exists()){
+        try {
+            String folder = "src/main/resources/static/images/";
+            String folderToDatabase = "/images/";
+            File directory = new File(folder);
+            if (!directory.exists()) {
                 directory.mkdirs();
             }
-            try {
-                System.out.println(new ClassPathResource("").getFile().getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try{
-             File saveFile = new ClassPathResource(newPath).getFile(); //todo change path
 
-                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + img.getOriginalFilename());
+            byte[] bytes = img.getBytes();
+            Path fullPath = Paths.get(folder + img.getOriginalFilename());
+            Path databasePath = Paths.get(folderToDatabase + img.getOriginalFilename());
+            Files.write(fullPath, bytes);
 
-                Files.copy(img.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            Image image = Image.builder()
+                    .fileName(img.getOriginalFilename())
+                    .path(String.valueOf(databasePath))
+                    .build();
+
+            if (errors.hasErrors()) {
+                return "create-event";
             }
-            catch (Exception e){
-                e.printStackTrace();
-            }*/
+
+            Event addedEvent = eventService.save(EventMapper.toEntity(form, image));
+
+            //todo: managing saving file and creating directory
+
+            if (addedEvent != null) {
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         return "index";
