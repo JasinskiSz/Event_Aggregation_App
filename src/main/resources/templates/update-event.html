@@ -33,6 +33,12 @@
             <label for="startingDateTime" class="form-label">Start Date Event:</label>
             <input id="startingDateTime" type="datetime-local" class="form-control" th:field="*{startingDateTime}"
                    required/>
+            <div
+                    th:if="${#fields.hasErrors('global')}"
+                    th:each="err : ${#fields.errors('global')}"
+                    th:text="${err}"
+                    class="invalid-feedback-custom">
+            </div>
         </div>
         <div class="mb-3">
             <label for="endingDateTime" class="form-label">End Date Event:</label>
