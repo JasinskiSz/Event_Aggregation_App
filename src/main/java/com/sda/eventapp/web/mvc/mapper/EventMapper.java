@@ -5,6 +5,11 @@ import com.sda.eventapp.web.mvc.form.CreateEventForm;
 
 public class EventMapper {
     public static Event toEntity(CreateEventForm form) {
-        return new Event(form.getTitle(), form.getDescription(), form.getStartEventDate(), form.getEndEventDate());
+        return Event.builder()
+                .title(form.getTitle())
+                .description(form.getDescription())
+                .startingDateTime(form.getStartingDateTime())
+                .endingDateTime(form.getEndingDateTime())
+                .build();
     }
 }
