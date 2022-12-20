@@ -7,7 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface EventRepository extends CrudRepository<Event, Long> {
-
     @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp ORDER BY event.startingDateTime")
     List<Event> findAllFutureEvents();
 
@@ -46,6 +45,4 @@ public interface EventRepository extends CrudRepository<Event, Long> {
 
     @Query(value = "SELECT event from Event event WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and event.title like %?1% ORDER BY event.startingDateTime")
     List<Event> findAllOngoingAndFutureEventsByTitle(String title);
-
-
 }

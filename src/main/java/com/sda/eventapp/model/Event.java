@@ -67,7 +67,4 @@ public class Event {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-
-//todo: optional: starting_time, ending_time, enum ONLINE/INPLACE, capacity, venueId
 }

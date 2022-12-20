@@ -21,7 +21,6 @@ public class EventService{
         return eventRepository.save(event);
     }
 
-    //todo: default should return ongoing and future events
     public List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
         if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
@@ -37,15 +36,15 @@ public class EventService{
         }
 
         //future past
-        else if (futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
+        else if (futureEventsFilter && !ongoingEventsFilter) {
             return eventRepository.findAllFutureAndPastEvents();
         }
         //ongoing past
-        else if (!futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+        else if (!futureEventsFilter && ongoingEventsFilter) {
             return eventRepository.findAllOngoingAndPastEvents();
         }
         //future ongoing past
-        else if (futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+        else if (futureEventsFilter && pastEventsFilter) {
             return StreamSupport.stream(eventRepository.findAll().spliterator(), false).collect(Collectors.toList());
         }
         //default - ongoing + future
@@ -68,15 +67,15 @@ public class EventService{
             return eventRepository.findAllPastEventsByTitle(title);
         }
         //future past
-        else if (futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
+        else if (futureEventsFilter && !ongoingEventsFilter) {
             return eventRepository.findAllFutureAndPastEventsByTitle(title);
         }
         //ongoing past
-        else if (!futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+        else if (!futureEventsFilter && ongoingEventsFilter) {
             return eventRepository.findAllOngoingAndPastEventsByTitle(title);
         }
         //future ongoing past
-        else if (futureEventsFilter && ongoingEventsFilter && pastEventsFilter) {
+        else if (futureEventsFilter && pastEventsFilter) {
             return eventRepository.findAllByTitle(title);
         }
         //default - ongoing + future
@@ -84,7 +83,4 @@ public class EventService{
             return eventRepository.findAllOngoingAndFutureEventsByTitle(title);
         }
     }
-
-
-
 }
