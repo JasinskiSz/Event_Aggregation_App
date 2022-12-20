@@ -12,7 +12,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-
 @Slf4j
 @Controller
 @RequestMapping({"/event"})
@@ -30,9 +29,10 @@ public class EventController {
     public String createEvenyByPost(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
         if (errors.hasErrors()) {
             return "create-event";
+        } else {
+            eventService.save(EventMapper.toEntity(form));
+            return "index";
         }
-        eventService.save(EventMapper.toEntity(form));
-        return "index";
     }
 
     @GetMapping("/update/{id}")
