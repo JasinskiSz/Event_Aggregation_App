@@ -1,8 +1,8 @@
-package com.sda.eventapp.web.mvc;
+package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.web.mvc.forms.CreateUserForm;
 import com.sda.eventapp.service.UserService;
-import com.sda.eventapp.web.mvc.mappers.UserMapper;
+import com.sda.eventapp.web.mvc.form.CreateUserForm;
+import com.sda.eventapp.web.mvc.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

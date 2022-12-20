@@ -3,7 +3,7 @@ package com.sda.eventapp.web.mvc;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
-import com.sda.eventapp.web.mvc.mappers.EventMapper;
+import com.sda.eventapp.web.mvc.mapper.EventMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping({"/event"})
 @RequiredArgsConstructor
+
 public class EventController {
     private final EventService eventService;
+
 
     @GetMapping("/create")
     public String createEvent(ModelMap model) {

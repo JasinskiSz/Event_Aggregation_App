@@ -1,7 +1,7 @@
-package com.sda.eventapp.web.mvc.mappers;
+package com.sda.eventapp.web.mvc.mapper;
 
 import com.sda.eventapp.model.User;
-import com.sda.eventapp.web.mvc.forms.CreateUserForm;
+import com.sda.eventapp.web.mvc.form.CreateUserForm;
 
 public class UserMapper {
     public static User toEntity(CreateUserForm form) {

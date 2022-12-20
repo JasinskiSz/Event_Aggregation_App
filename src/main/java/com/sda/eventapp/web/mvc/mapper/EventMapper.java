@@ -1,4 +1,4 @@
-package com.sda.eventapp.web.mvc.mappers;
+package com.sda.eventapp.web.mvc.mapper;
 
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
