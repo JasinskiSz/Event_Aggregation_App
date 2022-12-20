@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EventService{
+public class EventService {
 
     private final EventRepository eventRepository;
 
@@ -27,7 +27,7 @@ public class EventService{
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
-    public Event updateByModify(CreateEventForm form) {
+    public Event update(CreateEventForm form) {
         Event event = eventRepository.findById(form.getId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
         event.setId((form.getId()));
@@ -102,4 +102,3 @@ public class EventService{
         }
     }
 }
-
