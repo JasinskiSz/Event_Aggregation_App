@@ -1,6 +1,8 @@
 package com.sda.eventapp.web.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class EventWithBasicData {
-
     private String title;
     private String description;
     private LocalDateTime startingDateTime;
