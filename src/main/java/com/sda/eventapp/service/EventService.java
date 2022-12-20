@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import java.time.LocalDateTime;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -70,6 +72,15 @@ public class EventService {
             return eventRepository.findAllOngoingAndFutureEvents();
         }
     }
+
+    public List<Event> findAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    public List<Event> findEventByRangeDate(LocalDateTime start, LocalDateTime end) {
+        return eventRepository.findAllEventByRangeDate(start, end);
+    }
+
 
     public List<Event> findAllByTitleWithFilters(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
