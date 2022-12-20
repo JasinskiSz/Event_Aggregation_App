@@ -39,22 +39,35 @@ public class EventController {
     @PostMapping
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, @RequestParam MultipartFile img) {
         try {
-            String folder = "src/main/resources/static/images/";
-            String folderToDatabase = "/images/";
+            String folder = "/src/main/resources/static/images/";
+            //String folderToDatabase = "/images/";
             File directory = new File(folder);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            byte[] bytes = img.getBytes();
-            Path fullPath = Paths.get(folder + img.getOriginalFilename());
-            Path databasePath = Paths.get(folderToDatabase + img.getOriginalFilename());
-            Files.write(fullPath, bytes);
-
+            Path currentPath = Paths.get(""); //on Windows Paths.get(".")
+            Path absolutePath = currentPath.toAbsolutePath();
             Image image = Image.builder()
                     .fileName(img.getOriginalFilename())
-                    .path(String.valueOf(databasePath))
+                    .path(absolutePath + folder)
                     .build();
+            byte[] bytes = img.getBytes();
+            Path fullPath = Paths.get(image.getPath() + img.getOriginalFilename());
+            //Path databasePath = Paths.get(folderToDatabase + img.getOriginalFilename());
+            Files.write(fullPath, bytes);
+
+
+            /*Path fullPath = Paths.get(folder + img.getOriginalFilename());
+            Path databasePath = Paths.get(folderToDatabase + img.getOriginalFilename());
+            Files.write(fullPath, bytes);*/
+
+/*
+            Image image = Image.builder()
+                    .fileName(img.getOriginalFilename())
+                    .path(String.valueOf(databasePath)) //problem?
+                    .build();
+*/
 
             if (errors.hasErrors()) {
                 return "create-event";
