@@ -5,7 +5,10 @@ import com.sda.eventapp.web.dto.EventWithBasicData;
 import com.sda.eventapp.web.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +26,7 @@ public class EventRestController {
     }
 
     @GetMapping("date")
-    public List<EventWithBasicData> getEventsByRangeDate(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
-        return EventMapper.toWebpage(eventService.findEventByRangeDate(start, end));
+    public List<EventWithBasicData> getEventsByDateRange(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
+        return EventMapper.toWebpage(eventService.findEventByDateRange(start, end));
     }
 }

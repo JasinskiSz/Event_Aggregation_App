@@ -49,5 +49,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllOngoingAndFutureEventsByTitle(String title);
 
     @Query(value = "SELECT event FROM Event event WHERE  (event.startingDateTime <= ?2 and event.endingDateTime >= ?1)")
-    List<Event> findAllEventByRangeDate(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    List<Event> findAllEventByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }
