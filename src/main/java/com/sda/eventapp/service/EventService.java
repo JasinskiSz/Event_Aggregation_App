@@ -6,6 +6,9 @@ import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EventService {
@@ -30,5 +33,13 @@ public class EventService {
         event.setEndingDateTime(form.getEndingDateTime());
 
         return eventRepository.save(event);
+    }
+
+    public List<Event> findAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    public List<Event> findEventByRangeDate(LocalDateTime start, LocalDateTime end) {
+        return eventRepository.findAllEventByRangeDate(start, end);
     }
 }
