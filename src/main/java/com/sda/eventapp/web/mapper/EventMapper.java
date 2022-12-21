@@ -1,6 +1,6 @@
 package com.sda.eventapp.web.mapper;
 
-import com.sda.eventapp.dto.EventWithBasicData;
+import com.sda.eventapp.web.dto.EventWithBasicData;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 
@@ -11,6 +11,7 @@ public class EventMapper {
         return events.stream()
                 .map(event -> EventWithBasicData
                         .builder()
+                        .id(event.getId())
                         .title(event.getTitle())
                         .description(event.getDescription())
                         .startingDateTime(event.getStartingDateTime())
