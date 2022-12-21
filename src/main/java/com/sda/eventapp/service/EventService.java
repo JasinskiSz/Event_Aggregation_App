@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -69,6 +70,14 @@ public class EventService {
         else {
             return eventRepository.findAllOngoingAndFutureEvents();
         }
+    }
+
+    public List<Event> findAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    public List<Event> findEventByDateRange(LocalDateTime start, LocalDateTime end) {
+        return eventRepository.findAllEventByDateRange(start, end);
     }
 
     public List<Event> findAllByTitleWithFilters(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
