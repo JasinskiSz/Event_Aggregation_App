@@ -1,6 +1,6 @@
-package com.sda.eventapp.web.mapper;
+package com.sda.eventapp.mapper;
 
-import com.sda.eventapp.web.dto.EventWithBasicData;
+import com.sda.eventapp.dto.EventWithBasicData;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 
