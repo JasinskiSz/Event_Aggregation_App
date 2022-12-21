@@ -1,4 +1,4 @@
-package com.sda.eventapp.web.mapper;
+package com.sda.eventapp.mapper;
 
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.web.mvc.form.CreateUserForm;

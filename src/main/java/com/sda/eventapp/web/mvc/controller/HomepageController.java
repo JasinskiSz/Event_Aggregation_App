@@ -1,13 +1,12 @@
 package com.sda.eventapp.web.mvc.controller;
 
+import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller

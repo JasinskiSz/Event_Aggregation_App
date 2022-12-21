@@ -1,4 +1,4 @@
-package com.sda.eventapp.web.dto;
+package com.sda.eventapp.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class EventWithBasicData {
-
     private long id;
     private String title;
     private String description;
