@@ -2,14 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create user</title>
+    <title>Update event</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
 
 </head>
 <body>
 <div class="container">
-    <form th:object="${event}" th:action="@{/event/create}" method="post">
+    <form th:object="${event}" th:action="@{/event/update}" method="post">
+        <input type="hidden" th:field="*{id}"/>
         <div class="mb-3">
             <label for="Title" class="form-label">Title:</label>
             <input id="Title" class="form-control" type="text" th:field="*{title}"/>
@@ -33,10 +34,10 @@
             <input id="startingDateTime" type="datetime-local" class="form-control" th:field="*{startingDateTime}"
                    required/>
         </div>
-
         <div class="mb-3">
             <label for="endingDateTime" class="form-label">End Date Event:</label>
-            <input id="endingDateTime" type="datetime-local" class="form-control" th:field="*{endingDateTime}" required/>
+            <input id="endingDateTime" type="datetime-local" class="form-control" th:field="*{endingDateTime}"
+                   required/>
         </div>
         <div>
             <input type="submit" class="btn btn-primary" value="Send">

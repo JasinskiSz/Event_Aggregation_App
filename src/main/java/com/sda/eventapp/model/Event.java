@@ -2,6 +2,7 @@ package com.sda.eventapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -31,29 +32,18 @@ public class Event {
     private User owner;
 
     @Column(name = "starting_date_time")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startingDateTime;
 
     @Column(name = "ending_date_time")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endingDateTime;
 
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
-    //todo: OneToMany?
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<Comment> comments;
-    /*@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "events_comments",
-            // TODO: check if there is need to set property nullable = false;
-            joinColumns = {
-                    @JoinColumn(name = "event_id", referencedColumnName = "id")},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "comment_id", referencedColumnName = "id")})
-    private Set<Comment> comments = new HashSet<>();*/
-
-
-
-
 
     @Override
     public boolean equals(Object o) {
@@ -67,7 +57,4 @@ public class Event {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-
-//todo: optional: starting_time, ending_time, enum ONLINE/INPLACE, capacity, venueId
 }
