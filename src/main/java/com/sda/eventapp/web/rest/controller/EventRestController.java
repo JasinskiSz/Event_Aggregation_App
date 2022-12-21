@@ -1,7 +1,7 @@
-package com.sda.eventapp.web.rest;
+package com.sda.eventapp.web.rest.controller;
 
+import com.sda.eventapp.dto.EventWithBasicData;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.dto.EventWithBasicData;
 import com.sda.eventapp.web.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
