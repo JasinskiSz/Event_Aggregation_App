@@ -1,7 +1,6 @@
 package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
@@ -22,13 +21,9 @@ public class HomepageController {
                                @Param("ongoingEventsFilter") boolean ongoingEventsFilter,
                                @Param("pastEventsFilter") boolean pastEventsFilter) {
         map.addAttribute("title", title);
-        if (title != null && !title.equals("")) {
-            map.addAttribute("events", EventMapper.toWebpage(eventService.findAllByTitleWithFilters(
-                    title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter)));
-        } else {
-            map.addAttribute("events", EventMapper.toWebpage(eventService.findAllWithFilters(
-                    futureEventsFilter, ongoingEventsFilter, pastEventsFilter)));
-        }
+        map.addAttribute("events", eventService.findAllEventViews(title, futureEventsFilter,
+                ongoingEventsFilter, pastEventsFilter));
+
         return "homepage";
     }
 }

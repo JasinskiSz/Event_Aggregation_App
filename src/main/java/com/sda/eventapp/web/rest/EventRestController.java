@@ -1,8 +1,7 @@
 package com.sda.eventapp.web.rest;
 
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.dto.EventWithBasicData;
-import com.sda.eventapp.web.mapper.EventMapper;
+import com.sda.eventapp.web.dto.EventView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,18 +14,18 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("event")
+@RequestMapping("/event")
 @RequiredArgsConstructor
 public class EventRestController {
     private final EventService eventService;
 
-    @GetMapping("all")
-    public List<EventWithBasicData> getEvents() {
-        return EventMapper.toWebpage(eventService.findAllEvents());
+    @GetMapping("/all")
+    public List<EventView> getEventViews() {
+        return eventService.findAllEventViews();
     }
 
-    @GetMapping("date")
-    public List<EventWithBasicData> getEventsByDateRange(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
-        return EventMapper.toWebpage(eventService.findEventByDateRange(start, end));
+    @GetMapping("/date")
+    public List<EventView> getEventViewsByDateRange(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
+        return eventService.findEventViewsByDateRange(start, end);
     }
 }
