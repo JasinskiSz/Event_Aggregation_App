@@ -1,4 +1,4 @@
-package com.sda.eventapp.web.dto;
+package com.sda.eventapp.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class CommentWithBasicData {
-
     private String text;
-
     private LocalDateTime writingDate;
 }
