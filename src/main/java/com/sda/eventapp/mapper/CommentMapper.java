@@ -28,7 +28,7 @@ public class CommentMapper {
                 .text(form.getText())
                 .writingDate(LocalDateTime.now())
                 .user(User.builder() // TODO: Here will be user commenting.
-                        .username("ania")
+                        .username("PLACEHOLDER")
                         .build())
                 .event(event)
                 .build();
