@@ -40,9 +40,10 @@ public class EventController {
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, @RequestParam MultipartFile img) {
         try {
+            String folderForNewDirectory = "src/main/resources/static/images/";
             String folder = "/src/main/resources/static/images/";
             //String folderToDatabase = "/images/";
-            File directory = new File(folder);
+            File directory = new File(folderForNewDirectory);
             if (!directory.exists()) {
                 directory.mkdirs();
             }

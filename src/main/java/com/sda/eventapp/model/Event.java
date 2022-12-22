@@ -45,8 +45,6 @@ public class Event {
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
-    private Set<Comment> comments = new HashSet<>();*/
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="image_id",referencedColumnName = "id")
     private Image image;

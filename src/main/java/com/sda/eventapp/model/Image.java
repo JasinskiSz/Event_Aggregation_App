@@ -15,9 +15,6 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /*@Lob
-    private byte[] content;*/
-
     private String fileName;
 
     private String path;

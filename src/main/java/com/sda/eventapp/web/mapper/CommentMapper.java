@@ -3,12 +3,9 @@ package com.sda.eventapp.web.mapper;
 import com.sda.eventapp.model.Comment;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.dto.CommentWithBasicData;
+import com.sda.eventapp.dto.CommentWithBasicData;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;

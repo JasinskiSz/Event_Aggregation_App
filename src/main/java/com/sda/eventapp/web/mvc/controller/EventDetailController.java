@@ -1,4 +1,4 @@
-package com.sda.eventapp.web.mvc;
+package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.service.CommentService;
 import com.sda.eventapp.service.EventService;

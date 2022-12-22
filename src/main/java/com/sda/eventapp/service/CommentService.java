@@ -21,11 +21,6 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-
-    public List<Comment> findAll() {
-        return StreamSupport.stream(commentRepository.findAll().spliterator(), false).collect(Collectors.toList());
-    }
-
     public List<Comment> findByEventId(Long id) {
         return commentRepository.findAllByEvent_IdOrderByWritingDateDesc(id);
     }
