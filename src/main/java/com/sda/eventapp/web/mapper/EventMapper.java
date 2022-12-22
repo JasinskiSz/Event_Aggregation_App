@@ -19,7 +19,7 @@ public class EventMapper {
                 .toList();
     }
 
-    public static Event toEntity(CreateEventForm form) {
+    public Event to(CreateEventForm form) {
         return Event.builder()
                 .title(form.getTitle())
                 .description(form.getDescription())

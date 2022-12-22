@@ -22,8 +22,8 @@ public class EventService {
     private final EventRepository repository;
     private final EventMapper mapper;
 
-    public Event save(Event event) {
-        return repository.save(event);
+    public Event save(CreateEventForm form) {
+        return repository.save(mapper.to(form));
     }
 
     public Event findById(Long id) {

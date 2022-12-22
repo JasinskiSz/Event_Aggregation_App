@@ -4,7 +4,7 @@ import com.sda.eventapp.model.User;
 import com.sda.eventapp.web.mvc.form.CreateUserForm;
 
 public class UserMapper {
-    public static User toEntity(CreateUserForm form) {
+    public User to(CreateUserForm form) {
         return User.builder()
                 .username(form.getUsername())
                 .password(form.getPassword())
