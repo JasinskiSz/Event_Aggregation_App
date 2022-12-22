@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-    <form th:object="${event}" th:action="@{/create/event}" method="post" enctype="multipart/form-data">
+    <form th:object="${event}" th:action="@{/event/create}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="Title" class="form-label">Title:</label>
             <input id="Title" class="form-control" type="text" th:field="*{title}"/>
@@ -29,14 +29,14 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="startDateEvent" class="form-label">Start Date Event:</label>
-            <input id="startDateEvent" type="datetime-local" class="form-control" th:field="*{startEventDate}"
+            <label for="startingDateTime" class="form-label">Start Date Event:</label>
+            <input id="startingDateTime" type="datetime-local" class="form-control" th:field="*{startingDateTime}"
                    required/>
         </div>
 
         <div class="mb-3">
-            <label for="endDateEvent" class="form-label">End Date Event:</label>
-            <input id="endDateEvent" type="datetime-local" class="form-control" th:field="*{endEventDate}" required/>
+            <label for="endingDateTime" class="form-label">End Date Event:</label>
+            <input id="endingDateTime" type="datetime-local" class="form-control" th:field="*{endingDateTime}" required/>
         </div>
         <div>
             <input type="submit" class="btn btn-primary" value="Send">

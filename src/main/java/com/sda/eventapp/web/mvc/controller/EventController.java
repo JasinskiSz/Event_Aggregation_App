@@ -1,10 +1,10 @@
-package com.sda.eventapp.web.mvc;
+package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.web.mapper.EventMapper;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
-import com.sda.eventapp.web.mvc.mappers.EventMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +25,19 @@ import java.nio.file.StandardCopyOption;
 
 @Slf4j
 @Controller
-@RequestMapping({"/create/event"})
 @RequiredArgsConstructor
+@RequestMapping({"/event"})
 public class EventController {
     private final EventService eventService;
 
-    @GetMapping
+    @GetMapping("/create")
     public String create(ModelMap model) {
         model.addAttribute("event", new CreateEventForm());
         return "create-event";
     }
 
-    @PostMapping
+
+    @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, @RequestParam MultipartFile img) {
         try {
             String folder = "/src/main/resources/static/images/";
@@ -87,5 +88,19 @@ public class EventController {
         return "index";
     }
 
+    @GetMapping("/update/{id}")
+    public String update(ModelMap model, @PathVariable Long id) {
+        model.addAttribute("event", new CreateEventForm());
+        model.addAttribute("event", eventService.findById(id));
+        return "update-event";
+    }
 
+    @PostMapping("/update")
+    public String handleUpdate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
+        if (errors.hasErrors()) {
+            return "update-event";
+        }
+        eventService.update(form);
+        return "index";
+    }
 }

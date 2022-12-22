@@ -14,6 +14,5 @@ public class EventMapper {
                 .endingDateTime(form.getEndEventDate())
                 .image(img)
                 .build();
-        //return new Event(form.getTitle(), form.getDescription(), form.getStartEventDate(), form.getEndEventDate());
     }
 }
