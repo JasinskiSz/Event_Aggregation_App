@@ -30,7 +30,7 @@ public class User {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Event> ownedEvents;
 
-    //todo nullable false
+    //todo: trello reminder #001
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_events",
             joinColumns = {

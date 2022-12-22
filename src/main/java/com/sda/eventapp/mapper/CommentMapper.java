@@ -26,7 +26,7 @@ public class CommentMapper {
 
     }
 
-    //todo: needed to change toEntity method to non static because I need to inject beans
+
     public Comment toEntity(CreateCommentForm form, long eventId) {
         return Comment.builder()
                 .text(form.getText())
