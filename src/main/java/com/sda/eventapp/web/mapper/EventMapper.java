@@ -1,7 +1,8 @@
 package com.sda.eventapp.web.mapper;
 
+import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
-import com.sda.eventapp.web.dto.EventView;
+import com.sda.eventapp.web.mvc.form.CreateEventForm;
 
 import java.util.List;
 
@@ -16,5 +17,14 @@ public class EventMapper {
                         .endingDateTime(event.getEndingDateTime())
                         .build())
                 .toList();
+    }
+
+    public static Event toEntity(CreateEventForm form) {
+        return Event.builder()
+                .title(form.getTitle())
+                .description(form.getDescription())
+                .startingDateTime(form.getStartingDateTime())
+                .endingDateTime(form.getEndingDateTime())
+                .build();
     }
 }

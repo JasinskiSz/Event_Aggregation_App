@@ -1,8 +1,8 @@
 package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.web.mapper.EventMapper;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
-import com.sda.eventapp.web.mvc.mapper.EventMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

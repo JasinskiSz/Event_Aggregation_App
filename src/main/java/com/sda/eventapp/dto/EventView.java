@@ -1,4 +1,4 @@
-package com.sda.eventapp.web.dto;
+package com.sda.eventapp.dto;
 
 import lombok.Builder;
 import lombok.Getter;

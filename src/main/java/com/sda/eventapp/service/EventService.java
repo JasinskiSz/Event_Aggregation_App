@@ -1,8 +1,8 @@
 package com.sda.eventapp.service;
 
+import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.repository.EventRepository;
-import com.sda.eventapp.web.dto.EventView;
 import com.sda.eventapp.web.mapper.EventMapper;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import lombok.RequiredArgsConstructor;
