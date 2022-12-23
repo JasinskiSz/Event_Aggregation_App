@@ -1,9 +1,9 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.EventView;
+import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.repository.EventRepository;
-import com.sda.eventapp.web.mapper.EventMapper;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class EventService {
 
