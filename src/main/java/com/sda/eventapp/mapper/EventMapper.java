@@ -1,13 +1,15 @@
-package com.sda.eventapp.web.mapper;
+package com.sda.eventapp.mapper;
 
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class EventMapper {
-    public List<EventView> from(List<Event> events) {
+    public List<EventView> toEventViewList(List<Event> events) {
         return events.stream()
                 .map(event -> EventView
                         .builder()
@@ -19,7 +21,7 @@ public class EventMapper {
                 .toList();
     }
 
-    public Event to(CreateEventForm form) {
+    public Event toEvent(CreateEventForm form) {
         return Event.builder()
                 .title(form.getTitle())
                 .description(form.getDescription())

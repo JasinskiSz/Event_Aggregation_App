@@ -1,9 +1,9 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.EventView;
+import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.repository.EventRepository;
-import com.sda.eventapp.web.mapper.EventMapper;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,16 +14,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class EventService {
-
     private final EventRepository repository;
     private final EventMapper mapper;
 
     public Event save(CreateEventForm form) {
-        return repository.save(mapper.to(form));
+        return repository.save(mapper.toEvent(form));
     }
 
     public Event findById(Long id) {
@@ -44,11 +43,11 @@ public class EventService {
     }
 
     public List<EventView> findAllEventViews() {
-        return mapper.from(repository.findAll());
+        return mapper.toEventViewList(repository.findAll());
     }
 
     public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return mapper.from(repository.findAllEventByDateRange(start, end));
+        return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
     }
 
     private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
@@ -116,9 +115,9 @@ public class EventService {
 
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         if (title == null || title.equals("") || title.isBlank()) {
-            return mapper.from(findAllWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
+            return mapper.toEventViewList(findAllWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
         } else {
-            return mapper.from(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
+            return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
         }
     }
 }
