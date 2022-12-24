@@ -1,6 +1,5 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import jakarta.validation.Valid;
