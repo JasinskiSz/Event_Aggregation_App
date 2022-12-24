@@ -33,7 +33,7 @@ public class UserController {
         if (errors.hasErrors()) {
             return "create-user";
         }
-        userService.save(UserMapper.toEntity(form));
+        userService.save(form);
         return "index";
     }
 

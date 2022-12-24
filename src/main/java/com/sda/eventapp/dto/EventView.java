@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class EventWithBasicData {
+public class EventView {
     private long id;
     private String title;
     private String description;

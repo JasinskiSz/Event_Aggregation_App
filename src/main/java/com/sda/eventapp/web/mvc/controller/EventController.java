@@ -29,7 +29,7 @@ public class EventController {
         if (errors.hasErrors()) {
             return "create-event";
         }
-        eventService.save(EventMapper.toEntity(form));
+        eventService.save(form);
         return "index";
     }
 

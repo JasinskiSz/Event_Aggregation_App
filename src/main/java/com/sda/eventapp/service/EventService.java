@@ -1,6 +1,8 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.CommentView;
+import com.sda.eventapp.dto.EventView;
+import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
@@ -20,14 +22,19 @@ import java.util.stream.StreamSupport;
 public class EventService {
     private final EventRepository repository;
     private final CommentService commentService;
+    private final EventMapper mapper;
 
-    public Event save(Event event) {
-        return repository.save(event);
+    public Event save(CreateEventForm form) {
+        return repository.save(mapper.toEvent(form));
     }
 
     public Event findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+    }
+
+    public EventView findEventViewById(Long id) {
+        return mapper.toEventView(findById(id));
     }
 
     public Event update(CreateEventForm form) {
@@ -42,7 +49,15 @@ public class EventService {
         return repository.save(event);
     }
 
-    public List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
+    public List<EventView> findAllEventViews() {
+        return mapper.toEventViewList(repository.findAll());
+    }
+
+    public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
+        return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
+    }
+
+    private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
         if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
             return repository.findAllFutureEvents();
@@ -74,15 +89,7 @@ public class EventService {
         }
     }
 
-    public List<Event> findAllEvents() {
-        return repository.findAll();
-    }
-
-    public List<Event> findEventByDateRange(LocalDateTime start, LocalDateTime end) {
-        return repository.findAllEventByDateRange(start, end);
-    }
-
-    public List<Event> findAllByTitleWithFilters(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
+    private List<Event> findAllWithFilters(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
         if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
             return repository.findAllFutureEventsByTitle(title);
@@ -110,6 +117,14 @@ public class EventService {
         //default - ongoing + future
         else {
             return repository.findAllOngoingAndFutureEventsByTitle(title);
+        }
+    }
+
+    public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
+        if (title == null || title.equals("") || title.isBlank()) {
+            return mapper.toEventViewList(findAllWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
+        } else {
+            return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
         }
     }
 

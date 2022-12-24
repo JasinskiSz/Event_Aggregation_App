@@ -1,6 +1,5 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.Valid;
@@ -18,7 +17,7 @@ public class EventDetailController {
 
     @GetMapping("/{id}")
     public String getDetailEventView(ModelMap map, @PathVariable("id") Long id){
-        map.addAttribute("event", EventMapper.toWebpage(eventService.findById(id)));
+        map.addAttribute("event", eventService.findEventViewById(id));
         map.addAttribute("comment", new CreateCommentForm());
         map.addAttribute("comments", eventService.findCommentViewsByEventId(id));
         return "event-detail-view";
