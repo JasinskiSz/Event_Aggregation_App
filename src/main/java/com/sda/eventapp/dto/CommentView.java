@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class CommentWithBasicData {
+public class CommentView {
     private String text;
     private LocalDateTime writingDate;
 }
