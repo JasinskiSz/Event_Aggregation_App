@@ -41,14 +41,8 @@ public class Event {
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST) //
-    @JoinTable(name = "events_comments",
-            // TODO: check if there is need to set property nullable = false;
-            joinColumns = {
-                    @JoinColumn(name = "event_id", referencedColumnName = "id")},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "comment_id", referencedColumnName = "id")})
-    private Set<Comment> comments = new HashSet<>();
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private Set<Comment> comments;
 
     @Override
     public boolean equals(Object o) {

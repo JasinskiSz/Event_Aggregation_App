@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class EventView {
+    private long id;
     private String title;
     private String description;
     private LocalDateTime startingDateTime;

@@ -13,12 +13,23 @@ public class EventMapper {
         return events.stream()
                 .map(event -> EventView
                         .builder()
+                        .id(event.getId())
                         .title(event.getTitle())
                         .description(event.getDescription())
                         .startingDateTime(event.getStartingDateTime())
                         .endingDateTime(event.getEndingDateTime())
                         .build())
                 .toList();
+    }
+
+    public EventView toEventView(Event event) {
+        return EventView.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .description(event.getDescription())
+                .startingDateTime(event.getStartingDateTime())
+                .endingDateTime(event.getEndingDateTime())
+                .build();
     }
 
     public Event toEvent(CreateEventForm form) {

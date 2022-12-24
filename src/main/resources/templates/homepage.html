@@ -64,13 +64,17 @@
             <thead>
                 <tr>
                     <th>Title</th>
+                    <th>Description</th>
                     <th>Start time</th>
                     <th>End time</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="event : ${events}">
-                    <td th:text="${event.title}"></td>
+                    <td>
+                        <a th:href="@{detail-view/__${event.id}__}" th:text="${event.title}">
+                        </a>
+                    </td>
                     <td th:text="${#strings.abbreviate(event.description,50)}" ></td>
                     <td th:text="${event.startingDateTime}"></td>
                     <td th:text="${event.endingDateTime}"></td>

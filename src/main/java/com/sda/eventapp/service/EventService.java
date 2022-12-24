@@ -1,9 +1,11 @@
 package com.sda.eventapp.service;
 
+import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.repository.EventRepository;
+import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository repository;
+    private final CommentService commentService;
     private final EventMapper mapper;
 
     public Event save(CreateEventForm form) {
@@ -28,6 +31,10 @@ public class EventService {
     public Event findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+    }
+
+    public EventView findEventViewById(Long id) {
+        return mapper.toEventView(findById(id));
     }
 
     public Event update(CreateEventForm form) {
@@ -119,5 +126,13 @@ public class EventService {
         } else {
             return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
         }
+    }
+
+    public List<CommentView> findCommentViewsByEventId(Long id) {
+        return commentService.findCommentViewsByEventId(id);
+    }
+
+    public void saveComment(CreateCommentForm form, Long id) {
+        commentService.save(form, this.findById(id));
     }
 }
