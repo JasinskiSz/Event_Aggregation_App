@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class CommentMapper {
-    public List<CommentView> toWebpage(List<Comment> comments) {
+    public List<CommentView> toCommentViewList(List<Comment> comments) {
         return comments.stream()
                 .map(comment -> CommentView.builder()
                         .text(comment.getText())
