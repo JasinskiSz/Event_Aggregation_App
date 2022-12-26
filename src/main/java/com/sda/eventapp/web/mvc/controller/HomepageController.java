@@ -24,6 +24,7 @@ public class HomepageController {
         map.addAttribute("events", eventService.findAllEventViews(title, futureEventsFilter,
                 ongoingEventsFilter, pastEventsFilter));
 
+
         return "homepage";
     }
 }

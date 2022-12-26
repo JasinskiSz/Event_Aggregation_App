@@ -34,7 +34,7 @@ public class EventMapper {
                 .build();
     }
 
-    public Event toEvent(CreateEventForm form) {
+    public Event toEvent(CreateEventForm form, Image img) {
         return Event.builder()
                 .title(form.getTitle())
                 .description(form.getDescription())

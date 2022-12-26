@@ -4,6 +4,7 @@ import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
+import com.sda.eventapp.model.Image;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
@@ -24,8 +25,8 @@ public class EventService {
     private final CommentService commentService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form) {
-        return repository.save(mapper.toEvent(form));
+    public Event save(CreateEventForm form, Image image) {
+        return repository.save(mapper.toEvent(form, image));
     }
 
     public Event findById(Long id) {
@@ -122,9 +123,10 @@ public class EventService {
 
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         if (title == null || title.equals("") || title.isBlank()) {
-            return mapper.toEventViewList(findAllWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
-        } else {
             return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
+        } else {
+            return mapper.toEventViewList(findAllWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
+
         }
     }
 
