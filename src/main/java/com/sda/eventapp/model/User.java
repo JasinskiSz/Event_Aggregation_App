@@ -2,7 +2,11 @@ package com.sda.eventapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,7 +17,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -30,7 +34,7 @@ public class User {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Event> ownedEvents;
 
-    //todo nullable false
+    //todo: trello reminder #001
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_events",
             joinColumns = {
@@ -52,5 +56,30 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new HashSet<>(Set.of(new SimpleGrantedAuthority("ROLE_USER")));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

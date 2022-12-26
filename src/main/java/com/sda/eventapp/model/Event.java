@@ -41,17 +41,12 @@ public class Event {
     @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
-
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="image_id",referencedColumnName = "id")
     private Image image;
-
-
-
-
 
     @Override
     public boolean equals(Object o) {

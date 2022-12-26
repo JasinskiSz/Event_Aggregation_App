@@ -1,7 +1,6 @@
 package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.service.UserService;
-import com.sda.eventapp.web.mapper.UserMapper;
 import com.sda.eventapp.web.mvc.form.CreateUserForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,23 +16,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/create/user")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
-    @GetMapping
-    public String create(ModelMap map) {
+    @GetMapping("/register")
+    public String register(ModelMap map) {
         map.addAttribute("user", new CreateUserForm());
         return "create-user";
     }
 
-    @PostMapping
-    public String handleCreate(@ModelAttribute("user") @Valid CreateUserForm form, Errors errors) {
+    @PostMapping("/register")
+    public String handleRegister(@ModelAttribute("user") @Valid CreateUserForm form, Errors errors) {
         log.info("Creating user from form: {}", form);
         if (errors.hasErrors()) {
             return "create-user";
         }
-        userService.save(UserMapper.toEntity(form));
+        userService.save(form);
         return "index";
+    }
+
+    @GetMapping("/profile")
+    public String profile() {
+        return "profile";
     }
 }

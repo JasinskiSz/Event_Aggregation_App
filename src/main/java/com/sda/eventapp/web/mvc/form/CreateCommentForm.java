@@ -10,7 +10,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateCommentForm {
-
     @Size(max = 500)
     @NotBlank
     private String text;

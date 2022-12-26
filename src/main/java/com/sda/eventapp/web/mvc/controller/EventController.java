@@ -3,7 +3,6 @@ package com.sda.eventapp.web.mvc.controller;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.mapper.EventMapper;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,6 @@ public class EventController {
         model.addAttribute("event", new CreateEventForm());
         return "create-event";
     }
-
 
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, @RequestParam MultipartFile img) {
@@ -75,7 +73,7 @@ public class EventController {
                 return "create-event";
             }
 
-            Event addedEvent = eventService.save(EventMapper.toEntity(form, image));
+            Event addedEvent = eventService.save(form, image);
 
             //todo: managing saving file and creating directory
 
