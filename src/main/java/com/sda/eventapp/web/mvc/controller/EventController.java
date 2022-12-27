@@ -3,12 +3,14 @@ package com.sda.eventapp.web.mvc.controller;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.service.ImageService;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import jakarta.servlet.ServletException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -36,6 +38,7 @@ import java.nio.file.StandardCopyOption;
 @RequestMapping({"/event"})
 public class EventController {
     private final EventService eventService;
+    private final ImageService imageService;
 
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
@@ -72,8 +75,6 @@ public class EventController {
             return "redirect:/event/create";
         }
         try {
-            String folderForNewDirectory = "src/main/resources/static/images/";
-            String folder = "/src/main/resources/static/images/";
             File directory = new File(folderForNewDirectory);
             if (!directory.exists()) {
                 directory.mkdirs();
@@ -86,12 +87,19 @@ public class EventController {
                     .path(absolutePath + folder)
                     .build();
             byte[] bytes = img.getBytes();
-            Path fullPath = Paths.get(image.getPath() + img.getOriginalFilename());
-            Files.write(fullPath, bytes);
+            String originalFilename = img.getOriginalFilename();
 
-            if (errors.hasErrors()) {
-                return "create-event";
+
+            while (imageService.checkImageByFileName(originalFilename)) {
+                StringBuilder newNameBuilder = new StringBuilder();
+                newNameBuilder.append(RandomStringUtils.random(10, true, false));
+                newNameBuilder.append(originalFilename);
+                originalFilename = newNameBuilder.toString();
+                image.setFileName(originalFilename);
+
             }
+            Path fullPath = Paths.get(image.getPath() + originalFilename);
+            Files.write(fullPath, bytes);
 
             eventService.save(form, image);
 
