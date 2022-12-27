@@ -10,8 +10,17 @@ import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +33,8 @@ public class EventService {
     private final EventRepository repository;
     private final CommentService commentService;
     private final EventMapper mapper;
+
+    private final ImageService imageService;
 
     public Event save(CreateEventForm form, Image image) {
         return repository.save(mapper.toEvent(form, image));
@@ -137,4 +148,64 @@ public class EventService {
     public void saveComment(CreateCommentForm form, Long id) {
         commentService.save(form, this.findById(id));
     }
+
+    private static String prepareImageFilenameIfAlreadyExists(Image image, String originalFilename) {
+        StringBuilder newNameBuilder = new StringBuilder();
+        newNameBuilder.append(RandomStringUtils.random(10, true, false));
+        newNameBuilder.append(originalFilename);
+        originalFilename = newNameBuilder.toString();
+        image.setFileName(originalFilename);
+        return originalFilename;
+    }
+
+    public String createEventWithoutPhoto(CreateEventForm form) {
+        String folder = "/src/main/resources/static/images/";
+        Path currentPath = Paths.get(""); //on Windows Paths.get(".")
+        Path absolutePath = currentPath.toAbsolutePath();
+        Image image = imageService.buildDefaultImage(folder, absolutePath);
+        save(form, image);
+        return "index";
+    }
+
+    public String createEventWithPhoto(CreateEventForm form, MultipartFile img, RedirectAttributes ra) {
+        String folderForNewDirectory = "src/main/resources/static/images/";
+        String folder = "/src/main/resources/static/images/";
+        String extension = FilenameUtils.getExtension(img.getOriginalFilename());
+        if (!(extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png"))) {
+            ra.addFlashAttribute("wrongExtension", "You must upload jpg or png file");
+            return "redirect:/event/create";
+        }
+        try {
+            createDirectoryIfNotExist(folderForNewDirectory);
+            saveEvent(form, img, folder);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "index";
+    }
+
+    private void saveEvent(CreateEventForm form, MultipartFile img, String folder) throws IOException {
+        Path currentPath = Paths.get(""); //on Windows Paths.get(".")
+        Path absolutePath = currentPath.toAbsolutePath();
+        byte[] bytes = img.getBytes();
+        String originalFilename = img.getOriginalFilename();
+        Image image = imageService.buildImage(img, folder, absolutePath);
+
+        while (imageService.checkImageByFileName(originalFilename)) {
+            originalFilename = prepareImageFilenameIfAlreadyExists(image, originalFilename);
+        }
+        Path fullPath = Paths.get(image.getPath() + originalFilename);
+        Files.write(fullPath, bytes);
+
+        save(form, image);
+    }
+
+    private void createDirectoryIfNotExist(String folderForNewDirectory) {
+        File directory = new File(folderForNewDirectory);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+    }
+
+
 }
