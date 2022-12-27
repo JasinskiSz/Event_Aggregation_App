@@ -49,6 +49,23 @@ public class EventController {
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, @RequestParam MultipartFile img, RedirectAttributes ra) {
 
+        if (errors.hasErrors()) {
+            return "create-event";
+        }
+        if (img.getOriginalFilename().isBlank()) {
+            String folder = "/src/main/resources/static/images/";
+            Path currentPath = Paths.get(""); //on Windows Paths.get(".")
+            Path absolutePath = currentPath.toAbsolutePath();
+            Image image = Image.builder()
+                    .fileName("default-event-image.jpeg")
+                    .path(absolutePath + folder)
+                    .build();
+            eventService.save(form, image);
+            return "index";
+        }
+
+        String folderForNewDirectory = "src/main/resources/static/images/";
+        String folder = "/src/main/resources/static/images/";
         String extension = FilenameUtils.getExtension(img.getOriginalFilename());
         if (!(extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png"))) {
             ra.addFlashAttribute("wrongExtension", "You must upload jpg or png file");
