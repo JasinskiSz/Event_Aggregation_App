@@ -11,6 +11,11 @@
 
 </head>
 <body>
+
+<div class="text-danger" th:text="${uploadError}">
+</div>
+<div class="text-danger" th:text="${wrongExtension}">
+</div>
 <div class="container">
     <form th:object="${event}" th:action="@{/event/create}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
