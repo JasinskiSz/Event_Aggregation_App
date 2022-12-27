@@ -57,12 +57,10 @@ public class EventController {
         try {
             String folderForNewDirectory = "src/main/resources/static/images/";
             String folder = "/src/main/resources/static/images/";
-            //String folderToDatabase = "/images/";
             File directory = new File(folderForNewDirectory);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
-
 
             Path currentPath = Paths.get(""); //on Windows Paths.get(".")
             Path absolutePath = currentPath.toAbsolutePath();
@@ -72,32 +70,14 @@ public class EventController {
                     .build();
             byte[] bytes = img.getBytes();
             Path fullPath = Paths.get(image.getPath() + img.getOriginalFilename());
-            //Path databasePath = Paths.get(folderToDatabase + img.getOriginalFilename());
             Files.write(fullPath, bytes);
-
-
-            /*Path fullPath = Paths.get(folder + img.getOriginalFilename());
-            Path databasePath = Paths.get(folderToDatabase + img.getOriginalFilename());
-            Files.write(fullPath, bytes);*/
-
-/*
-            Image image = Image.builder()
-                    .fileName(img.getOriginalFilename())
-                    .path(String.valueOf(databasePath)) //problem?
-                    .build();
-*/
 
             if (errors.hasErrors()) {
                 return "create-event";
             }
 
-            Event addedEvent = eventService.save(form, image);
+            eventService.save(form, image);
 
-            //todo: managing saving file and creating directory
-
-            if (addedEvent != null) {
-
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
