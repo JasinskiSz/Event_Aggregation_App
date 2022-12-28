@@ -1,6 +1,7 @@
-package com.sda.eventapp.web.mvc.form.validation.date;
+package com.sda.eventapp.web.mvc.form.validation.validator;
 
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
+import com.sda.eventapp.web.mvc.form.validation.constraint.DifferentDates;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

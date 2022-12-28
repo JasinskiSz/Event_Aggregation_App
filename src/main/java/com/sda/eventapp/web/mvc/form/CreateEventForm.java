@@ -1,6 +1,6 @@
 package com.sda.eventapp.web.mvc.form;
 
-import com.sda.eventapp.web.mvc.form.validation.date.DifferentDates;
+import com.sda.eventapp.web.mvc.form.validation.constraint.DifferentDates;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

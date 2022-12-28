@@ -1,5 +1,6 @@
-package com.sda.eventapp.web.mvc.form.validation.username;
+package com.sda.eventapp.web.mvc.form.validation.constraint;
 
+import com.sda.eventapp.web.mvc.form.validation.validator.UniqueEmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -10,9 +11,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {UniqueUsernameValidator.class})
-public @interface UniqueUsername {
-    String message() default "{com.sda.eventapp.web.mvc.form.validation.username.UniqueUsername.message}";
+@Constraint(validatedBy = {UniqueEmailValidator.class})
+public @interface UniqueEmail {
+    String message() default "{com.sda.eventapp.web.mvc.form.validation.constraints.UniqueEmail.message}";
 
     Class<?>[] groups() default {};
 

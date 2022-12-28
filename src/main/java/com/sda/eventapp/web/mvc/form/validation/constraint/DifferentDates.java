@@ -1,5 +1,6 @@
-package com.sda.eventapp.web.mvc.form.validation.password;
+package com.sda.eventapp.web.mvc.form.validation.constraint;
 
+import com.sda.eventapp.web.mvc.form.validation.validator.DifferentDatesValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -10,9 +11,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {EqualPasswordsValidator.class})
-public @interface EqualPasswords {
-    String message() default "{com.sda.eventapp.web.mvc.form.validation.password.EqualPasswords.message}";
+@Constraint(validatedBy = {DifferentDatesValidator.class})
+public @interface DifferentDates {
+    String message() default "{com.sda.eventapp.web.mvc.form.validation.constraints.DifferentDates.message}";
 
     Class<?>[] groups() default {};
 

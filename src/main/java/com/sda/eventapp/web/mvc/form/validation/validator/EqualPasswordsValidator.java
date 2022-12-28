@@ -1,6 +1,7 @@
-package com.sda.eventapp.web.mvc.form.validation.password;
+package com.sda.eventapp.web.mvc.form.validation.validator;
 
 import com.sda.eventapp.web.mvc.form.CreateUserForm;
+import com.sda.eventapp.web.mvc.form.validation.constraint.EqualPasswords;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

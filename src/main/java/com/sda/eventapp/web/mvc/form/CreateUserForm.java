@@ -1,8 +1,8 @@
 package com.sda.eventapp.web.mvc.form;
 
-import com.sda.eventapp.web.mvc.form.validation.email.UniqueEmail;
-import com.sda.eventapp.web.mvc.form.validation.password.EqualPasswords;
-import com.sda.eventapp.web.mvc.form.validation.username.UniqueUsername;
+import com.sda.eventapp.web.mvc.form.validation.constraint.EqualPasswords;
+import com.sda.eventapp.web.mvc.form.validation.constraint.UniqueEmail;
+import com.sda.eventapp.web.mvc.form.validation.constraint.UniqueUsername;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
