@@ -12,6 +12,7 @@ public class DifferentDatesValidator implements ConstraintValidator<DifferentDat
 
     @Override
     public boolean isValid(CreateEventForm form, ConstraintValidatorContext context) {
-        return form.getStartingDateTime().isBefore(form.getEndingDateTime());
+        return form.getStartingDateTime()
+                .isBefore(form.getEndingDateTime());
     }
 }

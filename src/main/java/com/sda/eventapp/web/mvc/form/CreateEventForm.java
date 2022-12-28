@@ -9,10 +9,10 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@ToString
 @Getter
 @Setter
-@DifferentDates(message = "[Incorrect date. Date START DATE EVENT must be before date END DATE EVENT.]")
+@ToString
+@DifferentDates(message = "Starting date must be before ending date of event")
 public class CreateEventForm {
     private Long id;
     @NotBlank(message = "Field title is required.")

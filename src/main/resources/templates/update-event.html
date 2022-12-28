@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Update event</title>
-    <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
-
 </head>
 <body>
 <div class="container">
     <form th:object="${event}" th:action="@{/event/update}" method="post">
         <input type="hidden" th:field="*{id}"/>
         <div class="mb-3">
-            <label for="Title" class="form-label">Title:</label>
-            <input id="Title" class="form-control" type="text" th:field="*{title}"/>
+            <label class="form-label" for="title">Title:</label>
+            <input class="form-control" id="title" th:field="*{title}" type="text"/>
             <div
                     th:if="${#fields.hasErrors('title')}"
                     th:text="${#fields.errors('title')}"
@@ -31,8 +29,8 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="startingDateTime" class="form-label">Start Date Event:</label>
-            <input id="startingDateTime" type="datetime-local" class="form-control" th:field="*{startingDateTime}"
+            <label class="form-label" for="starting-date-time">Start Date Event:</label>
+            <input class="form-control" id="starting-date-time" th:field="*{startingDateTime}" type="datetime-local"
                    required/>
             <div
                     th:if="${#fields.hasErrors('global')}"

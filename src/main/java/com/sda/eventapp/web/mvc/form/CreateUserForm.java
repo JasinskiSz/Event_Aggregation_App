@@ -13,10 +13,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@UniqueEmail(message = "[Email is already exists.]")
-@UniqueUsername(message = "[Username is already exists.]")
-@EqualPasswords(message = "[Passwords do NOT match]")
-
+@UniqueEmail(message = "Email is already taken")
+@UniqueUsername(message = "Username is already taken")
+@EqualPasswords(message = "Passwords do not match")
 public class CreateUserForm {
     @NotBlank(message = "Field username is required")
     @Size(max = 50, message = "Username must be shorter than 50 characters.")

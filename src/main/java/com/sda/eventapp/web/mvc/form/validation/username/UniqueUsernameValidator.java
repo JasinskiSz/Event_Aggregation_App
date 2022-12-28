@@ -18,6 +18,6 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
 
     @Override
     public boolean isValid(CreateUserForm form, ConstraintValidatorContext context) {
-        return !userService.existUsernameinDatabase(form.getUsername());
+        return !userService.existsByUsername(form.getUsername());
     }
 }

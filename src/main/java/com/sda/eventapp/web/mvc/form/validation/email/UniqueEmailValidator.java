@@ -2,7 +2,6 @@ package com.sda.eventapp.web.mvc.form.validation.email;
 
 import com.sda.eventapp.service.UserService;
 import com.sda.eventapp.web.mvc.form.CreateUserForm;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, Cr
 
     @Override
     public boolean isValid(CreateUserForm form, ConstraintValidatorContext context) {
-        return !userService.existEmailinDatabase(form.getEmail());
+        return !userService.existsByEmail(form.getEmail());
     }
 }

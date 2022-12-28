@@ -12,8 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {UniqueEmailValidator.class})
 public @interface UniqueEmail {
-
-    String message() default "";
+    String message() default "{com.sda.eventapp.web.mvc.form.validation.email.UniqueEmail.message}";
 
     Class<?>[] groups() default {};
 

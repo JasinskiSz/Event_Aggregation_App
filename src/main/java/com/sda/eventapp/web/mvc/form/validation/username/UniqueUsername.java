@@ -12,8 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {UniqueUsernameValidator.class})
 public @interface UniqueUsername {
-
-    String message() default "";
+    String message() default "{com.sda.eventapp.web.mvc.form.validation.username.UniqueUsername.message}";
 
     Class<?>[] groups() default {};
 

@@ -12,8 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {EqualPasswordsValidator.class})
 public @interface EqualPasswords {
-
-    String message() default "";
+    String message() default "{com.sda.eventapp.web.mvc.form.validation.password.EqualPasswords.message}";
 
     Class<?>[] groups() default {};
 

@@ -12,8 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {DifferentDatesValidator.class})
 public @interface DifferentDates {
-
-    String message() default "";
+    String message() default "{com.sda.eventapp.web.mvc.form.validation.date.DifferentDates.message}";
 
     Class<?>[] groups() default {};
 

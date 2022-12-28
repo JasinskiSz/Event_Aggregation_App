@@ -1,7 +1,6 @@
 package com.sda.eventapp.web.mvc.form.validation.password;
 
 import com.sda.eventapp.web.mvc.form.CreateUserForm;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +16,7 @@ public class EqualPasswordsValidator implements ConstraintValidator<EqualPasswor
 
     @Override
     public boolean isValid(CreateUserForm form, ConstraintValidatorContext context) {
-        return form.getPassword().equals(form.getConfirmPassword());
+        return form.getPassword()
+                .equals(form.getConfirmPassword());
     }
 }
