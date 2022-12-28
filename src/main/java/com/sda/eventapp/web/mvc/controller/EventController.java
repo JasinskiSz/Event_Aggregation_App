@@ -21,7 +21,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping({"/event"})
 public class EventController {
     private final EventService service;
-
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
@@ -47,7 +46,6 @@ public class EventController {
 
     @ExceptionHandler({MaxUploadSizeExceededException.class})
     public String handleImageUploadError(RedirectAttributes ra) {
-        System.out.println("Caught file upload error");
         ra.addFlashAttribute("uploadError", "You could not upload file bigger than " + maxFileSize);
         return "redirect:/event/create";
     }
