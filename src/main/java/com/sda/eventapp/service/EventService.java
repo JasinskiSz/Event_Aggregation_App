@@ -4,6 +4,7 @@ import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
+import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
@@ -132,7 +133,7 @@ public class EventService {
         return commentService.findCommentViewsByEventId(id);
     }
 
-    public void saveComment(CreateCommentForm form, Long id) {
-        commentService.save(form, this.findById(id));
+    public void saveComment(CreateCommentForm form, Long id, User loggedUser) {
+        commentService.save(form, this.findById(id), loggedUser);
     }
 }

@@ -4,6 +4,7 @@ import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.mapper.CommentMapper;
 import com.sda.eventapp.model.Comment;
 import com.sda.eventapp.model.Event;
+import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.CommentRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,9 @@ public class CommentService {
     private final CommentRepository repository;
     private final CommentMapper mapper;
 
-    public Comment save(CreateCommentForm form, Event event) {
-        return repository.save(mapper.toEntity(form, event));
+    public Comment save(CreateCommentForm form, Event event, User loggedUser) {
+
+        return repository.save(mapper.toEntity(form, event, loggedUser));
     }
 
     public List<CommentView> findCommentViewsByEventId(Long id) {
