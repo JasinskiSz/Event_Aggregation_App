@@ -21,6 +21,4 @@ public class Image {
 
     @OneToOne(mappedBy = "image")
     private Event event;
-
-
 }

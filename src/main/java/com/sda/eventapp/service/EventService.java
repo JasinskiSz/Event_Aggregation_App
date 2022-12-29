@@ -32,9 +32,8 @@ import java.util.stream.StreamSupport;
 public class EventService {
     private final EventRepository repository;
     private final CommentService commentService;
-    private final EventMapper mapper;
-
     private final ImageService imageService;
+    private final EventMapper mapper;
 
     public Event save(CreateEventForm form, Image image) {
         return repository.save(mapper.toEvent(form, image));
@@ -137,7 +136,6 @@ public class EventService {
             return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
         } else {
             return mapper.toEventViewList(findAllWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
-
         }
     }
 
@@ -206,6 +204,4 @@ public class EventService {
             directory.mkdirs();
         }
     }
-
-
 }

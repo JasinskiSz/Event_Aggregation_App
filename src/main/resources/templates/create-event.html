@@ -53,66 +53,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 offset-md-3 mt-4 ">
+                    <div class="mb-3">
+                        <input class="form-control" name="img" type="file">
+                    </div>
 
-                            <div class="mb-3">
-                                <input type="file" name="img" class="form-control">
-                            </div>
-
-                            <div class="text-center">
-                                <button class="btn btn-primary">Upload  </button>
-                            </div>
-
+                    <div class="text-center">
+                        <button class="btn btn-primary">Upload</button>
+                    </div>
                 </div>
-
             </div>
-
-
         </div>
-        <!--<div>
-            <input type="file" id="file">
-            <img src="https://i.imgur.com/njjoRY2.jpeg" id="img" height="200 px">
-            <p id="url"></p>
-
-            &lt;!&ndash;<script>
-                const file = document.getElementById("file")
-                const img = document.getElementById("img")
-                const url = document.getElementById("url")
-                file.addEventListener("change", ev => {
-                    const formdata = new FormData()
-                    formdata.append("image", ev.target.files[0])
-                    fetch("https://api.imgur.com/3/upload", {
-                        method: "post",
-                        headers: {
-                            Authorization: "Client-ID 6454567fd544a3b"
-                        },
-                        body: formdata
-                    }).then(data => data.json()).then(data => {
-                        img.src = data.data.link
-                        url.innerText = data.data.link
-                    })
-                })
-            </script>&ndash;&gt;
-
-            &lt;!&ndash;<script>
-                     const file=document.getElementById("file")
-                     const img=document.getElementById("img")
-                     const url=document.getElementById("url")
-                     file.addEventListener("change",ev=>{
-                         const formdata = new FormData()
-                         formdata.append("image",ev.target.files[0])
-                         fetch("https://api.imgur.com/3/image/",{
-                             method:"post",
-                             headers:{
-                                 Authorization:"Client-ID 6454567fd544a3b"
-                             }
-                             ,body:formdata
-                         }).then(data=>data.json()).then(data => {
-                             img.src=data.data.link
-                             url.innerText=data.data.link
-                         })
-                     })
-                 </script>&ndash;&gt;
-        </div>-->
     </form>
 </div>
 <script crossorigin="anonymous"

@@ -16,14 +16,13 @@ public class HomepageController {
 
     @GetMapping
     public String getAllEventsView(ModelMap map,
-                               @Param("title") String title,
-                               @Param("futureEventsFilter") boolean futureEventsFilter,
-                               @Param("ongoingEventsFilter") boolean ongoingEventsFilter,
-                               @Param("pastEventsFilter") boolean pastEventsFilter) {
+                                   @Param("title") String title,
+                                   @Param("futureEventsFilter") boolean futureEventsFilter,
+                                   @Param("ongoingEventsFilter") boolean ongoingEventsFilter,
+                                   @Param("pastEventsFilter") boolean pastEventsFilter) {
         map.addAttribute("title", title);
         map.addAttribute("events", eventService.findAllEventViews(title, futureEventsFilter,
                 ongoingEventsFilter, pastEventsFilter));
-
 
         return "homepage";
     }
