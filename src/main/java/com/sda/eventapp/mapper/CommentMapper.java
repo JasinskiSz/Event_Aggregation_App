@@ -23,13 +23,11 @@ public class CommentMapper {
                 .toList();
     }
 
-    public Comment toEntity(CreateCommentForm form, Event event) {
+    public Comment toEntity(CreateCommentForm form, Event event, User loggedUser) {
         return Comment.builder()
                 .text(form.getText())
                 .writingDate(LocalDateTime.now())
-                .user(User.builder() // TODO: Here will be user commenting.
-                        .username("PLACEHOLDER")
-                        .build())
+                .user(loggedUser)
                 .event(event)
                 .build();
     }
