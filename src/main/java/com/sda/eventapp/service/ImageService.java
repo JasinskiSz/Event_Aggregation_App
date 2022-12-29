@@ -8,33 +8,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
-import java.util.Optional;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class ImageService {
-
     private final ImageRepository repository;
 
     public boolean checkImageByFileName(String fileName) {
-        return repository.findFirstByFileName(fileName).isPresent();
+        return repository.existsByFileName(fileName);
     }
 
     public Image buildDefaultImage(String folder, Path absolutePath) {
-        Image image = Image.builder()
+        return Image.builder()
                 .fileName("default-event-image.jpeg")
                 .path(absolutePath + folder)
                 .build();
-        return image;
     }
 
     public Image buildImage(MultipartFile img, String folder, Path absolutePath) {
-        Image image = Image.builder()
+        return Image.builder()
                 .fileName(img.getOriginalFilename())
                 .path(absolutePath + folder)
                 .build();
-        return image;
     }
-
 }
