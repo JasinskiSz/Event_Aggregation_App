@@ -25,8 +25,8 @@ public class EventService {
     private final CommentService commentService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form) {
-        return repository.save(mapper.toEvent(form));
+    public Event save(CreateEventForm form, User owner) {
+        return repository.save(mapper.toEvent(form, owner));
     }
 
     public Event findById(Long id) {

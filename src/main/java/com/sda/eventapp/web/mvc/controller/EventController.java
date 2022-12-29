@@ -1,5 +1,7 @@
 package com.sda.eventapp.web.mvc.controller;
 
+import com.sda.eventapp.authentication.IAuthenticationFacade;
+import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import jakarta.validation.Valid;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
     private final EventService eventService;
 
+    private final IAuthenticationFacade authenticationFacade;
+
     @GetMapping("/create")
     public String create(ModelMap model) {
         model.addAttribute("event", new CreateEventForm());
@@ -25,10 +29,13 @@ public class EventController {
 
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors) {
+
+        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+
         if (errors.hasErrors()) {
             return "create-event";
         }
-        eventService.save(form);
+        eventService.save(form, loggedUser);
         return "index";
     }
 
