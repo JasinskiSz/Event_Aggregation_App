@@ -12,6 +12,13 @@
 <div class="container">
     <form method="post" th:action="@{/user/register}" th:object="${user}">
         <div class="mb-3">
+            <div
+                    th:if="${#fields.hasErrors('global')}"
+                    th:each="err : ${#fields.errors('global')}"
+                    th:text="${err}"
+                    class="invalid-feedback-custom">
+            </div>
+
             <label for="username" class="form-label">Username:</label>
             <input th:field="*{username}" id="username" class="form-control" type="text" placeholder="Enter username"
                    required>
@@ -41,9 +48,11 @@
             </div>
         </div>
         <div class="mb-3">
-            <label for="passwordConfirm" class="form-label">Confirm Password:</label>
-            <input id="passwordConfirm" class="form-control" type="password" placeholder="Confirm password" required>
+            <label class="form-label" for="confirm-password">Confirm Password:</label>
+            <input class="form-control" id="confirm-password" th:field="*{confirmPassword}" type="password"
+                   placeholder="Enter password" required>
         </div>
+
         <input type="submit" class="btn btn-primary" value="Submit">
     </form>
 </div>
