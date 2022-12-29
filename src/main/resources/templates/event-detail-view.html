@@ -44,12 +44,14 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>Comment author</th>
                 <th>Text</th>
                 <th>Writing date</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="c : ${comments}">
+                <td th:text="${c.userNickname} + ' wrote: '"></td>
                 <td th:text="${c.text}"></td>
                 <td th:text="${c.writingDate}"></td>
             </tr>

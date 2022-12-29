@@ -19,6 +19,7 @@ public class CommentMapper {
                 .map(comment -> CommentView.builder()
                         .text(comment.getText())
                         .writingDate(comment.getWritingDate())
+                        .userNickname(comment.getUser().getUsername())
                         .build())
                 .toList();
     }
