@@ -193,7 +193,7 @@ public class EventService {
         String originalFilename = file.getOriginalFilename();
         Image image = imageService.buildImage(originalFilename, Paths.get("").toAbsolutePath(), IMAGES_PATH);
 
-        // TODO: This implementation of while loop is smelly. We should think about something else.
+        // TODO #004: This implementation of while loop is smelly. We should think about something else.
         while (imageService.existsByFilename(image.getFilename())) {
             image.setFilename(randomizeFilename(originalFilename));
         }
