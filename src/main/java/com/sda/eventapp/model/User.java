@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private Set<Event> ownedEvents;
 
     //todo: trello reminder #001
-    @ManyToMany(fetch = FetchType.LAZY)
+    /*@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_events",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "id",
@@ -43,6 +43,9 @@ public class User implements UserDetails {
             inverseJoinColumns = {
                     @JoinColumn(name = "event_id", referencedColumnName = "id",
                             nullable = true)})
+    private Set<Event> attendingEvents = new HashSet<>();*/
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Event> attendingEvents = new HashSet<>();
 
     @Override

@@ -6,6 +6,7 @@ import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Comment;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
+import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
@@ -221,5 +222,11 @@ public class EventService {
      */
     private boolean createImageDirectory() {
         return new File(IMAGES_PATH).mkdirs();
+    }
+
+    public Event saveEventToUser(User loggedUser, Long eventID) {
+        Event foundEvent = this.findById(eventID);
+        foundEvent.getUsers().add(loggedUser);
+        return repository.save(foundEvent);
     }
 }
