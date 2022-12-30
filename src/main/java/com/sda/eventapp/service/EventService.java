@@ -36,7 +36,8 @@ public class EventService {
     private final ImageService imageService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form) {
+    public Event save(CreateEventForm form, MultipartFile file) {
+        form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form));
     }
 
@@ -148,38 +149,26 @@ public class EventService {
         return commentService.save(form, this.findById(id));
     }
 
-    public void createEvent(CreateEventForm form, MultipartFile image) {
-        if (image.getOriginalFilename() == null || image.getOriginalFilename().isBlank()) {
-            createEventWithoutPhoto(form);
+    private Image solveImage(MultipartFile file) {
+        Image image;
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
+            image = getDefaultImage();
+        } else {
+            image = saveImageLocally(file);
         }
-        createEventWithPhoto(form, image);
+        return image;
     }
 
-    public void createEventWithoutPhoto(CreateEventForm form) {
-        Image image = imageService.buildDefaultImage(
+    public Image getDefaultImage() {
+        return imageService.buildDefaultImage(
                 Paths.get("").toAbsolutePath(),
                 IMAGES_PATH);
-        form.setImage(image);
-        save(form);
     }
 
-    public void createEventWithPhoto(CreateEventForm form, MultipartFile img) {
-        createImageDirIfNotExist();
-
-        try {
-            saveEvent(form, img);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public Image saveImageLocally(MultipartFile img) {
+        if (createImageDirectory()) {
+            log.debug("Directory created");
         }
-    }
-
-    private void prepareImageFileName(Image image, String originalFilename) {
-        String salt = RandomStringUtils.random(10, true, false);
-        image.setFileName(salt + originalFilename);
-    }
-
-    private void saveEvent(CreateEventForm form, MultipartFile img) throws IOException {
-        byte[] bytes = img.getBytes();
         String originalFilename = img.getOriginalFilename();
         Image image = imageService.buildImage(originalFilename, Paths.get("").toAbsolutePath(), IMAGES_PATH);
 
@@ -187,17 +176,29 @@ public class EventService {
         while (imageService.checkImageByFileName(image.getFileName())) {
             prepareImageFileName(image, originalFilename);
         }
-        Path fullPath = Paths.get(image.getPath() + originalFilename);
-        Files.write(fullPath, bytes);
 
-        form.setImage(image);
-        save(form);
+        Path fullPath = Paths.get(image.getPath() + originalFilename);
+
+        try {
+            byte[] bytes = img.getBytes();
+            Files.write(fullPath, bytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return image;
+    }
+
+    private void prepareImageFileName(Image image, String originalFilename) {
+        String salt = RandomStringUtils.random(10, true, false);
+        image.setFileName(salt + originalFilename);
     }
 
     /**
+     * Creates directory named after path: {@link com.sda.eventapp.service.EventService#IMAGES_PATH} if it doesn't already exist.
+     *
      * @return true in the same manner as {@link java.io.File#mkdirs()}
      */
-    private boolean createImageDirIfNotExist() {
+    private boolean createImageDirectory() {
         if (new File(IMAGES_PATH).mkdirs()) {
             log.info("Image directory created");
             return true;

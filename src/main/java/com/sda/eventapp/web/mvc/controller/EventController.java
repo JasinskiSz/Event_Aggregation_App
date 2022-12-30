@@ -42,14 +42,14 @@ public class EventController {
             return "create-event";
         }
         // Not sure if this should be handled by ImageService.
-        if (!imageService.isImage(file)) {
+        // But check should be here, to have proper redirect.
+        if (!file.isEmpty() && !imageService.isImage(file)) {
             // TODO: change attributeValue. Message should be different probably.
             ra.addFlashAttribute("wrongFileExtension",
                     "You must upload file with jpg/png extension");
             return "redirect:/event/create";
         }
-
-        eventService.createEvent(form, file);
+        eventService.save(form, file);
         return "index";
     }
 
