@@ -17,28 +17,28 @@ import java.util.Arrays;
 public class ImageService {
     private final ImageRepository repository;
 
-    public boolean checkImageByFileName(String fileName) {
-        return repository.existsByFileName(fileName);
+    public boolean existsByFilename(String filename) {
+        return repository.existsByFilename(filename);
     }
 
     public Image buildDefaultImage(Path absolutePath, String contentRootPath) {
         return Image.builder()
-                .fileName("default-event-image.jpeg")
+                .filename("default-event-image.jpeg")
                 .path(absolutePath + "/" + contentRootPath)
                 .build();
     }
 
     public Image buildImage(String name, Path absolutePath, String contentRootPath) {
         return Image.builder()
-                .fileName(name)
+                .filename(name)
                 .path(absolutePath + "/" + contentRootPath)
                 .build();
     }
 
     /**
-     * Returns {@code true} if the file extension matches with any value in the AllowedExtensions enum.
+     * Returns {@code true} if the file extension matches with any value in the enum {@link com.sda.eventapp.service.ImageService.AllowedExtensions}.
      *
-     * @param file A MultipartFile from which the file extension will be taken
+     * @param file A {@link org.springframework.web.multipart.MultipartFile} from which the file extension will be taken
      * @return true if file extension matches any value from AllowedExtensions
      */
     public boolean isImage(MultipartFile file) {

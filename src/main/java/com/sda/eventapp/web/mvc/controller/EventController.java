@@ -43,6 +43,8 @@ public class EventController {
         }
         // Not sure if this should be handled by ImageService.
         // But check should be here, to have proper redirect.
+        //
+        // If file is uploaded (is not empty) and file is not an image.
         if (!file.isEmpty() && !imageService.isImage(file)) {
             // TODO: change attributeValue. Message should be different probably.
             ra.addFlashAttribute("wrongFileExtension",

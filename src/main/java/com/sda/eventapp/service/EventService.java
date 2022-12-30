@@ -141,14 +141,22 @@ public class EventService {
         return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
     }
 
-    public List<CommentView> findCommentViewsByEventId(Long id) {
-        return commentService.findCommentViewsByEventId(id);
-    }
-
     public Comment saveComment(CreateCommentForm form, Long id) {
         return commentService.save(form, this.findById(id));
     }
 
+    public List<CommentView> findCommentViewsByEventId(Long id) {
+        return commentService.findCommentViewsByEventId(id);
+    }
+
+    /**
+     * Taking {@link org.springframework.web.multipart.MultipartFile} and checks its name if it's {@link java.lang.String#isBlank()} or null.
+     * <br>
+     * If false, it does {@link com.sda.eventapp.service.EventService#saveImageLocally(MultipartFile)}
+     *
+     * @param file should be checked before if its of required file extension
+     * @return {@link com.sda.eventapp.model.Image} build from {@link org.springframework.web.multipart.MultipartFile}
+     */
     private Image solveImage(MultipartFile file) {
         Image image;
         if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
@@ -159,28 +167,41 @@ public class EventService {
         return image;
     }
 
-    public Image getDefaultImage() {
+    private Image getDefaultImage() {
         return imageService.buildDefaultImage(
                 Paths.get("").toAbsolutePath(),
                 IMAGES_PATH);
     }
 
-    public Image saveImageLocally(MultipartFile img) {
+    /**
+     * Creates directory in default location ->  {@link EventService#createImageDirectory()}.
+     * <br>
+     * Then builds image from file originalFilename -> {@link ImageService#buildImage(String
+     * fileName, Path absolutePath, String contentRootPath)}
+     * <br>
+     * Then checks if image of this name already exists in repository. If true, it will randomize
+     * its name suffix and will try again -> {@link EventService#randomizeFilename(String fileName)}
+     *
+     * @param file {@link org.springframework.web.multipart.MultipartFile} that is meant to be saved
+     *             locally and built {@link com.sda.eventapp.model.Image} out of it
+     * @return built and saved locally {@link com.sda.eventapp.model.Image}
+     */
+    private Image saveImageLocally(MultipartFile file) {
         if (createImageDirectory()) {
             log.debug("Directory created");
         }
-        String originalFilename = img.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
         Image image = imageService.buildImage(originalFilename, Paths.get("").toAbsolutePath(), IMAGES_PATH);
 
         // TODO: This implementation of while loop is smelly. We should think about something else.
-        while (imageService.checkImageByFileName(image.getFileName())) {
-            prepareImageFileName(image, originalFilename);
+        while (imageService.existsByFilename(image.getFilename())) {
+            image.setFilename(randomizeFilename(originalFilename));
         }
 
         Path fullPath = Paths.get(image.getPath() + originalFilename);
 
         try {
-            byte[] bytes = img.getBytes();
+            byte[] bytes = file.getBytes();
             Files.write(fullPath, bytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -188,9 +209,9 @@ public class EventService {
         return image;
     }
 
-    private void prepareImageFileName(Image image, String originalFilename) {
+    private String randomizeFilename(String filename) {
         String salt = RandomStringUtils.random(10, true, false);
-        image.setFileName(salt + originalFilename);
+        return salt + filename;
     }
 
     /**
@@ -199,10 +220,6 @@ public class EventService {
      * @return true in the same manner as {@link java.io.File#mkdirs()}
      */
     private boolean createImageDirectory() {
-        if (new File(IMAGES_PATH).mkdirs()) {
-            log.info("Image directory created");
-            return true;
-        }
-        return false;
+        return new File(IMAGES_PATH).mkdirs();
     }
 }

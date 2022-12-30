@@ -31,7 +31,7 @@
 
     <div class="container">
         <div class="col-md-3" th:object="${event.image}">
-            <img alt="event-image" style="width:304px;height:228px" th:src="@{${'/images/' + event.image.fileName}}">
+            <img alt="event-image" style="width:304px;height:228px" th:src="@{${'/images/' + event.image.filename}}">
         </div>
     </div>
 
