@@ -20,4 +20,12 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(form.getPassword()));
         return repository.save(user);
     }
+
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
+    }
 }
