@@ -33,7 +33,7 @@ public class EventController {
         return "create-event";
     }
 
-    // TODO: Maybe MultipartFile parameter can have some annotation to valid it? Ex. valid file extension.
+    // TODO #005: Maybe MultipartFile parameter can have some annotation to valid it? Ex. valid file extension.
     // If we'll choose to do so, we can handle file extension error via if (errors.hasErrors()), I think.
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors,
@@ -46,9 +46,8 @@ public class EventController {
         //
         // If file is uploaded (is not empty) and file is not an image.
         if (!file.isEmpty() && !imageService.isImage(file)) {
-            // TODO: change attributeValue. Message should be different probably.
             ra.addFlashAttribute("wrongFileExtension",
-                    "You must upload file with jpg/png extension");
+                    imageService.wrongFileExtensionMessage());
             return "redirect:/event/create";
         }
         eventService.save(form, file);

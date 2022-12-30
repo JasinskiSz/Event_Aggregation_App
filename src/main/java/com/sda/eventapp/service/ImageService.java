@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -46,6 +47,15 @@ public class ImageService {
 
         return Arrays.stream(AllowedExtensions.values())
                 .anyMatch(e -> e.toString().equalsIgnoreCase(extension));
+    }
+
+    public String wrongFileExtensionMessage() {
+        StringBuilder messageSB = new StringBuilder("You must upload file with extension: ");
+        AllowedExtensions[] extensions = AllowedExtensions.values();
+        IntStream.range(0, extensions.length)
+                .mapToObj(i -> extensions[i] + (i < extensions.length - 1 ? ", " : ""))
+                .forEach(messageSB::append);
+        return messageSB.toString();
     }
 
     private enum AllowedExtensions {
