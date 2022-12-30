@@ -2,7 +2,6 @@ package com.sda.eventapp.mapper;
 
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.Image;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import org.springframework.stereotype.Component;
 
@@ -34,13 +33,13 @@ public class EventMapper {
                 .build();
     }
 
-    public Event toEvent(CreateEventForm form, Image img) {
+    public Event toEvent(CreateEventForm form) {
         return Event.builder()
                 .title(form.getTitle())
                 .description(form.getDescription())
                 .startingDateTime(form.getStartingDateTime())
                 .endingDateTime(form.getEndingDateTime())
-                .image(img)
+                .image(form.getImage())
                 .build();
     }
 }
