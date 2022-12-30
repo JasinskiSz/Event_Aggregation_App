@@ -21,7 +21,7 @@
             <tbody>
             <tr th:object="${event}">
                 <td th:text="${event.title}"></td>
-                <td th:text="${event.description}" ></td>
+                <td th:text="${event.description}"></td>
                 <td th:text="${event.startingDateTime}"></td>
                 <td th:text="${event.endingDateTime}"></td>
             </tr>
@@ -56,5 +56,25 @@
             </tbody>
         </table>
     </div>
+
+<div class="container">
+    <table class="table table-striped">
+        <h3>List of users saved for events </h3>
+        <thead>
+
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
