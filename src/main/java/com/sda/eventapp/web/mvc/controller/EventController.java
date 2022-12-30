@@ -1,6 +1,7 @@
 package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.service.ImageService;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 @RequestMapping({"/event"})
 public class EventController {
-    private final EventService service;
+    private final EventService eventService;
+    private final ImageService imageService;
 
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
@@ -31,28 +33,37 @@ public class EventController {
         return "create-event";
     }
 
+    // TODO: Maybe MultipartFile parameter can have some annotation to valid it? Ex. valid file extension.
+    // If we'll choose to do so, we can handle file extension error via if (errors.hasErrors()), I think.
     @PostMapping("/create")
-    public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors, @RequestParam MultipartFile img, RedirectAttributes ra) {
-
+    public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors,
+                               @RequestParam MultipartFile file, RedirectAttributes ra) {
         if (errors.hasErrors()) {
             return "create-event";
         }
-        if (img.getOriginalFilename().isBlank()) {
-            return service.createEventWithoutPhoto(form);
+        // Not sure if this should be handled by ImageService.
+        if (!imageService.isImage(file)) {
+            // TODO: change attributeValue. Message should be different probably.
+            ra.addFlashAttribute("wrongFileExtension",
+                    "You must upload file with jpg/png extension");
+            return "redirect:/event/create";
         }
-        return service.createEventWithPhoto(form, img, ra);
+
+        eventService.createEvent(form, file);
+        return "index";
     }
 
     @ExceptionHandler({MaxUploadSizeExceededException.class})
     public String handleImageUploadError(RedirectAttributes ra) {
-        ra.addFlashAttribute("uploadError", "You could not upload file bigger than " + maxFileSize);
+        ra.addFlashAttribute("uploadError",
+                "You could not upload file bigger than " + maxFileSize);
         return "redirect:/event/create";
     }
 
     @GetMapping("/update/{id}")
     public String update(ModelMap model, @PathVariable Long id) {
         model.addAttribute("event", new CreateEventForm());
-        model.addAttribute("event", service.findById(id));
+        model.addAttribute("event", eventService.findById(id));
         return "update-event";
     }
 
@@ -61,7 +72,7 @@ public class EventController {
         if (errors.hasErrors()) {
             return "update-event";
         }
-        service.update(form);
+        eventService.update(form);
         return "index";
     }
 }

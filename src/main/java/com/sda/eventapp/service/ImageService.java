@@ -4,10 +4,12 @@ import com.sda.eventapp.model.Image;
 import com.sda.eventapp.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 
 @Slf4j
 @Service
@@ -19,17 +21,34 @@ public class ImageService {
         return repository.existsByFileName(fileName);
     }
 
-    public Image buildDefaultImage(String folder, Path absolutePath) {
+    public Image buildDefaultImage(Path absolutePath, String contentRootPath) {
         return Image.builder()
                 .fileName("default-event-image.jpeg")
-                .path(absolutePath + folder)
+                .path(absolutePath + "/" + contentRootPath)
                 .build();
     }
 
-    public Image buildImage(MultipartFile img, String folder, Path absolutePath) {
+    public Image buildImage(String name, Path absolutePath, String contentRootPath) {
         return Image.builder()
-                .fileName(img.getOriginalFilename())
-                .path(absolutePath + folder)
+                .fileName(name)
+                .path(absolutePath + "/" + contentRootPath)
                 .build();
+    }
+
+    /**
+     * Returns {@code true} if the file extension matches with any value in the AllowedExtensions enum.
+     *
+     * @param file A MultipartFile from which the file extension will be taken
+     * @return true if file extension matches any value from AllowedExtensions
+     */
+    public boolean isImage(MultipartFile file) {
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+
+        return Arrays.stream(AllowedExtensions.values())
+                .anyMatch(e -> e.toString().equalsIgnoreCase(extension));
+    }
+
+    private enum AllowedExtensions {
+        JPG, JPEG, PNG
     }
 }

@@ -3,6 +3,7 @@ package com.sda.eventapp.service;
 import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
+import com.sda.eventapp.model.Comment;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.repository.EventRepository;
@@ -10,11 +11,9 @@ import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,22 +29,15 @@ import java.util.stream.StreamSupport;
 @Service
 @RequiredArgsConstructor
 public class EventService {
+    private final static String IMAGES_PATH = "src/main/resources/static/images/";
+
     private final EventRepository repository;
     private final CommentService commentService;
     private final ImageService imageService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form, Image image) {
-        return repository.save(mapper.toEvent(form, image));
-    }
-
-    public Event findById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
-    }
-
-    public EventView findEventViewById(Long id) {
-        return mapper.toEventView(findById(id));
+    public Event save(CreateEventForm form) {
+        return repository.save(mapper.toEvent(form));
     }
 
     public Event update(CreateEventForm form) {
@@ -60,12 +52,9 @@ public class EventService {
         return repository.save(event);
     }
 
-    public List<EventView> findAllEventViews() {
-        return mapper.toEventViewList(repository.findAll());
-    }
-
-    public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
+    public Event findById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
     private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
@@ -131,6 +120,14 @@ public class EventService {
         }
     }
 
+    public EventView findEventViewById(Long id) {
+        return mapper.toEventView(findById(id));
+    }
+
+    public List<EventView> findAllEventViews() {
+        return mapper.toEventViewList(repository.findAll());
+    }
+
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         if (title == null || title.equals("") || title.isBlank()) {
             return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
@@ -139,69 +136,72 @@ public class EventService {
         }
     }
 
+    public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
+        return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
+    }
+
     public List<CommentView> findCommentViewsByEventId(Long id) {
         return commentService.findCommentViewsByEventId(id);
     }
 
-    public void saveComment(CreateCommentForm form, Long id) {
-        commentService.save(form, this.findById(id));
+    public Comment saveComment(CreateCommentForm form, Long id) {
+        return commentService.save(form, this.findById(id));
     }
 
-    private static String prepareImageFilenameIfAlreadyExists(Image image, String originalFilename) {
-        StringBuilder newNameBuilder = new StringBuilder();
-        newNameBuilder.append(RandomStringUtils.random(10, true, false));
-        newNameBuilder.append(originalFilename);
-        originalFilename = newNameBuilder.toString();
-        image.setFileName(originalFilename);
-        return originalFilename;
-    }
-
-    public String createEventWithoutPhoto(CreateEventForm form) {
-        String folder = "/src/main/resources/static/images/";
-        Path currentPath = Paths.get(""); //on Windows Paths.get(".")
-        Path absolutePath = currentPath.toAbsolutePath();
-        Image image = imageService.buildDefaultImage(folder, absolutePath);
-        save(form, image);
-        return "index";
-    }
-
-    public String createEventWithPhoto(CreateEventForm form, MultipartFile img, RedirectAttributes ra) {
-        String folderForNewDirectory = "src/main/resources/static/images/";
-        String folder = "/src/main/resources/static/images/";
-        String extension = FilenameUtils.getExtension(img.getOriginalFilename());
-        if (!(extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png"))) {
-            ra.addFlashAttribute("wrongExtension", "You must upload jpg or png file");
-            return "redirect:/event/create";
+    public void createEvent(CreateEventForm form, MultipartFile image) {
+        if (image.getOriginalFilename() == null || image.getOriginalFilename().isBlank()) {
+            createEventWithoutPhoto(form);
         }
+        createEventWithPhoto(form, image);
+    }
+
+    public void createEventWithoutPhoto(CreateEventForm form) {
+        Image image = imageService.buildDefaultImage(
+                Paths.get("").toAbsolutePath(),
+                IMAGES_PATH);
+        form.setImage(image);
+        save(form);
+    }
+
+    public void createEventWithPhoto(CreateEventForm form, MultipartFile img) {
+        createImageDirIfNotExist();
+
         try {
-            createDirectoryIfNotExist(folderForNewDirectory);
-            saveEvent(form, img, folder);
+            saveEvent(form, img);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return "index";
     }
 
-    private void saveEvent(CreateEventForm form, MultipartFile img, String folder) throws IOException {
-        Path currentPath = Paths.get(""); //on Windows Paths.get(".")
-        Path absolutePath = currentPath.toAbsolutePath();
+    private void prepareImageFileName(Image image, String originalFilename) {
+        String salt = RandomStringUtils.random(10, true, false);
+        image.setFileName(salt + originalFilename);
+    }
+
+    private void saveEvent(CreateEventForm form, MultipartFile img) throws IOException {
         byte[] bytes = img.getBytes();
         String originalFilename = img.getOriginalFilename();
-        Image image = imageService.buildImage(img, folder, absolutePath);
+        Image image = imageService.buildImage(originalFilename, Paths.get("").toAbsolutePath(), IMAGES_PATH);
 
-        while (imageService.checkImageByFileName(originalFilename)) {
-            originalFilename = prepareImageFilenameIfAlreadyExists(image, originalFilename);
+        // TODO: This implementation of while loop is smelly. We should think about something else.
+        while (imageService.checkImageByFileName(image.getFileName())) {
+            prepareImageFileName(image, originalFilename);
         }
         Path fullPath = Paths.get(image.getPath() + originalFilename);
         Files.write(fullPath, bytes);
 
-        save(form, image);
+        form.setImage(image);
+        save(form);
     }
 
-    private void createDirectoryIfNotExist(String folderForNewDirectory) {
-        File directory = new File(folderForNewDirectory);
-        if (!directory.exists()) {
-            directory.mkdirs();
+    /**
+     * @return true in the same manner as {@link java.io.File#mkdirs()}
+     */
+    private boolean createImageDirIfNotExist() {
+        if (new File(IMAGES_PATH).mkdirs()) {
+            log.info("Image directory created");
+            return true;
         }
+        return false;
     }
 }
