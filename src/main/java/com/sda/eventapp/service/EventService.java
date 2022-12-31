@@ -224,9 +224,15 @@ public class EventService {
         return new File(IMAGES_PATH).mkdirs();
     }
 
-    public Event saveEventToUser(User loggedUser, Long eventID) {
+    public Event signUpForEvent(User loggedUser, Long eventID) {
         Event foundEvent = this.findById(eventID);
         foundEvent.getUsers().add(loggedUser);
         return repository.save(foundEvent);
+    }
+
+    public void signOutFromEvent(User loggedUser, Long eventID) {
+        Event foundEvent = this.findById(eventID);
+        foundEvent.getUsers().remove(loggedUser);
+        repository.save(foundEvent);
     }
 }

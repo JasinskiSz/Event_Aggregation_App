@@ -56,6 +56,15 @@
         </form>
     </div>
 
+    <!--  sign out user  -->
+    <div>
+        <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
+            <div>
+                <input type="submit" value="Sign out from Event">
+            </div>
+        </form>
+    </div>
+
 
     <div class="container">
         <table class="table table-striped">

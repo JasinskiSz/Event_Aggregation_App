@@ -44,7 +44,17 @@ public class EventDetailController {
     @PostMapping("/{id}/signup-for-event")
     public String signupForEvent(@PathVariable("id") Long eventID) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-        eventService.saveEventToUser(loggedUser, eventID);
+        eventService.signUpForEvent(loggedUser, eventID);
+
+        //userService.saveUserToEvent(loggedUser, eventID);
+
+        return "redirect:/detail-view/" + eventID;
+    }
+
+    @PostMapping("/{id}/sign-out-from-event")
+    public String signOutFromEvent(@PathVariable("id") Long eventID) {
+        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+        eventService.signOutFromEvent(loggedUser, eventID);
 
         //userService.saveUserToEvent(loggedUser, eventID);
 
