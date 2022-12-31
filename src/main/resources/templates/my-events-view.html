@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Event detail view</title>
+    <link href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Owned events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ownedEvent : ${ownedEvents}">
+            <td>
+                <a th:href="@{detail-view/__${ownedEvent.id}__}" th:text="${ownedEvent.title}">
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Attending events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="attendingEvent : ${attendingEvents}">
+            <td>
+                <a th:href="@{detail-view/__${attendingEvent.id}__}" th:text="${attendingEvent.title}">
+                </a>
+
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

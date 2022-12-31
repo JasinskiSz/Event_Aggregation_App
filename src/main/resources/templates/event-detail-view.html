@@ -19,16 +19,16 @@
                 <th>End time</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:object="${event}">
-                <td th:text="${event.title}"></td>
-                <td th:text="${event.description}" ></td>
-                <td th:text="${event.startingDateTime}"></td>
-                <td th:text="${event.endingDateTime}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <tbody>
+        <tr th:object="${event}">
+            <td th:text="${event.title}"></td>
+            <td th:text="${event.description}"></td>
+            <td th:text="${event.startingDateTime}"></td>
+            <td th:text="${event.endingDateTime}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
     <div class="container">
         <div class="col-md-3" th:object="${event.image}">
