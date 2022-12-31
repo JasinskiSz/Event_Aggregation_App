@@ -23,6 +23,8 @@ public class EventDetailController {
 
     @GetMapping("/{id}")
     public String getDetailEventView(ModelMap map, @PathVariable("id") Long id) {
+        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+        map.addAttribute("loggedUser", loggedUser);
         map.addAttribute("event", eventService.findEventViewById(id));
         map.addAttribute("comment", new CreateCommentForm());
         map.addAttribute("comments", eventService.findCommentViewsByEventId(id));

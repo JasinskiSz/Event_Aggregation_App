@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Event detail view</title>
@@ -7,9 +8,9 @@
     <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <p id="id" name="id" th:value="${event.id}"></p>
-        <table class="table table-striped">
+<div class="container">
+    <p id="id" name="id" th:value="${event.id}"></p>
+    <table class="table table-striped">
             <thead>
             <tr>
                 <th>Title</th>
@@ -47,31 +48,37 @@
         </form>
     </div>
 
-    <!--    sign up user -->
-    <div>
-        <form method="post" th:action="@{/detail-view/__${event.id}__/signup-for-event}">
-            <div>
-                <input type="submit" value="Sign up for Event">
-            </div>
-        </form>
-    </div>
+<!--     sign up user -->
 
-    <!--  sign out user  -->
-    <div>
-        <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
-            <div>
-                <input type="submit" value="Sign out from Event">
-            </div>
-        </form>
-    </div>
+<div th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
+    <!--            th:if="!${event.usersNicknames.contains(__${loggedUser.username}__)}"-->
+
+    <form method="post" th:action="@{/detail-view/__${event.id}__/signup-for-event}">
+        <div>
+            <input type="submit" value="Sign up for Event">
+        </div>
+    </form>
+
+</div>
+<!--  sign out user  -->
+
+<div th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">
+    <!--            th:if="${event.usersNicknames.contains(__${loggedUser.username}__)}" -->
+
+    <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
+        <div>
+            <input type="submit" value="Sign out from Event">
+        </div>
+    </form>
+</div>
 
 
-    <div class="container">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Text</th>
-                <th>Writing date</th>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Text</th>
+            <th>Writing date</th>
             </tr>
             </thead>
             <tbody>
