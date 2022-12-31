@@ -72,6 +72,22 @@
     </form>
 </div>
 
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Attending Users</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userNickname : ${event.usersNicknames}">
+            <td th:text="${userNickname}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 
 <div class="container">
     <table class="table table-striped">
@@ -79,8 +95,8 @@
         <tr>
             <th>Text</th>
             <th>Writing date</th>
-            </tr>
-            </thead>
+        </tr>
+        </thead>
             <tbody>
             <tr th:each="c : ${comments}">
                 <td th:text="${c.text}"></td>
