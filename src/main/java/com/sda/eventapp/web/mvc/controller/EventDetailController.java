@@ -42,7 +42,7 @@ public class EventDetailController {
         if (errors.hasErrors()) {
             return "redirect:/detail-view/" + eventID;
         }
-        eventService.saveComment(form, eventID);
+        eventService.saveComment(form, eventID, loggedUser);
         return "redirect:/detail-view/" + eventID;
     }
 

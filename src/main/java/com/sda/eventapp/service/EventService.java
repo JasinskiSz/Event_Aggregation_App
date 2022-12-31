@@ -37,10 +37,10 @@ public class EventService {
     private final ImageService imageService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form, MultipartFile file) {
+    public Event save(CreateEventForm form, MultipartFile file, User owner) {
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form, owner));
-        return repository.save(mapper.toEvent(form));
+
     }
 
     public Event findById(Long id) {
@@ -48,9 +48,6 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
-    public EventView findEventViewById(Long id) {
-        return mapper.toEventView(findById(id));
-    }
 
     public Event update(CreateEventForm form) {
         Event event = repository.findById(form.getId())
@@ -64,10 +61,6 @@ public class EventService {
         return repository.save(event);
     }
 
-    public Event findById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
-    }
 
     private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
@@ -150,10 +143,6 @@ public class EventService {
 
     public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
         return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
-    }
-
-    public Comment saveComment(CreateCommentForm form, Long id) {
-        return commentService.save(form, this.findById(id));
     }
 
     public List<CommentView> findCommentViewsByEventId(Long id) {

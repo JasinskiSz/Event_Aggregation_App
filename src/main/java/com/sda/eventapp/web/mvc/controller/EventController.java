@@ -56,8 +56,8 @@ public class EventController {
             return "redirect:/event/create";
         }
 
-        eventService.save(form, file);
-        eventService.save(form, loggedUser);
+
+        eventService.save(form, file, loggedUser);
         return "index";
     }
 
