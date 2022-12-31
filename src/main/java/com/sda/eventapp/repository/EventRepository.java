@@ -1,6 +1,7 @@
 package com.sda.eventapp.repository;
 
 import com.sda.eventapp.model.Event;
+import com.sda.eventapp.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -50,4 +51,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value = "SELECT event FROM Event event WHERE  (event.startingDateTime <= ?2 and event.endingDateTime >= ?1)")
     List<Event> findAllEventByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    List<Event> findAllByOwner(User owner);
+
+    List<Event> findAllByUsers_Username(String nickname);
 }

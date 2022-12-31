@@ -237,4 +237,12 @@ public class EventService {
         foundEvent.getUsers().remove(loggedUser);
         repository.save(foundEvent);
     }
+
+    public List<Event> findOwnedEvents(User loggedUser) {
+        return repository.findAllByOwner(loggedUser);
+    }
+
+    public List<Event> findAttendingEvents(String loggedUserNickname) {
+        return repository.findAllByUsers_Username(loggedUserNickname);
+    }
 }
