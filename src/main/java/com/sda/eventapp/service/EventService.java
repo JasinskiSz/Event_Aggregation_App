@@ -39,7 +39,17 @@ public class EventService {
 
     public Event save(CreateEventForm form, MultipartFile file) {
         form.setImage(solveImage(file));
+        return repository.save(mapper.toEvent(form, owner));
         return repository.save(mapper.toEvent(form));
+    }
+
+    public Event findById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+    }
+
+    public EventView findEventViewById(Long id) {
+        return mapper.toEventView(findById(id));
     }
 
     public Event update(CreateEventForm form) {
@@ -150,6 +160,9 @@ public class EventService {
         return commentService.findCommentViewsByEventId(id);
     }
 
+    public void saveComment(CreateCommentForm form, Long id, User loggedUser) {
+        commentService.save(form, this.findById(id), loggedUser);
+    }
     /**
      * Taking {@link org.springframework.web.multipart.MultipartFile} and checks its name if it's {@link java.lang.String#isBlank()} or null.
      * <br>

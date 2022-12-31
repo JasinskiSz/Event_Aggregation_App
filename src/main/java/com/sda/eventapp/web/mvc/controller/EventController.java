@@ -1,5 +1,7 @@
 package com.sda.eventapp.web.mvc.controller;
 
+import com.sda.eventapp.authentication.IAuthenticationFacade;
+import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.service.ImageService;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
@@ -27,6 +29,8 @@ public class EventController {
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
+    private final IAuthenticationFacade authenticationFacade;
+
     @GetMapping("/create")
     public String create(ModelMap model) {
         model.addAttribute("event", new CreateEventForm());
@@ -38,6 +42,7 @@ public class EventController {
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors,
                                @RequestParam MultipartFile file, RedirectAttributes ra) {
+        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
         if (errors.hasErrors()) {
             return "create-event";
         }
@@ -50,7 +55,9 @@ public class EventController {
                     imageService.wrongFileExtensionMessage());
             return "redirect:/event/create";
         }
+
         eventService.save(form, file);
+        eventService.save(form, loggedUser);
         return "index";
     }
 

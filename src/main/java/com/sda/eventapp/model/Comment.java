@@ -18,7 +18,7 @@ public class Comment {
     private long id;
 
     //todo: trello reminder #001
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
