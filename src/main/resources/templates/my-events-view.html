@@ -29,6 +29,72 @@
     </div>
 </form>
 
+<div class="container" th:if="${#strings.equals(eventFilters.participationType, ownedEventsType)}">
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Owned Events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="boundEvent : ${boundEvents}">
+            <td>
+                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">
+                </a>
+            </td>
+            <td th:text="${boundEvent.startingDateTime}"></td>
+            <td th:text="${boundEvent.endingDateTime}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container" th:if="${#strings.equals(eventFilters.participationType, attendedEventsType)}">
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Attended Events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="boundEvent : ${boundEvents}">
+            <td>
+                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">
+                </a>
+            </td>
+            <td th:text="${boundEvent.startingDateTime}"></td>
+            <td th:text="${boundEvent.endingDateTime}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--<div class="container" th:if="${#strings.equals(eventFilters.participationType, allEventsType)}">-->
+
+<!--    <table class="table table-striped" th:if="${#lists.contains(boundEvents., loggedUser)}">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Attended Events</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="boundEvent : ${boundEvents}">-->
+<!--            <td>-->
+<!--                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">-->
+<!--                </a>-->
+<!--            </td>-->
+<!--            <td th:text="${boundEvent.startingDateTime}"></td>-->
+<!--            <td th:text="${boundEvent.endingDateTime}"></td>-->
+
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+
 
 <div class="container">
     <table class="table table-striped">

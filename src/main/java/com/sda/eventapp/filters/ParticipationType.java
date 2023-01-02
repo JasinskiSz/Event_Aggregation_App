@@ -3,7 +3,7 @@ package com.sda.eventapp.filters;
 public enum ParticipationType {
     OWNED_EVENTS("Owned Events"),
     ATTENDED_EVENTS("Attended Events"),
-    ALL("All Events");
+    ALL_EVENTS("All Events");
 
     private final String displayValue;
 
