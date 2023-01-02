@@ -91,4 +91,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value = "SELECT event from Event event left join event.users users WHERE event.endingDateTime < current_timestamp and (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
     List<Event> findOwnedAndAttendedPastEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedAllEventsById(Long id);
 }

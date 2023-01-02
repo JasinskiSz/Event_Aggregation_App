@@ -318,6 +318,10 @@ public class EventService {
 
         //All + All
 
+        if (participationType.equals("All Events") && dateType.equals("All")) {
+            return mapper.toEventViewList(repository.findOwnedAndAttendedAllEventsById(loggedUserId));
+        }
+
         return null;
     }
 }
