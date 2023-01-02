@@ -259,32 +259,50 @@ public class EventService {
         if (participationType.equals("Owned Events") && dateType.equals("Future")) {
             return mapper.toEventViewList(repository.findOwnedFutureEventsByOwner_Username(loggedUserNickname));
         }
+
         //Owned + FutureOngoing
         else if (participationType.equals("Owned Events") && dateType.equals("Future and Ongoing")) {
             return mapper.toEventViewList(repository.findOwnedFutureAndOngoingEventsByOwner_Username(loggedUserNickname));
         }
 
-
         //Owned + Past
-
         else if (participationType.equals("Owned Events") && dateType.equals("Past")) {
             return mapper.toEventViewList(repository.findOwnedPastEventsByOwner_Username(loggedUserNickname));
         }
 
         //Owned + All
         else if (participationType.equals("Owned Events") && dateType.equals("All")) {
-            return mapper.toEventViewList(repository.findOwnedAllEventsByOwner_Username(loggedUserNickname));
+            return mapper.toEventViewList(repository.findOwnedAllEventsByOwner_UsernameOrderByStartingDateTime(loggedUserNickname));
         }
 
         //Attended + Future
+        if (participationType.equals("Attended Events") && dateType.equals("Future")) {
+            return mapper.toEventViewList(repository.findAttendedFutureEventsByUsername(loggedUserNickname));
+        }
 
         //Attended + FutureOngoing
 
+        if (participationType.equals("Attended Events") && dateType.equals("Future and Ongoing")) {
+            return mapper.toEventViewList(repository.findAttendedFutureAndOngoingEventsByUsername(loggedUserNickname));
+        }
+
         //Attended + Past
+
+        if (participationType.equals("Attended Events") && dateType.equals("Past")) {
+            return mapper.toEventViewList(repository.findAttendedPastEventsByUsername(loggedUserNickname));
+        }
 
         //Attended + All
 
+        if (participationType.equals("Attended Events") && dateType.equals("All")) {
+            return mapper.toEventViewList(repository.findAttendedAllEventsByUsers_UsernameOrderByStartingDateTime(loggedUserNickname));
+        }
+
         //All + Future
+
+        if (participationType.equals("All Events") && dateType.equals("Future")) {
+            return mapper.toEventViewList(repository.findOwnedAndAttendedFutureEventsByUsername(loggedUserNickname));
+        }
 
         //All + FutureOngoing
 
