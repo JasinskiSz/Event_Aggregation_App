@@ -73,34 +73,12 @@
     </table>
 </div>
 
-<!--<div class="container" th:if="${#strings.equals(eventFilters.participationType, allEventsType)}">-->
+<div class="container" th:if="${#strings.equals(eventFilters.participationType, allEventsType)}">
 
-<!--    <table class="table table-striped" th:if="${#lists.contains(boundEvents., loggedUser)}">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>Attended Events</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="boundEvent : ${boundEvents}">-->
-<!--            <td>-->
-<!--                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">-->
-<!--                </a>-->
-<!--            </td>-->
-<!--            <td th:text="${boundEvent.startingDateTime}"></td>-->
-<!--            <td th:text="${boundEvent.endingDateTime}"></td>-->
-
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
-
-
-<div class="container">
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Bound events</th>
+            <th>All Events</th>
         </tr>
         </thead>
         <tbody>
@@ -117,44 +95,6 @@
     </table>
 </div>
 
-<div class="container">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Owned events</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="ownedEvent : ${ownedEvents}">
-            <td>
-                <a th:href="@{detail-view/__${ownedEvent.id}__}" th:text="${ownedEvent.title}">
-                </a>
-            </td>
-
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Attending events</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="attendingEvent : ${attendingEvents}">
-            <td>
-                <a th:href="@{detail-view/__${attendingEvent.id}__}" th:text="${attendingEvent.title}">
-                </a>
-
-            </td>
-
-        </tr>
-        </tbody>
-    </table>
-</div>
 
 </body>
 </html>
