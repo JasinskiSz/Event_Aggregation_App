@@ -55,4 +55,15 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByOwner(User owner);
 
     List<Event> findAllByUsers_Username(String nickname);
+
+    @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp and event.owner.username like ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedFutureEventsByOwner_Username(String nickname);
+
+    @Query(value = "SELECT event from Event event WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and event.owner.username = ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedFutureAndOngoingEventsByOwner_Username(String nickname);
+
+    @Query(value = "SELECT event from Event event WHERE event.endingDateTime < current_timestamp and event.owner.username like ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedPastEventsByOwner_Username(String nickname);
+
+    List<Event> findOwnedAllEventsByOwner_Username(String nickname);
 }

@@ -34,6 +34,27 @@
     <table class="table table-striped">
         <thead>
         <tr>
+            <th>Bound events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="boundEvent : ${boundEvents}">
+            <td>
+                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">
+                </a>
+            </td>
+            <td th:text="${boundEvent.startingDateTime}"></td>
+            <td th:text="${boundEvent.endingDateTime}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
             <th>Owned events</th>
         </tr>
         </thead>

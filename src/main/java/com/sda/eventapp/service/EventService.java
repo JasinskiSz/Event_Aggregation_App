@@ -3,7 +3,6 @@ package com.sda.eventapp.service;
 import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
-import com.sda.eventapp.model.Comment;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
@@ -244,5 +243,55 @@ public class EventService {
 
     public List<Event> findAttendingEvents(String loggedUserNickname) {
         return repository.findAllByUsers_Username(loggedUserNickname);
+    }
+
+    public List<EventView> findBoundEventsWithFilters(String loggedUserNickname, String participationType, String dateType) {
+        /*OWNED_EVENTS("Owned Events"),
+                ATTENDED_EVENTS("Attended Events"),
+                ALL("All");*/
+
+        /*FUTURE("Future"),
+                FUTURE_AND_ONGOING("Future and Ongoing"),
+                PAST("Past"),
+                ALL("All");*/
+
+        //Owned + Future
+        if (participationType.equals("Owned Events") && dateType.equals("Future")) {
+            return mapper.toEventViewList(repository.findOwnedFutureEventsByOwner_Username(loggedUserNickname));
+        }
+        //Owned + FutureOngoing
+        else if (participationType.equals("Owned Events") && dateType.equals("Future and Ongoing")) {
+            return mapper.toEventViewList(repository.findOwnedFutureAndOngoingEventsByOwner_Username(loggedUserNickname));
+        }
+
+
+        //Owned + Past
+
+        else if (participationType.equals("Owned Events") && dateType.equals("Past")) {
+            return mapper.toEventViewList(repository.findOwnedPastEventsByOwner_Username(loggedUserNickname));
+        }
+
+        //Owned + All
+        else if (participationType.equals("Owned Events") && dateType.equals("All")) {
+            return mapper.toEventViewList(repository.findOwnedAllEventsByOwner_Username(loggedUserNickname));
+        }
+
+        //Attended + Future
+
+        //Attended + FutureOngoing
+
+        //Attended + Past
+
+        //Attended + All
+
+        //All + Future
+
+        //All + FutureOngoing
+
+        //All + Past
+
+        //All + All
+
+        return null;
     }
 }

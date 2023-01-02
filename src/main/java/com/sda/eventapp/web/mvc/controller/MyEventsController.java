@@ -22,10 +22,17 @@ public class MyEventsController {
     private final EventService eventService;
     private final IAuthenticationFacade authenticationFacade;
 
+    //null handling @Params
     @GetMapping()
     public String getMyEventView(ModelMap map,
                                  @Param("participationType") String participationType,
                                  @Param("dateType") String dateType) {
+        if (participationType == null) {
+            participationType = "Owned Events";
+        }
+        if (dateType == null) {
+            dateType = "Future";
+        }
         System.out.println(participationType + " " + dateType);
 
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
@@ -33,6 +40,8 @@ public class MyEventsController {
         map.addAttribute("participationTypes", ParticipationType.values());
         map.addAttribute("dateTypes", DateType.values());
 
+        map.addAttribute("boundEvents",
+                eventService.findBoundEventsWithFilters(loggedUser.getUsername(), participationType, dateType));
 
         map.addAttribute("ownedEvents", eventService.findOwnedEvents(loggedUser));
         map.addAttribute("attendingEvents", eventService.findAttendingEvents(loggedUser.getUsername()));
