@@ -56,34 +56,39 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByUsers_Username(String nickname);
 
-    @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp and event.owner.username = ?1 ORDER BY event.startingDateTime")
-    List<Event> findOwnedFutureEventsByOwner_Username(String nickname);
+    @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp and event.owner.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedFutureEventsByOwner_Id(Long id);
 
-    @Query(value = "SELECT event from Event event WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and event.owner.username = ?1 ORDER BY event.startingDateTime")
-    List<Event> findOwnedFutureAndOngoingEventsByOwner_Username(String nickname);
+    @Query(value = "SELECT event from Event event WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and event.owner.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedFutureAndOngoingEventsByOwner_Id(Long id);
 
-    @Query(value = "SELECT event from Event event WHERE event.endingDateTime < current_timestamp and event.owner.username = ?1 ORDER BY event.startingDateTime")
-    List<Event> findOwnedPastEventsByOwner_Username(String nickname);
+    @Query(value = "SELECT event from Event event WHERE event.endingDateTime < current_timestamp and event.owner.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedPastEventsByOwner_Id(Long id);
 
-    List<Event> findOwnedAllEventsByOwner_UsernameOrderByStartingDateTime(String nickname);
+    List<Event> findOwnedAllEventsByOwner_IdOrderByStartingDateTime(Long id);
 
 
     //from Organization o join o.languages l join o.addresses a where l.languageCd = 1 AND a.housenumber = 22
     /*Query query = entityManager.createQuery("SELECT p FROM Product p
             JOIN p.categories c
             WHERE c.id = :idCategory");*/
-    @Query(value = "SELECT event from Event event left join event.users users WHERE event.startingDateTime > current_timestamp and users.username = ?1 ORDER BY event.startingDateTime")
-    List<Event> findAttendedFutureEventsByUsername(String nickname);
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.startingDateTime > current_timestamp and users.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findAttendedFutureEventsById(Long id);
 
-    @Query(value = "SELECT event from Event event left join event.users users WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and users.username = ?1 ORDER BY event.startingDateTime")
-    List<Event> findAttendedFutureAndOngoingEventsByUsername(String nickname);
+    @Query(value = "SELECT event from Event event left join event.users users  WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and users.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findAttendedFutureAndOngoingEventsById(Long id);
 
-    @Query(value = "SELECT event from Event event left join event.users users WHERE event.endingDateTime < current_timestamp and users.username = ?1 ORDER BY event.startingDateTime")
-    List<Event> findAttendedPastEventsByUsername(String nickname);
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.endingDateTime < current_timestamp and users.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findAttendedPastEventsById(Long id);
 
-    List<Event> findAttendedAllEventsByUsers_UsernameOrderByStartingDateTime(String nickname);
+    List<Event> findAttendedAllEventsByUsers_IdOrderByStartingDateTime(Long id);
 
-    @Query(value = "" +
-            "")
-    List<Event> findOwnedAndAttendedFutureEventsByUsername(String nickname);
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.startingDateTime > current_timestamp and (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedFutureEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedFutureAndOngoingEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.endingDateTime < current_timestamp and (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedPastEventsById(Long id);
 }

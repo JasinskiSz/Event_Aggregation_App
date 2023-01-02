@@ -41,7 +41,7 @@ public class MyEventsController {
         map.addAttribute("dateTypes", DateType.values());
 
         map.addAttribute("boundEvents",
-                eventService.findBoundEventsWithFilters(loggedUser.getUsername(), participationType, dateType));
+                eventService.findBoundEventsWithFilters(loggedUser.getId(), participationType, dateType));
 
         map.addAttribute("ownedEvents", eventService.findOwnedEvents(loggedUser));
         map.addAttribute("attendingEvents", eventService.findAttendingEvents(loggedUser.getUsername()));
