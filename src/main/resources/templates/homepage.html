@@ -18,11 +18,15 @@
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 </ul>
 
-                <form th:action="@{/homepage}"  method="get" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input id ="title" type="text" name="title" th:value="${title}" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get" role="search"
+                      th:action="@{/homepage}">
+                    <input id="title" type="text" name="title" th:value="${title}"
+                           class="form-control form-control-dark text-bg-dark" placeholder="Search..."
+                           aria-label="Search">
 
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="event-dropdown" data-bs-auto-close="outside">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false" id="event-dropdown" data-bs-auto-close="outside">
                             Dropdown button
                         </button>
 
