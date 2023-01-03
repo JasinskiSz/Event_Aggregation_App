@@ -3,7 +3,7 @@ package com.sda.eventapp.mapper;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.User;
-import com.sda.eventapp.web.mvc.form.CreateEventForm;
+import com.sda.eventapp.web.mvc.form.EventForm;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class EventMapper {
                 .build();
     }
 
-    public Event toEvent(CreateEventForm form, User owner) {
+    public Event toEvent(EventForm form, User owner) {
         return Event.builder()
                 .title(form.getTitle())
                 .description(form.getDescription())
@@ -46,4 +46,15 @@ public class EventMapper {
                 .owner(owner)
                 .build();
     }
+
+    public Event toEventUpdate(EventForm updateEventForm, User owner, Event event) {
+        event.setTitle((updateEventForm.getTitle()));
+        event.setDescription(updateEventForm.getDescription());
+        event.setStartingDateTime(updateEventForm.getStartingDateTime());
+        event.setEndingDateTime(updateEventForm.getEndingDateTime());
+        event.setOwner(owner);
+        event.setImage(updateEventForm.getImage());
+        return event;
+    }
 }
+
