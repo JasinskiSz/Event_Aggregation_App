@@ -58,7 +58,7 @@ public class EventController {
                     imageService.wrongFileExtensionMessage());
             return "redirect:/event/create";
         }
-        eventService.save(form, loggedUser, file); //eventService.save(form, loggedUser);
+        eventService.save(form, loggedUser, file);
         return "index";
     }
 

@@ -37,6 +37,7 @@ public class EventService {
     private final EventMapper mapper;
 
     public Event save(CreateEventForm form, User owner, MultipartFile file) {
+        form.setOwner(owner);
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form));
     }
@@ -145,8 +146,8 @@ public class EventService {
         return commentService.findCommentViewsByEventId(id);
     }
 
-    public void saveComment(CreateCommentForm form, Long id, User loggedUser) {
-        commentService.save(form, this.findById(id), loggedUser);
+    public void saveComment(CreateCommentForm form, Long eventId, User loggedUser) {
+        commentService.save(form, this.findById(eventId), loggedUser);
     }
 
     /**

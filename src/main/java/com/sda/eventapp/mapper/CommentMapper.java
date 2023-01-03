@@ -24,7 +24,7 @@ public class CommentMapper {
                 .toList();
     }
 
-    public Comment toEntity(CreateCommentForm form, Event event, User loggedUser) {
+    public Comment toComment(CreateCommentForm form, Event event, User loggedUser) {
         return Comment.builder()
                 .text(form.getText())
                 .writingDate(LocalDateTime.now())
