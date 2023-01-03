@@ -1,14 +1,11 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.authentication.IAuthenticationFacade;
+import com.sda.eventapp.mapper.authentication.IAuthenticationFacade;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.service.UserService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
