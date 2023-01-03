@@ -25,6 +25,6 @@ public class CommentService {
     }
 
     public List<CommentView> findCommentViewsByEventId(Long id) {
-        return mapper.toCommentViewList(repository.findAllByIdOrderByWritingDateDesc(id));
+        return mapper.toCommentViewList(repository.findAllByEvent_IdOrderByWritingDateDesc(id));
     }
 }
