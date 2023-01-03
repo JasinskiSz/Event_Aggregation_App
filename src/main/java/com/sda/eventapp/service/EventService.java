@@ -199,7 +199,7 @@ public class EventService {
             image.setFilename(randomizeFilename(originalFilename));
         }
 
-        Path fullPath = Paths.get(image.getPath() + originalFilename);
+        Path fullPath = Paths.get(image.getPath() + image.getFilename());
 
         try {
             byte[] bytes = file.getBytes();
