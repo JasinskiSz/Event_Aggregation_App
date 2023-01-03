@@ -40,6 +40,7 @@ public class EventMapper {
                 .startingDateTime(form.getStartingDateTime())
                 .endingDateTime(form.getEndingDateTime())
                 .image(form.getImage())
+                .owner(form.getOwner())
                 .build();
     }
 }

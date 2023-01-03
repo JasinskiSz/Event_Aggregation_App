@@ -3,9 +3,9 @@ package com.sda.eventapp.service;
 import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
-import com.sda.eventapp.model.Comment;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
+import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import com.sda.eventapp.web.mvc.form.CreateEventForm;
@@ -36,7 +36,8 @@ public class EventService {
     private final ImageService imageService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form, MultipartFile file) {
+    public Event save(CreateEventForm form, User owner, MultipartFile file) {
+        form.setOwner(owner);
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form));
     }
@@ -141,12 +142,12 @@ public class EventService {
         return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
     }
 
-    public Comment saveComment(CreateCommentForm form, Long id) {
-        return commentService.save(form, this.findById(id));
-    }
-
     public List<CommentView> findCommentViewsByEventId(Long id) {
         return commentService.findCommentViewsByEventId(id);
+    }
+
+    public void saveComment(CreateCommentForm form, Long eventId, User loggedUser) {
+        commentService.save(form, this.findById(eventId), loggedUser);
     }
 
     /**
