@@ -38,7 +38,7 @@ public class EventService {
 
     public Event save(CreateEventForm form, User owner, MultipartFile file) {
         form.setImage(solveImage(file));
-        return repository.save(mapper.toEvent(form, owner));
+        return repository.save(mapper.toEvent(form));
     }
 
     public Event update(CreateEventForm form) {
