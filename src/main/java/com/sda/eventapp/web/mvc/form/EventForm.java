@@ -2,6 +2,8 @@ package com.sda.eventapp.web.mvc.form;
 
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.web.mvc.form.validation.constraint.DifferentDates;
+import com.sda.eventapp.web.mvc.form.validation.constraint.EventPastTime;
+import com.sda.eventapp.web.mvc.form.validation.constraint.MaxEventTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -13,8 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@EventPastTime(message = "Starting date cannot be a past date")
+@MaxEventTime(message = "The maximum duration of the event is 2 weeks")
 @DifferentDates(message = "Starting date must be before ending date of event")
-public class CreateEventForm {
+public class EventForm {
     private Long id;
     @NotBlank(message = "Field title is required.")
     private String title;
