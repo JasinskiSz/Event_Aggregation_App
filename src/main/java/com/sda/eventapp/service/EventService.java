@@ -8,7 +8,7 @@ import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
-import com.sda.eventapp.web.mvc.form.CreateEventForm;
+import com.sda.eventapp.web.mvc.form.EventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -36,7 +36,7 @@ public class EventService {
     private final ImageService imageService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form, MultipartFile file, User owner) {
+    public Event save(EventForm form, MultipartFile file, User owner) {
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form, owner));
 
@@ -47,19 +47,16 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
-
-    public Event update(CreateEventForm form) {
+    public Event update(EventForm form, MultipartFile file, User owner) {
         Event event = repository.findById(form.getId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
-        event.setId((form.getId()));
-        event.setTitle((form.getTitle()));
-        event.setDescription(form.getDescription());
-        event.setStartingDateTime(form.getStartingDateTime());
-        event.setEndingDateTime(form.getEndingDateTime());
-
-        return repository.save(event);
+        form.setImage(solveImage(file));
+        return repository.save(mapper.toEventUpdate(form, owner, event));
     }
 
+    public Long findOwnerIdByEventId(Long eventId) {
+        return repository.findById(eventId).orElseThrow().getOwner().getId();
+    }
 
     private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
@@ -200,7 +197,7 @@ public class EventService {
             image.setFilename(randomizeFilename(originalFilename));
         }
 
-        Path fullPath = Paths.get(image.getPath() + originalFilename);
+        Path fullPath = Paths.get(image.getPath() + image.getFilename());
 
         try {
             byte[] bytes = file.getBytes();
