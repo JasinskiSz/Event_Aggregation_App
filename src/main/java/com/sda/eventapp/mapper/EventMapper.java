@@ -36,14 +36,14 @@ public class EventMapper {
                 .build();
     }
 
-    public Event toEvent(CreateEventForm form, User owner) {
+    public Event toEvent(CreateEventForm form) {
         return Event.builder()
                 .title(form.getTitle())
                 .description(form.getDescription())
                 .startingDateTime(form.getStartingDateTime())
                 .endingDateTime(form.getEndingDateTime())
                 .image(form.getImage())
-                .owner(owner)
+                .owner(form.getOwner())
                 .build();
     }
 }

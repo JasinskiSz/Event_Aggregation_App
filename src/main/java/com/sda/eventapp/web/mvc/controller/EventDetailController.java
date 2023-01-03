@@ -7,8 +7,6 @@ import com.sda.eventapp.service.UserService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class EventDetailController {
     private final EventService eventService;
     private final IAuthenticationFacade authenticationFacade;
-
 
     @GetMapping("/{id}")
     public String getDetailEventView(ModelMap map, @PathVariable("id") Long id) {
@@ -36,7 +33,6 @@ public class EventDetailController {
     @PostMapping("/{id}")
     public String addComment(@ModelAttribute("comment") @Valid CreateCommentForm form, Errors errors, @PathVariable("id") Long eventID) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-
 
         //todo trello reminder #002
         if (errors.hasErrors()) {
