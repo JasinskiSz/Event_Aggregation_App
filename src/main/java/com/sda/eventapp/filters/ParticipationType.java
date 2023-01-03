@@ -7,7 +7,6 @@ public enum ParticipationType {
 
     private final String displayValue;
 
-
     ParticipationType(String displayValue) {
         this.displayValue = displayValue;
     }

@@ -8,7 +8,6 @@ public enum DateType {
 
     private final String displayValue;
 
-
     DateType(String displayValue) {
         this.displayValue = displayValue;
     }
