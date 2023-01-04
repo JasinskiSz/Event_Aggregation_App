@@ -40,8 +40,10 @@ p {
     white-space: normal;
 }
 
-.columnText {
+.column {
     flex: 1;
+    margin-left: 4%;
+    margin-right: 4%;
 
 }
 
@@ -49,6 +51,8 @@ p {
     flex: 1;
     display: flex;
     justify-content: center;
+    margin-left: 4%;
+    margin-right: 4%;
 
 }
 
@@ -57,8 +61,8 @@ p {
     display: flex;
     align-items: center;
 
-    margin-left: 4%;
-    margin-right: 4%;
+    /*margin-left: 4%;*/
+    /*margin-right: 4%;*/
 }
 
 img {
@@ -89,4 +93,19 @@ img {
 
 .commentDate {
     font-size: 8px;
+}
+
+.lowerContent {
+    display: flex;
+
+}
+
+.attendingList {
+
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+    word-break: break-all;
+    white-space: normal;
+
 }

@@ -23,7 +23,7 @@
     <!-- text placement-->
     <div class="event-content">
 
-        <section class="columnText">
+        <section class="column">
             <p class="header" th:text="${event.title}"></p>
             <!--     sign up user -->
 
@@ -64,49 +64,66 @@
 
     <hr class="section-divider">
 
+    <div class="lowerContent">
+        <section class="column">
+            <form class="nav-item d-flex"
+                  method="post"
+                  role="search"
+                  th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
+                <div class="input-group">
+                    <input aria-describedby="basic-addon1"
+                           aria-label="Add comment"
+                           autofocus
+                           class="form-control"
+                           id="title"
+                           name="title"
+                           placeholder="Add comment..."
+                           th:field="*{text}"
+                           type="text">
 
-    <form class="nav-item d-flex"
-          method="post"
-          role="search"
-          th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
-        <div class="input-group">
-            <input aria-describedby="basic-addon1"
-                   aria-label="Add comment"
-                   autofocus
-                   class="form-control"
-                   id="title"
-                   name="title"
-                   placeholder="Add comment..."
-                   th:field="*{text}"
-                   type="text">
-
-            <!-- Search button -->
-            <button class="btn btn-primary input-group-append"
-                    type="submit">
-                Add comment
-            </button>
-        </div>
-    </form>
-    <section>
-
-
-        <div class="commentList">
-
-            <tr th:each="c : ${comments}">
-
-                <div class="comment">
-                    <td th:text="${c.userNickname} + ' wrote: '"></td>
-                    <td th:text="${c.text}"></td>
-                    <div class="commentDate">
-                        <td th:text="${c.writingDate}"></td>
-                    </div>
+                    <!-- Search button -->
+                    <button class="btn btn-primary input-group-append"
+                            type="submit">
+                        Add comment
+                    </button>
                 </div>
+            </form>
+            <div class="commentList">
 
-            </tr>
+                <tr th:each="c : ${comments}">
 
+                    <div class="comment">
+                        <td th:text="${c.userNickname} + ' wrote: '"></td>
+                        <td th:text="${c.text}"></td>
+                        <div class="commentDate">
+                            <td th:text="${c.writingDate}"></td>
+                        </div>
+                    </div>
 
-        </div>
-    </section>
+                </tr>
+
+            </div>
+        </section>
+
+        <section class="column">
+            <div>
+                <table class="table table-striped attendingList">
+                    <thead>
+                    <tr>
+                        <th>Attending Users</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--                    <tr th:each="userNickname : ${event.usersNicknames}">-->
+                    <!--                        <td th:text="${userNickname}"></td>-->
+
+                    <!--                    </tr>-->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
 
 </div>
 
