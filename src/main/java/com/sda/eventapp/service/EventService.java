@@ -123,7 +123,7 @@ public class EventService {
     }
 
     public EventView findEventViewById(Long id) {
-        return mapper.toEventView(findById(id));
+        return mapper.toEventView(this.findById(id));
     }
 
     public List<EventView> findAllEventViews() {
@@ -142,8 +142,8 @@ public class EventService {
         return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
     }
 
-    public List<CommentView> findCommentViewsByEventId(Long id) {
-        return commentService.findCommentViewsByEventId(id);
+    public List<CommentView> findCommentViewsByEventId(Long eventId) {
+        return commentService.findCommentViewsByEventId(eventId);
     }
 
     public void saveComment(CreateCommentForm form, Long eventId, User loggedUser) {
@@ -224,16 +224,16 @@ public class EventService {
         return new File(IMAGES_PATH).mkdirs();
     }
 
-    public Event signUpForEvent(User loggedUser, Long eventID) {
-        Event foundEvent = this.findById(eventID);
-        foundEvent.getUsers().add(loggedUser);
-        return repository.save(foundEvent);
+    public Event signUpForEvent(User user, Long eventId) {
+        Event event = this.findById(eventId);
+        event.getUsers().add(user);
+        return repository.save(event);
     }
 
-    public void signOutFromEvent(User loggedUser, Long eventID) {
-        Event foundEvent = this.findById(eventID);
-        foundEvent.getUsers().remove(loggedUser);
-        repository.save(foundEvent);
+    public Event signOutFromEvent(User user, Long eventId) {
+        Event event = this.findById(eventId);
+        event.getUsers().remove(user);
+        return repository.save(event);
     }
 
     /**

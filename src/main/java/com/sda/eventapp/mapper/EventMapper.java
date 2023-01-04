@@ -32,7 +32,9 @@ public class EventMapper {
                 .startingDateTime(event.getStartingDateTime())
                 .endingDateTime(event.getEndingDateTime())
                 .image(event.getImage())
-                .usersNicknames(event.getUsers().stream().map(User::getUsername).collect(Collectors.toSet()))
+                .usersNicknames(event.getUsers().stream()
+                        .map(User::getUsername)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 

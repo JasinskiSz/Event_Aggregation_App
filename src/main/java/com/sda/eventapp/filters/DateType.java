@@ -6,13 +6,13 @@ public enum DateType {
     PAST("Past"),
     ALL("All");
 
-    private final String displayValue;
+    private final String name;
 
-    DateType(String displayValue) {
-        this.displayValue = displayValue;
+    DateType(String name) {
+        this.name = name;
     }
 
-    public String getDisplayValue() {
-        return displayValue;
+    public String getName() {
+        return name;
     }
 }

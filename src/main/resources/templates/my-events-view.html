@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+<html lang="en"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -11,19 +11,19 @@
 
 
 <form method="get" th:action="@{/my-events}">
-<div class="container">
+    <div class="container">
 
-    <select name="participationType" value="participationType">
-        <option th:each="participationType: ${participationTypes}"
-                th:text="${participationType.displayValue}" th:value="${participationType.displayValue}"></option>
-    </select>
+        <select name="participationType" value="participationType">
+            <option th:each="participationType: ${participationTypes}"
+                    th:text="${participationType.name}" th:value="${participationType.name}"></option>
+        </select>
 
-    <select name="dateType" value="dateType">
-        <option th:each="dateType: ${dateTypes}"
-                th:text="${dateType.displayValue}" th:value="${dateType.displayValue}"></option>
-    </select>
+        <select name="dateType" value="dateType">
+            <option th:each="dateType: ${dateTypes}"
+                    th:text="${dateType.name}" th:value="${dateType.name}"></option>
+        </select>
 
-</div>
+    </div>
     <div>
         <input class="btn btn-primary" type="submit" value="Search">
     </div>
@@ -94,7 +94,5 @@
         </tbody>
     </table>
 </div>
-
-
 </body>
 </html>

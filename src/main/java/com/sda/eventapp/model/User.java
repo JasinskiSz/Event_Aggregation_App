@@ -34,17 +34,6 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private Set<Event> ownedEvents;
 
-    //todo: trello reminder #001
-    /*@ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_events",
-            joinColumns = {
-                    @JoinColumn(name = "user_id", referencedColumnName = "id",
-                            nullable = true)},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "event_id", referencedColumnName = "id",
-                            nullable = true)})
-    private Set<Event> attendingEvents = new HashSet<>();*/
-
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     private Set<Event> attendingEvents = new HashSet<>();
 
