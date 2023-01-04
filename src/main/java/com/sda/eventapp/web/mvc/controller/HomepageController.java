@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping({"/home", "/"})
 @RequiredArgsConstructor
 public class HomepageController {
     private final EventService eventService;
