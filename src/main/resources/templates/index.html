@@ -146,7 +146,8 @@
                         <div class="card h-100 h6">
                             <img alt="..."
                                  class="card-img-top"
-                                 src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"/>
+                                 th:object="${event.image}"
+                                 th:src="@{${'/images/' + event.image.filename}}"/>
                             <div class="card-body">
                                 <h5 class="card-title">
                                     <a th:href="@{detail-view/__${event.id}__}"

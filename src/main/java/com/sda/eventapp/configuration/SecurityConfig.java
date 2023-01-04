@@ -21,7 +21,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/home",
                                 "/user/register",
                                 "/detail-view/**",
-                                "/css/**", "/js/**", "/assets/**")
+                                "/css/**", "/js/**", "/assets/**", "/images/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
