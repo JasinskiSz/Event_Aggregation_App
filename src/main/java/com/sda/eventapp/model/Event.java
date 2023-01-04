@@ -38,14 +38,22 @@ public class Event {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endingDateTime;
 
-    @ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_events",
+            joinColumns = {
+                    @JoinColumn(name = "event_id", referencedColumnName = "id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id")
+            }
+    )
     private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="image_id",referencedColumnName = "id")
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
     @Override

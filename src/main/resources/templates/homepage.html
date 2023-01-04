@@ -12,24 +12,31 @@
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                        <use xlink:href="#bootstrap"></use>
+                    </svg>
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 </ul>
 
-                <form th:action="@{/homepage}"  method="get" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input id ="title" type="text" name="title" th:value="${title}" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get" role="search"
+                      th:action="@{/homepage}">
+                    <input aria-label="Search" class="form-control form-control-dark text-bg-dark" id="title"
+                           name="title" placeholder="Search..." th:value="${title}" type="text">
 
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="event-dropdown" data-bs-auto-close="outside">
+                        <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
+                                data-bs-auto-close="outside" data-bs-toggle="dropdown" id="event-dropdown"
+                                type="button">
                             Dropdown button
                         </button>
 
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuClickableOutside">
                             <li>
                                 <a class="form-check" href="#">
-                                    <input type="checkbox" class="btn-check" id="futureEventsFilter" name="futureEventsFilter">
+                                    <input type="checkbox" class="btn-check" id="futureEventsFilter"
+                                           name="futureEventsFilter">
                                     <label class="btn btn-outline-primary" for="futureEventsFilter">Future events</label>
                                 </a>
                             </li>

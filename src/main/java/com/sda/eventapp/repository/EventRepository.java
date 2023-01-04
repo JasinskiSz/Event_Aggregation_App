@@ -50,4 +50,38 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value = "SELECT event FROM Event event WHERE  (event.startingDateTime <= ?2 and event.endingDateTime >= ?1)")
     List<Event> findAllEventByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp and event.owner.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedFutureEventsByOwner_Id(Long id);
+
+    @Query(value = "SELECT event from Event event WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and event.owner.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedFutureAndOngoingEventsByOwner_Id(Long id);
+
+    @Query(value = "SELECT event from Event event WHERE event.endingDateTime < current_timestamp and event.owner.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findOwnedPastEventsByOwner_Id(Long id);
+
+    List<Event> findOwnedAllEventsByOwner_IdOrderByStartingDateTime(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.startingDateTime > current_timestamp and users.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findAttendedFutureEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users  WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and users.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findAttendedFutureAndOngoingEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.endingDateTime < current_timestamp and users.id = ?1 ORDER BY event.startingDateTime")
+    List<Event> findAttendedPastEventsById(Long id);
+
+    List<Event> findAttendedAllEventsByUsers_IdOrderByStartingDateTime(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.startingDateTime > current_timestamp and (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedFutureEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE (event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime) and (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedFutureAndOngoingEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE event.endingDateTime < current_timestamp and (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedPastEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join event.users users WHERE (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
+    List<Event> findOwnedAndAttendedAllEventsById(Long id);
 }
