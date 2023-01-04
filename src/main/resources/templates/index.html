@@ -91,18 +91,6 @@
                         </button>
                     </div>
                 </form>
-
-                <!-- Collapsing navbar-->
-                <!-- <button class="navbar-toggler"-->
-                <!--         aria-controls="navbarSupportedContent"-->
-                <!--         aria-expanded="false"-->
-                <!--         aria-label="Toggle navigation"-->
-                <!--         data-bs-target="#navbarSupportedContent"-->
-                <!--         data-bs-toggle="collapse"-->
-                <!--         type="button">-->
-                <!--     <span class="navbar-toggler-icon"></span>-->
-                <!-- </button>-->
-
                 <!-- Profile dropdown-->
                 <div class="dropdown"
                      sec:authorize="isAuthenticated()">
@@ -117,13 +105,27 @@
                     </a>
                     <ul aria-labelledby="profileDropdown"
                         class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
-                        <li><a class="dropdown-item" th:href="@{/user/events}">My Events</a></li>
+                        <li>
+                            <a class="dropdown-item"
+                               th:href="@{/profile}">
+                                Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item"
+                               th:href="@{/my-events}">
+                                My Events
+                            </a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item text-danger fw-semibold"
-                               th:href="@{/perform-log-out}">Log out</a></li>
+                        <li>
+                            <a class="dropdown-item text-danger fw-semibold"
+                               th:href="@{/perform-log-out}">
+                                Log out
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="nav-item"
@@ -133,7 +135,6 @@
                         Sign in/Sign up
                     </a>
                 </div>
-
             </div>
         </nav>
         <!-- Page content-->
@@ -148,9 +149,11 @@
                                  src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"/>
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <a th:href="@{detail-view/__${event.id}__}" th:text="${event.title}"></a>
+                                    <a th:href="@{detail-view/__${event.id}__}"
+                                       th:text="${event.title}"></a>
                                 </h5>
-                                <p class="card-text text-break" th:text="${#strings.abbreviate(event.description,50)}"/>
+                                <p class="card-text text-break"
+                                   th:text="${#strings.abbreviate(event.description,50)}"/>
                             </div>
                             <div class="card-footer">
                                 <span th:text="${event.startingDateTime}">start date</span>
