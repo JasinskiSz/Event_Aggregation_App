@@ -1,0 +1,67 @@
+.header {
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+    word-break: break-all;
+    white-space: normal;
+    font-size: 36px;
+    margin-bottom: 40px;
+!important;
+
+}
+
+h4 {
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+}
+
+hr {
+    background-color: white;
+    width: 50%;
+
+    height: 10px;
+
+}
+
+p {
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.columnText {
+    flex: 1;
+
+}
+
+.columnImage {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+
+}
+
+.event-content {
+
+    display: flex;
+    align-items: center;
+
+    margin-left: 4%;
+    margin-right: 4%;
+}
+
+img {
+    width: 480px;
+    height: 270px;
+
+}
+
+.section-divider {
+    background-color: white;
+    width: 50%;
+    height: 10px;
+    margin: 20px 25%;
+}
