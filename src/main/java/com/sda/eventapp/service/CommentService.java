@@ -20,12 +20,11 @@ public class CommentService {
     private final CommentRepository repository;
     private final CommentMapper mapper;
 
-    public Comment save(CreateCommentForm form, Event event, User loggedUser) {
-
-        return repository.save(mapper.toEntity(form, event, loggedUser));
+    public Comment save(CreateCommentForm form, Event event, User user) {
+        return repository.save(mapper.toComment(form, event, user));
     }
 
-    public List<CommentView> findCommentViewsByEventId(Long id) {
-        return mapper.toCommentViewList(repository.findAllByEvent_IdOrderByWritingDateDesc(id));
+    public List<CommentView> findCommentViewsByEventId(Long eventId) {
+        return mapper.toCommentViewList(repository.findAllByEvent_IdOrderByWritingDateDesc(eventId));
     }
 }

@@ -19,45 +19,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping({"/my-events"})
 public class MyEventsController {
-
     private final EventService eventService;
     private final IAuthenticationFacade authenticationFacade;
 
-    private EventFilters eventFilters = EventFilters.builder()
-            .participationType(ParticipationType.OWNED_EVENTS.getDisplayValue())
-            .dateType(DateType.FUTURE.getDisplayValue())
+    private final EventFilters eventFilters = EventFilters.builder()
+            .participationType(ParticipationType.OWNED_EVENTS.getName())
+            .dateType(DateType.FUTURE.getName())
             .build();
 
-    //todo null handling @Params
     @GetMapping()
     public String getMyEventView(ModelMap map,
                                  @Param("participationType") String participationType,
                                  @Param("dateType") String dateType) {
 
-        if (participationType == null) {
-            eventFilters.setParticipationType(ParticipationType.OWNED_EVENTS.getDisplayValue());
-        } else {
+        if (participationType != null && dateType != null) {
             eventFilters.setParticipationType(participationType);
-        }
-        if (dateType == null) {
-            eventFilters.setDateType(DateType.FUTURE.getDisplayValue());
-        } else {
             eventFilters.setDateType(dateType);
         }
 
-
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+
         map.addAttribute("loggedUser", loggedUser);
         map.addAttribute("participationTypes", ParticipationType.values());
-        map.addAttribute("ownedEventsType", ParticipationType.OWNED_EVENTS.getDisplayValue());
-        map.addAttribute("attendedEventsType", ParticipationType.ATTENDED_EVENTS.getDisplayValue());
-        map.addAttribute("allEventsType", ParticipationType.ALL_EVENTS.getDisplayValue());
+        map.addAttribute("ownedEventsType", ParticipationType.OWNED_EVENTS.getName());
+        map.addAttribute("attendedEventsType", ParticipationType.ATTENDED_EVENTS.getName());
+        map.addAttribute("allEventsType", ParticipationType.ALL_EVENTS.getName());
         map.addAttribute("dateTypes", DateType.values());
         map.addAttribute("boundEvents",
-                eventService.findBoundEventsWithFilters(loggedUser.getId(), eventFilters.getParticipationType(), eventFilters.getDateType()));
+                eventService.findAllEventViews(
+                        loggedUser.getId(),
+                        eventFilters.getParticipationType(),
+                        eventFilters.getDateType()
+                ));
         map.addAttribute("eventFilters", eventFilters);
-
-
 
         return "my-events-view";
     }

@@ -1,7 +1,6 @@
 package com.sda.eventapp.repository;
 
 import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -52,10 +51,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "SELECT event FROM Event event WHERE  (event.startingDateTime <= ?2 and event.endingDateTime >= ?1)")
     List<Event> findAllEventByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    List<Event> findAllByOwner(User owner);
-
-    List<Event> findAllByUsers_Username(String nickname);
-
     @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp and event.owner.id = ?1 ORDER BY event.startingDateTime")
     List<Event> findOwnedFutureEventsByOwner_Id(Long id);
 
@@ -67,11 +62,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findOwnedAllEventsByOwner_IdOrderByStartingDateTime(Long id);
 
-
-    //from Organization o join o.languages l join o.addresses a where l.languageCd = 1 AND a.housenumber = 22
-    /*Query query = entityManager.createQuery("SELECT p FROM Product p
-            JOIN p.categories c
-            WHERE c.id = :idCategory");*/
     @Query(value = "SELECT event from Event event left join event.users users WHERE event.startingDateTime > current_timestamp and users.id = ?1 ORDER BY event.startingDateTime")
     List<Event> findAttendedFutureEventsById(Long id);
 

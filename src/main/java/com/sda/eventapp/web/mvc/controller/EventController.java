@@ -29,10 +29,11 @@ public class EventController {
     private final EventService eventService;
     private final ImageService imageService;
 
+    private final IAuthenticationFacade authenticationFacade;
+
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
-    private final IAuthenticationFacade authenticationFacade;
 
     @GetMapping("/create")
     public String create(ModelMap model) {
@@ -45,22 +46,22 @@ public class EventController {
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid EventForm form, Errors errors,
                                @RequestParam MultipartFile file, RedirectAttributes ra) {
-        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
         if (errors.hasErrors()) {
             return "create-event";
         }
+
+        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+
         // Not sure if this should be handled by ImageService.
         // But check should be here, to have proper redirect.
-        //
+
         // If file is uploaded (is not empty) and file is not an image.
         if (!file.isEmpty() && !imageService.isImage(file)) {
             ra.addFlashAttribute("wrongFileExtension",
                     imageService.wrongFileExtensionMessage());
             return "redirect:/event/create";
         }
-
-
-        eventService.save(form, file, loggedUser);
+        eventService.save(form, loggedUser, file);
         return "index";
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+<html lang="en"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -11,14 +11,14 @@
 <div class="container">
     <p id="id" name="id" th:value="${event.id}"></p>
     <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Start time</th>
-                <th>End time</th>
-            </tr>
-            </thead>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Start time</th>
+            <th>End time</th>
+        </tr>
+        </thead>
         <tbody>
         <tr th:object="${event}">
             <td th:text="${event.title}"></td>
@@ -30,41 +30,35 @@
     </table>
 </div>
 
-    <div class="container">
-        <div class="col-md-3" th:object="${event.image}">
-            <img alt="event-image" style="width:304px;height:228px" th:src="@{${'/images/' + event.image.filename}}">
-        </div>
+<div class="container">
+    <div class="col-md-3" th:object="${event.image}">
+        <img alt="event-image" style="width:304px;height:228px" th:src="@{${'/images/' + event.image.filename}}">
     </div>
+</div>
 
-    <div>
-        <form th:object="${comment}" th:action="@{/detail-view/__${event.id}__}" method="post">
-            <div>
-                <label for="comment">Write a comment:</label>
-                <input id="comment" type="text" th:field="*{text}"/>
-            </div>
-            <div>
-                <input type="submit" value="Add">
-            </div>
-        </form>
-    </div>
+<div>
+    <form method="post" th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
+        <div>
+            <label for="comment">Write a comment:</label>
+            <input id="comment" th:field="*{text}" type="text"/>
+        </div>
+        <div>
+            <input type="submit" value="Add">
+        </div>
+    </form>
+</div>
 
 <!--     sign up user -->
-
 <div th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
-    <!--            th:if="!${event.usersNicknames.contains(__${loggedUser.username}__)}"-->
-
     <form method="post" th:action="@{/detail-view/__${event.id}__/signup-for-event}">
         <div>
             <input type="submit" value="Sign up for Event">
         </div>
     </form>
-
 </div>
+
 <!--  sign out user  -->
-
 <div th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">
-    <!--            th:if="${event.usersNicknames.contains(__${loggedUser.username}__)}" -->
-
     <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
         <div>
             <input type="submit" value="Sign out from Event">
@@ -82,12 +76,10 @@
         <tbody>
         <tr th:each="userNickname : ${event.usersNicknames}">
             <td th:text="${userNickname}"></td>
-
         </tr>
         </tbody>
     </table>
 </div>
-
 
 <div class="container">
     <table class="table table-striped">
@@ -97,23 +89,25 @@
             <th>Writing date</th>
         </tr>
         </thead>
-    <div class="container">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Comment author</th>
-                <th>Text</th>
-                <th>Writing date</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="c : ${comments}">
-                <td th:text="${c.userNickname} + ' wrote: '"></td>
-                <td th:text="${c.text}"></td>
-                <td th:text="${c.writingDate}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="container">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Comment author</th>
+                    <th>Text</th>
+                    <th>Writing date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c : ${comments}">
+                    <td th:text="${c.userNickname} + ' wrote: '"></td>
+                    <td th:text="${c.text}"></td>
+                    <td th:text="${c.writingDate}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </table>
+</div>
 </body>
 </html>

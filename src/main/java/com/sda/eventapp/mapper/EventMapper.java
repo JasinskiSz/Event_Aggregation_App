@@ -32,18 +32,20 @@ public class EventMapper {
                 .startingDateTime(event.getStartingDateTime())
                 .endingDateTime(event.getEndingDateTime())
                 .image(event.getImage())
-                .usersNicknames(event.getUsers().stream().map(User::getUsername).collect(Collectors.toSet()))
+                .usersNicknames(event.getUsers().stream()
+                        .map(User::getUsername)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 
-    public Event toEvent(EventForm form, User owner) {
+    public Event toEvent(EventForm form) {
         return Event.builder()
                 .title(form.getTitle())
                 .description(form.getDescription())
                 .startingDateTime(form.getStartingDateTime())
                 .endingDateTime(form.getEndingDateTime())
                 .image(form.getImage())
-                .owner(owner)
+                .owner(form.getOwner())
                 .build();
     }
 
@@ -57,4 +59,3 @@ public class EventMapper {
         return event;
     }
 }
-

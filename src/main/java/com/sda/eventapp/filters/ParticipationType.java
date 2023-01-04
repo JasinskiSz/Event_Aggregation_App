@@ -5,14 +5,13 @@ public enum ParticipationType {
     ATTENDED_EVENTS("Attended Events"),
     ALL_EVENTS("All Events");
 
-    private final String displayValue;
+    private final String name;
 
-
-    ParticipationType(String displayValue) {
-        this.displayValue = displayValue;
+    ParticipationType(String name) {
+        this.name = name;
     }
 
-    public String getDisplayValue() {
-        return displayValue;
+    public String getName() {
+        return name;
     }
 }

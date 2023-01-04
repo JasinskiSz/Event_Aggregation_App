@@ -41,17 +41,13 @@ public class Event {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_events",
             joinColumns = {
-                    @JoinColumn(name = "event_id", referencedColumnName = "id",
-                            nullable = true)},
+                    @JoinColumn(name = "event_id", referencedColumnName = "id")
+            },
             inverseJoinColumns = {
-                    @JoinColumn(name = "user_id", referencedColumnName = "id",
-                            nullable = true)})
+                    @JoinColumn(name = "user_id", referencedColumnName = "id")
+            }
+    )
     private Set<User> users = new HashSet<>();
-
-
-
-    /*@ManyToMany(mappedBy = "attendingEvents", fetch = FetchType.LAZY)
-    private Set<User> users = new HashSet<>();*/
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<Comment> comments;
