@@ -24,7 +24,7 @@ public class EventDetailController {
         map.addAttribute("comment", new CreateCommentForm());
         map.addAttribute("comments", eventService.findCommentViewsByEventId(id));
 
-        return "event-detail-view";
+        return "event-detail-view-mockup";
     }
 
     @PostMapping("/{id}")
