@@ -36,6 +36,13 @@
             </tbody>
         </table>
     </div>
+
+    <div class="container">
+        <div class="col-md-3" th:object="${event.image}">
+            <img alt="event-image" style="width:304px;height:228px" th:src="@{${'/images/' + event.image.filename}}">
+        </div>
+    </div>
+
     <div>
         <form th:object="${comment}" th:action="@{/detail-view/__${event.id}__}" method="post">
             <div>
@@ -52,12 +59,14 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>Comment author</th>
                 <th>Text</th>
                 <th>Writing date</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="c : ${comments}">
+                <td th:text="${c.userNickname} + ' wrote: '"></td>
                 <td th:text="${c.text}"></td>
                 <td th:text="${c.writingDate}"></td>
             </tr>

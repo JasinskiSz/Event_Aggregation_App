@@ -12,4 +12,5 @@ import java.time.LocalDateTime;
 public class CommentView {
     private String text;
     private LocalDateTime writingDate;
+    private String userNickname;
 }

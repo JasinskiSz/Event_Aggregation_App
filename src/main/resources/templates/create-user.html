@@ -18,37 +18,55 @@
 <div class="container">
     <form method="post" th:action="@{/user/register}" th:object="${user}">
         <div class="mb-3">
-            <label class="form-label" for="username">Username:</label>
-            <input class="form-control" id="username" placeholder="Enter username" required th:field="*{username}"
-                   type="text">
-            <div
-                    class="invalid-feedback-custom"
-                    th:if="${#fields.hasErrors('username')}"
-                    th:text="${#fields.errors('username')}">
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('global')}"
+                 th:each="err : ${#fields.errors('global')}"
+                 th:text="${err}">
+            </div>
+
+            <label for="username" class="form-label">Username:</label>
+            <input th:field="*{username}" id="username" class="form-control" type="text" placeholder="Enter username"
+                   required>
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('username')}"
+                 th:text="${#fields.errors('username')}">
             </div>
         </div>
         <div class="mb-3">
             <label class="form-label" for="email">Email:</label>
             <input class="form-control" id="email" placeholder="Enter email" required th:field="*{email}" type="email">
-            <div
-                    class="invalid-feedback-custom"
-                    th:if="${#fields.hasErrors('email')}"
-                    th:text="${#fields.errors('email')}">
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:text="${#fields.errors('email')}">
             </div>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="password">Password:</label>
-            <input class="form-control" id="password" placeholder="Enter password" required
-                   th:field="*{password}" type="password">
-            <div
-                    class="invalid-feedback-custom"
-                    th:if="${#fields.hasErrors('password')}"
-                    th:text="${#fields.errors('password')}">
+            <label class="form-label"
+                   for="password">
+                Password:
+            </label>
+            <input class="form-control"
+                   id="password"
+                   placeholder="Enter password"
+                   th:field="*{password}"
+                   type="password"
+                   required>
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('password')}"
+                 th:text="${#fields.errors('password')}">
             </div>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="passwordConfirm">Confirm Password:</label>
-            <input class="form-control" id="passwordConfirm" placeholder="Confirm password" required type="password">
+            <label class="form-label"
+                   for="confirm-password">
+                Confirm Password:
+            </label>
+            <input class="form-control"
+                   id="confirm-password"
+                   th:field="*{confirmPassword}"
+                   type="password"
+                   placeholder="Enter password"
+                   required>
         </div>
         <input class="btn btn-primary" type="submit" value="Submit">
     </form>

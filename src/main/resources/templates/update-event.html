@@ -19,8 +19,8 @@
     <form method="post" th:action="@{/event/update}" th:object="${event}">
         <input th:field="*{id}" type="hidden"/>
         <div class="mb-3">
-            <label class="form-label" for="Title">Title:</label>
-            <input class="form-control" id="Title" th:field="*{title}" type="text"/>
+            <label class="form-label" for="title">Title:</label>
+            <input class="form-control" id="title" th:field="*{title}" type="text"/>
             <div
                     class="invalid-feedback-custom"
                     th:if="${#fields.hasErrors('title')}"
@@ -37,14 +37,30 @@
             </div>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="startingDateTime">Start Date Event:</label>
-            <input class="form-control" id="startingDateTime" required th:field="*{startingDateTime}"
+            <label class="form-label"
+                   for="startingDateTime">
+                Start Date Event:
+            </label>
+            <input class="form-control"
+                   id="startingDateTime"
+                   required th:field="*{startingDateTime}"
                    type="datetime-local"/>
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('global')}"
+                 th:each="err : ${#fields.errors('global')}"
+                 th:text="${err}">
+            </div>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="endingDateTime">End Date Event:</label>
-            <input class="form-control" id="endingDateTime" required th:field="*{endingDateTime}"
-                   type="datetime-local"/>
+            <label class="form-label"
+                   for="endingDateTime">
+                End Date Event:
+            </label>
+            <input class="form-control"
+                   id="endingDateTime"
+                   th:field="*{endingDateTime}"
+                   type="datetime-local"
+                   required/>
         </div>
         <div>
             <input class="btn btn-primary" type="submit" value="Send">

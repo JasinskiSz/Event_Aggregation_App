@@ -29,6 +29,7 @@ public class EventMapper {
                 .description(event.getDescription())
                 .startingDateTime(event.getStartingDateTime())
                 .endingDateTime(event.getEndingDateTime())
+                .image(event.getImage())
                 .build();
     }
 
@@ -38,6 +39,8 @@ public class EventMapper {
                 .description(form.getDescription())
                 .startingDateTime(form.getStartingDateTime())
                 .endingDateTime(form.getEndingDateTime())
+                .image(form.getImage())
+                .owner(form.getOwner())
                 .build();
     }
 }

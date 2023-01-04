@@ -1,5 +1,6 @@
 package com.sda.eventapp.dto;
 
+import com.sda.eventapp.model.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,4 +16,5 @@ public class EventView {
     private String description;
     private LocalDateTime startingDateTime;
     private LocalDateTime endingDateTime;
+    private Image image;
 }
