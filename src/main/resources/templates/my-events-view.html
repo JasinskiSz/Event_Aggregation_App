@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Event detail view</title>
+    <link href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+<form method="get" th:action="@{/my-events}">
+    <div class="container">
+
+        <select name="participationType" value="participationType">
+            <option th:each="participationType: ${participationTypes}"
+                    th:text="${participationType.name}" th:value="${participationType.name}"></option>
+        </select>
+
+        <select name="dateType" value="dateType">
+            <option th:each="dateType: ${dateTypes}"
+                    th:text="${dateType.name}" th:value="${dateType.name}"></option>
+        </select>
+
+    </div>
+    <div>
+        <input class="btn btn-primary" type="submit" value="Search">
+    </div>
+</form>
+
+<div class="container" th:if="${#strings.equals(eventFilters.participationType, ownedEventsType)}">
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Owned Events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="boundEvent : ${boundEvents}">
+            <td>
+                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">
+                </a>
+            </td>
+            <td th:text="${boundEvent.startingDateTime}"></td>
+            <td th:text="${boundEvent.endingDateTime}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container" th:if="${#strings.equals(eventFilters.participationType, attendedEventsType)}">
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Attended Events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="boundEvent : ${boundEvents}">
+            <td>
+                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">
+                </a>
+            </td>
+            <td th:text="${boundEvent.startingDateTime}"></td>
+            <td th:text="${boundEvent.endingDateTime}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container" th:if="${#strings.equals(eventFilters.participationType, allEventsType)}">
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>All Events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="boundEvent : ${boundEvents}">
+            <td>
+                <a th:href="@{detail-view/__${boundEvent.id}__}" th:text="${boundEvent.title}">
+                </a>
+            </td>
+            <td th:text="${boundEvent.startingDateTime}"></td>
+            <td th:text="${boundEvent.endingDateTime}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

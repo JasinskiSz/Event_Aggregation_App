@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,4 +18,5 @@ public class EventView {
     private LocalDateTime startingDateTime;
     private LocalDateTime endingDateTime;
     private Image image;
+    private Set<String> usersNicknames;
 }

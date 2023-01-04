@@ -43,12 +43,12 @@ public class EventController {
     @PostMapping("/create")
     public String handleCreate(@ModelAttribute("event") @Valid CreateEventForm form, Errors errors,
                                @RequestParam MultipartFile file, RedirectAttributes ra) {
-
-        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-
         if (errors.hasErrors()) {
             return "create-event";
         }
+
+        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+
         // Not sure if this should be handled by ImageService.
         // But check should be here, to have proper redirect.
 
