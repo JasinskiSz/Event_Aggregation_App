@@ -137,19 +137,25 @@
             </div>
         </nav>
         <!-- Page content-->
-        <div class="container-fluid">
-            <div class="col-md">
+        <div class="container-fluid text-center py-2">
+            <!-- Card-->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-6 align-items-stretch g-3">
                 <th:block th:each="event : ${events}">
-                    <div class="card custom-card">
-                        <div>
-                            <img alt="..." class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"/>
-                            <div class="card-body text-center">
+                    <div class="col-md">
+                        <div class="card h-100 h6">
+                            <img alt="..."
+                                 class="card-img-top"
+                                 src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"/>
+                            <div class="card-body">
                                 <h5 class="card-title">
                                     <a th:href="@{detail-view/__${event.id}__}" th:text="${event.title}"></a>
                                 </h5>
-                                <p class="card-text" th:text="${#strings.abbreviate(event.description,50)}"/>
-                                <p th:text="${event.startingDateTime}">start date</p>
-                                <p th:text="${event.endingDateTime}">end date</p>
+                                <p class="card-text text-break" th:text="${#strings.abbreviate(event.description,50)}"/>
+                            </div>
+                            <div class="card-footer">
+                                <span th:text="${event.startingDateTime}">start date</span>
+                                ->
+                                <span th:text="${event.endingDateTime}">end date</span>
                             </div>
                         </div>
                     </div>

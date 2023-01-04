@@ -1,4 +1,5 @@
-.custom-card {
-    display: inline-block !important;
-    width: 15rem;
+.card-cover {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
 }
