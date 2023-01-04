@@ -62,11 +62,22 @@
                 Remember me
             </label>
         </div>
+        <!-- Sign in button-->
         <button class="w-100 btn btn-lg btn-primary btn-signin-color fw-semibold"
                 type="submit"
                 value="Sign In">
             Sign in
         </button>
+        <div class="container">
+            <div class="row">
+                <div class="col text-start px-0">
+                    <a th:href="@{/home}">back to homepage</a>
+                </div>
+                <div class="col-3 text-end px-0">
+                    <a th:href="@{/user/register}">register</a>
+                </div>
+            </div>
+        </div>
     </form>
 </main>
 <!-- Bootstrap core JS-->
