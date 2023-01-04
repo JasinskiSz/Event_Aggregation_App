@@ -25,6 +25,31 @@
 
         <section class="columnText">
             <p class="header" th:text="${event.title}"></p>
+            <!--     sign up user -->
+
+            <div>
+                <!--    <div th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">-->
+                <!--            th:if="!${event.usersNicknames.contains(__${loggedUser.username}__)}"-->
+
+                <form method="post" th:action="@{/detail-view/__${event.id}__/signup-for-event}">
+                    <div>
+                        <input type="submit" value="Sign up for Event">
+                    </div>
+                </form>
+
+            </div>
+            <!--  sign out user  -->
+
+            <div>
+                <!--    <div th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">-->
+                <!--            th:if="${event.usersNicknames.contains(__${loggedUser.username}__)}" -->
+
+                <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
+                    <div>
+                        <input type="submit" value="Sign out from Event">
+                    </div>
+                </form>
+            </div>
             <hr>
             <h4 th:text="${#strings.concat(event.startingDateTime, ' - ', event.endingDateTime)}"></h4>
             <article>
@@ -39,6 +64,49 @@
 
     <hr class="section-divider">
 
+
+    <form class="nav-item d-flex"
+          method="post"
+          role="search"
+          th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
+        <div class="input-group">
+            <input aria-describedby="basic-addon1"
+                   aria-label="Add comment"
+                   autofocus
+                   class="form-control"
+                   id="title"
+                   name="title"
+                   placeholder="Add comment..."
+                   th:field="*{text}"
+                   type="text">
+
+            <!-- Search button -->
+            <button class="btn btn-primary input-group-append"
+                    type="submit">
+                Add comment
+            </button>
+        </div>
+    </form>
+    <section>
+
+
+        <div class="commentList">
+
+            <tr th:each="c : ${comments}">
+
+                <div class="comment">
+                    <td th:text="${c.userNickname} + ' wrote: '"></td>
+                    <td th:text="${c.text}"></td>
+                    <div class="commentDate">
+                        <td th:text="${c.writingDate}"></td>
+                    </div>
+                </div>
+
+            </tr>
+
+
+        </div>
+    </section>
 
 </div>
 
