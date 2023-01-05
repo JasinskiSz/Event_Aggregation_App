@@ -96,11 +96,16 @@
             <div class="card bg-light">
               <div class="card-body">
                 <!-- Comment form-->
-                <form method="post" th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
-                  <input class="form-control" placeholder="Join the discussion and leave a comment!" rows="2"
-                         th:field="${comment.text}" type="text">
-                  <button class="btn btn-primary input-group-append hidden-submit-button" type="submit"></button>
-                </form>
+                <div sec:authorize="isAuthenticated()">
+                  <form method="post" th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
+                    <input class="form-control" placeholder="Join the discussion and leave a comment!" rows="2"
+                           th:field="${comment.text}" type="text">
+                    <button class="btn btn-primary input-group-append hidden-submit-button" type="submit"></button>
+                  </form>
+                </div>
+                <div class="ms-3 fw-bold fs-5 fs-3" sec:authorize="isAnonymous()">
+                  <p>Comments</p>
+                </div>
                 <!-- Single comment-->
                 <div class="d-flex">
                   <div class="ms-3">
