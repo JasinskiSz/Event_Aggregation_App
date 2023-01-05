@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="https://www.thymeleaf.org">>
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
@@ -56,27 +57,27 @@
       <div class="row gx-5 align-items-center justify-content-center">
         <div class="col-lg-8 col-xl-7 col-xxl-6">
           <div class="my-5 text-center text-xl-start">
-            <h1 class=" text-break display-1 fw-bolder text-white mb-2" th:text="${event.title}">A Bootstrap 5 template
-              for modern businesses</h1>
+            <h1 class=" text-break display-1 fw-bolder text-white mb-2" th:text="${event.title}"></h1>
             <h4 class="display-6 fw-bolder text-white mb-2"
-                th:text="${#strings.concat(event.startingDateTime, ' - ', event.endingDateTime)}">A Bootstrap 5 template
-              for modern businesses</h4>
-            <p class=" text-break lead fw-normal text-white-50 mb-4" th:text="${event.description}">Quickly design and
-              customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source
-              toolkit!</p>
+                th:text="${#strings.concat(event.startingDateTime, ' - ', event.endingDateTime)}"></h4>
+            <p class=" text-break lead fw-normal text-white-50 mb-4" th:text="${event.description}"></p>
             <!--sign up/out-->
-            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
-                 th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
-              <form method="post" th:action="@{/detail-view/__${event.id}__/sign-up-for-event}">
-                <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign up for Event</button>
-              </form>
+
+            <div sec:>
+              <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
+                   th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
+                <form method="post" th:action="@{/detail-view/__${event.id}__/sign-up-for-event}">
+                  <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign up for Event</button>
+                </form>
+              </div>
+              <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
+                   th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">
+                <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
+                  <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign out from Event</button>
+                </form>
+              </div>
             </div>
-            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
-                 th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">
-              <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
-                <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign out from Event</button>
-              </form>
-            </div>
+
           </div>
         </div>
         <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img alt="..." class="img-fluid rounded-3 my-5"
