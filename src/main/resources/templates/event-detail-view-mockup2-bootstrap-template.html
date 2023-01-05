@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <meta content="" name="description"/>
+  <meta content="" name="author"/>
+  <title>Modern Business - Start Bootstrap Template</title>
+  <!-- Favicon-->
+  <link href="assets/favicon.ico" rel="icon" type="image/x-icon"/>
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="/css/styles.css" rel="stylesheet"/>
+  <link href="/css/custom.css" rel="stylesheet"/>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container px-5">
+      <a class="navbar-brand" href="index.html">Start Bootstrap</a>
+      <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+              class="navbar-toggler" data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="pricing.html">Pricing</a></li>
+          <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+          <li class="nav-item dropdown">
+            <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+               id="navbarDropdownBlog" role="button">Blog</a>
+            <ul aria-labelledby="navbarDropdownBlog" class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="blog-home.html">Blog Home</a></li>
+              <li><a class="dropdown-item" href="blog-post.html">Blog Post</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+               id="navbarDropdownPortfolio" role="button">Portfolio</a>
+            <ul aria-labelledby="navbarDropdownPortfolio" class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="portfolio-overview.html">Portfolio Overview</a></li>
+              <li><a class="dropdown-item" href="portfolio-item.html">Portfolio Item</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Header-->
+  <header class="bg-dark py-5">
+    <div class="container px-5">
+      <div class="row gx-5 align-items-center justify-content-center">
+        <div class="col-lg-8 col-xl-7 col-xxl-6">
+          <div class="my-5 text-center text-xl-start">
+            <h1 class=" text-break display-1 fw-bolder text-white mb-2" th:text="${event.title}">A Bootstrap 5 template
+              for modern businesses</h1>
+            <h4 class="display-6 fw-bolder text-white mb-2"
+                th:text="${#strings.concat(event.startingDateTime, ' - ', event.endingDateTime)}">A Bootstrap 5 template
+              for modern businesses</h4>
+            <p class=" text-break lead fw-normal text-white-50 mb-4" th:text="${event.description}">Quickly design and
+              customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source
+              toolkit!</p>
+            <!--sign up/out-->
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
+                 th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
+              <form method="post" th:action="@{/detail-view/__${event.id}__/sign-up-for-event}">
+                <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign up for Event</button>
+              </form>
+            </div>
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
+                 th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">
+              <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
+                <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign out from Event</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img alt="..." class="img-fluid rounded-3 my-5"
+                                                                           th:src="@{${'/images/' + event.image.filename}}"/>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Features section-->
+  <section class="py-5 " id="features">
+    <div class="container px-5 my-5">
+      <div class="row gx-5">
+        <!--Add comment section-->
+        <div class="col-lg-8">
+          <section class="mb-5">
+            <div class="card bg-light">
+              <div class="card-body">
+                <!-- Comment form-->
+                <form method="post" th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
+                  <input class="form-control" placeholder="Join the discussion and leave a comment!" rows="2"
+                         th:field="${comment.text}" type="text">
+                  <button class="btn btn-primary input-group-append hidden-submit-button" type="submit"></button>
+                </form>
+                <!-- Single comment-->
+                <div class="d-flex">
+                  <div class="ms-3">
+                    <tr th:each="c : ${comments}">
+                      <div class="fw-bold fs-5">
+                        <td th:text="${c.userNickname}"></td>
+                      </div>
+                      <div class="fw-bold date-font-size">
+                        <td th:text="${c.writingDate}"></td>
+                      </div>
+                      <div class="mb-2 text-break">
+                        <td th:text="${c.text}"></td>
+                      </div>
+                    </tr>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!--        Attenders list-->
+        <div class="col-lg-4">
+          <div class="card mb-4  mb-lg-0">
+            <div class="card-header">Attenders</div>
+            <div class="card-body">
+              <tr th:each="userNickname : ${event.usersNicknames}">
+                <div class="mb-2">
+                  <td th:text="${userNickname}"></td>
+                </div>
+              </tr>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- Footer-->
+<footer class="bg-dark py-4 mt-auto">
+  <div class="container px-5">
+    <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+      <div class="col-auto">
+        <div class="small m-0 text-white">Copyright &copy; Your Website 2022</div>
+      </div>
+      <div class="col-auto">
+        <a class="link-light small" href="#!">Privacy</a>
+        <span class="text-white mx-1">&middot;</span>
+        <a class="link-light small" href="#!">Terms</a>
+        <span class="text-white mx-1">&middot;</span>
+        <a class="link-light small" href="#!">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
+
+</body>
+</html>
