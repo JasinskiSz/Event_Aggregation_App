@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-      xmlns:th="https://www.thymeleaf.org">>
+      xmlns:th="https://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
@@ -63,7 +63,7 @@
             <p class=" text-break lead fw-normal text-white-50 mb-4" th:text="${event.description}"></p>
             <!--sign up/out-->
 
-            <div sec:>
+            <div sec:authorize="isAuthenticated()">
               <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
                    th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
                 <form method="post" th:action="@{/detail-view/__${event.id}__/sign-up-for-event}">
