@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@EventPastTime(message = "Starting date cannot be a past date")
+@EventPastTime(message = "Start date cannot be before today")
 @MaxEventTime(message = "The maximum duration of the event is 2 weeks")
-@DifferentDates(message = "Starting date must be before ending date of event")
+@DifferentDates(message = "End date must be after start date")
 public class EventForm {
     private Long id;
     @NotBlank(message = "Field title is required.")
