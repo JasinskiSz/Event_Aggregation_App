@@ -143,7 +143,7 @@
         <!-- Page content-->
 
         <div class="text-danger" th:text="${uploadError}"></div>
-        <div class="text-danger" th:text="${wrongExtension}"></div>
+        <div class="text-danger" th:text="${wrongFileExtension}"></div>
         <!-- Create event form-->
         <div class="form-body">
             <div class="row">
@@ -152,7 +152,7 @@
                         <div class="form-items">
                             <h3>Create your event</h3>
                             <p>Fill in the data below.</p>
-                            <form class="requires-validation" enctype="multipart/form-data" method="post" novalidate
+                            <form enctype="multipart/form-data" method="post"
                                   th:action="@{/event/create}" th:object="${event}">
 
                                 <div class="col-md-12">
@@ -168,7 +168,7 @@
 
                                 <div class="col-md-12">
                                     <textarea class="form-control text-area-mt-15" name="email"
-                                              placeholder="Description" required th:field="*{description}"
+                                              placeholder="Description" th:field="*{description}"
                                               type="email"></textarea>
                                     <div class="valid-feedback">Email field is valid!</div>
                                     <div
@@ -177,6 +177,7 @@
                                             th:text="${#fields.errors('description')}">
                                     </div>
                                 </div>
+
 
                                 <!--starting-date-->
                                 <div class="col-md-12">
@@ -209,15 +210,11 @@
                                     <div class="input-group custom-file-button text-area-mt-15">
                                         <label class="input-group-text custom-button-color"
                                                for="inputGroupFile">Browse</label>
-                                        <input class="form-control" id="inputGroupFile" lang="en" type="file">
+                                        <input class="form-control" id="inputGroupFile" name="file" type="file">
                                     </div>
-
-
                                 </div>
-
-
                                 <div class="form-button mt-3">
-                                    <button class="btn btn-primary" id="submit" type="submit">Create an event</button>
+                                    <button class="btn btn-primary" type="submit" value="Send">Create an event</button>
                                 </div>
                             </form>
                         </div>
