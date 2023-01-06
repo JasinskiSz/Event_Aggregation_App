@@ -1,3 +1,31 @@
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbars-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbars-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.img-navbar-logo {
+    width: 12.5rem;
+    height: 3.5625rem;
+}
+
+#pageContentWrapper {
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+.invalid-feedback-custom {
+    width: 110%;
+    margin-top: .25rem;
+    font-size: .875em;
+    color: #f8415c
+}
+
 .invalid-feedback-custom {
     width: 110%;
     margin-top: .25rem;
