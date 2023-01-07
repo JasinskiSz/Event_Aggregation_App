@@ -31,6 +31,11 @@
                              src="/assets/event-aggregation-app-low-resolution-logo-white-on-transparent-background.png">
                     </a>
                 </div>
+                <div>
+                    <form th:action="@{/home}">
+                        <button class="btn btn-primary" type="submit">Home</button>
+                    </form>
+                </div>
                 <!-- Search bar-->
                 <form class="nav-item d-flex"
                       method="get"
@@ -181,7 +186,7 @@
                                 <!--starting-date-->
                                 <div class="col-md-12">
                                     <input class="form-control text-area-mt-15" id="txtbox" placeholder="Staring date"
-                                           required th:field="*{startingDateTime}" type="text">
+                                           required th:field="*{startingDateTime}" type="datetime-local">
                                     <div class="valid-feedback">Username field is valid!</div>
                                     <div
                                             class="invalid-feedback-custom"
@@ -194,7 +199,7 @@
                                 <!--ending-date-->
                                 <div class="col-md-12">
                                     <input class="form-control text-area-mt-15" id="txtbox2" placeholder="Ending date"
-                                           required th:field="*{endingDateTime}" type="text">
+                                           required th:field="*{endingDateTime}" type="datetime-local">
                                     <div class="valid-feedback">Username field is valid!</div>
                                     <div
                                             class="invalid-feedback-custom"
