@@ -143,23 +143,26 @@
         <div class="col-lg-8 col-xl-7 col-xxl-6">
           <div class="my-5 text-center text-xl-start">
             <h1 class=" text-break display-1 fw-bolder text-white mb-2" th:text="${event.title}"></h1>
+
             <h4 class="display-6 fw-bolder text-white mb-2"
                 th:text="${#strings.concat(event.startingDateTime, ' - ', event.endingDateTime)}"></h4>
             <p class=" text-break lead fw-normal text-white-50 mb-4" th:text="${event.description}"></p>
             <!--sign up/out-->
             <div sec:authorize="isAuthenticated()">
-              <div th:unless="${#strings.equals(event.ownerNickname, loggedUser.username)}">
-                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
-                     th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
-                  <form method="post" th:action="@{/detail-view/__${event.id}__/sign-up-for-event}">
-                    <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign up for Event</button>
-                  </form>
-                </div>
-                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
-                     th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">
-                  <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
-                    <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign out from Event</button>
-                  </form>
+              <div th:if="${event.startingDateTime.isAfter(#temporals.createNow())}">
+                <div th:unless="${#strings.equals(event.ownerNickname, loggedUser.username)}">
+                  <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
+                       th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
+                    <form method="post" th:action="@{/detail-view/__${event.id}__/sign-up-for-event}">
+                      <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign up for Event</button>
+                    </form>
+                  </div>
+                  <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
+                       th:if="${#sets.contains(event.usersNicknames, loggedUser.username)}">
+                    <form method="post" th:action="@{/detail-view/__${event.id}__/sign-out-from-event}">
+                      <button class="btn btn-primary btn-lg px-4 me-sm-3" type="submit">Sign out from Event</button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
