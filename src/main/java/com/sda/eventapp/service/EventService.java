@@ -44,8 +44,14 @@ public class EventService {
 
     public Event update(EventForm form, User owner, MultipartFile file) {
         Event event = this.findById(form.getId());
-        form.setImage(solveImage(file));
-        return repository.save(mapper.toEventUpdate(form, owner, event));
+        event.setTitle((form.getTitle()));
+        event.setDescription(form.getDescription());
+        event.setStartingDateTime(form.getStartingDateTime());
+        event.setEndingDateTime(form.getEndingDateTime());
+        event.setOwner(owner);
+        form.setImage(solveImageByEditEvent(file, event));
+        event.setImage(form.getImage());
+        return repository.save(event);
     }
 
     public Event findById(Long id) {
@@ -170,6 +176,16 @@ public class EventService {
         return imageService.buildDefaultImage(
                 Paths.get("").toAbsolutePath(),
                 IMAGES_PATH);
+    }
+
+    private Image solveImageByEditEvent(MultipartFile file, Event event) {
+        Image image;
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
+            image = imageService.imageByEventId(event);
+        } else {
+            image = saveImageLocally(file);
+        }
+        return image;
     }
 
     /**
