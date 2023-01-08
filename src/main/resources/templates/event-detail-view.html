@@ -185,19 +185,20 @@
             <div class="card bg-light">
               <div class="card-body">
                 <!-- Comment form-->
-                <div class="mb-4" sec:authorize="isAuthenticated()">
-                    <form method="post" th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
-                        <button class="btn btn-primary input-group-append hidden-submit-button" type="submit"></button>
-                        <input class="form-control"
-                               maxlength="500"
-                               placeholder="Join the discussion and leave a comment!"
-                               rows="2"
-                               th:field="${comment.text}" type="text">
-                        <div
-                                class="alert alert-danger"
-                                th:each="err : ${commentErrors}"
+                <div sec:authorize="isAuthenticated()">
+                  <form method="post" th:action="@{/detail-view/__${event.id}__}" th:object="${comment}">
+
+                    <input class="form-control"
+                           maxlength="500"
+                           placeholder="Join the discussion and leave a comment!"
+                           rows="2"
+                           th:field="${comment.text}" type="text">
+                    <div
+                            class="alert alert-danger no-bm"
+                            th:each="err : ${commentErrors}"
                                 th:text="${err}">
                         </div>
+                    <button class="btn btn-primary input-group-append hidden-submit-button" type="submit"></button>
                     </form>
                 </div>
                 <div class="ms-3 fw-bold fs-5 fs-3" sec:authorize="isAnonymous()">
