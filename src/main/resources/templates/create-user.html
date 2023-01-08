@@ -32,7 +32,7 @@
                 th:if="${#fields.hasErrors('global')}"
                 th:each="err : ${#fields.errors('global')}"
                 th:text="${err}"
-                class="invalid-feedback-custom">
+                class="alert alert-danger">
         </div>
         <!-- Nickname input-->
         <div class="form-floating">
@@ -41,8 +41,7 @@
                    name="nickname"
                    placeholder="Nickname"
                    th:field="*{username}"
-                   type="text"
-                   required/>
+                   type="text">
             <label for="floatingNickname">Nickname</label>
             <div
                     class="invalid-feedback-custom"
@@ -57,13 +56,12 @@
                    name="username"
                    placeholder="name@example.com"
                    th:field="*{email}"
-                   type="email"
-                   required/>
+                   type="email">
             <label for=floatingEmail>Email address</label>
             <div
                     class="invalid-feedback-custom"
-                    th:if="${#fields.hasErrors('password')}"
-                    th:text="${#fields.errors('password')}">
+                    th:if="${#fields.hasErrors('email')}"
+                    th:text="${#fields.errors('email')}">
             </div>
         </div>
         <!-- Password input-->
@@ -73,9 +71,13 @@
                    name="password"
                    placeholder="Password"
                    th:field="*{password}"
-                   type="password"
-                   required/>
+                   type="password">
             <label for="floatingPassword">Password</label>
+            <div
+                    class="invalid-feedback-custom"
+                    th:if="${#fields.hasErrors('password')}"
+                    th:text="${#fields.errors('password')}">
+            </div>
         </div>
         <!-- Confirm password input -->
         <div class="form-floating">
@@ -84,8 +86,7 @@
                    name="password"
                    placeholder="ConfirmPassword"
                    th:field="*{confirmPassword}"
-                   type="password"
-                   required/>
+                   type="password">
             <label for="floatingConfirmPassword">Confirm Password</label>
         </div>
         <!-- Agree all statements -->

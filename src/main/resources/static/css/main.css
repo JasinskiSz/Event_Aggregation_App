@@ -19,9 +19,11 @@
     min-height: 100vh;
 }
 
+
 .invalid-feedback-custom {
-    width: 110%;
+    width: auto;
+    text-align: left;
     margin-top: .25rem;
-    font-size: .875em;
-    color: #f8415c
+    font-size: .875rem;
+    color: rgb(248, 65, 65)
 }
