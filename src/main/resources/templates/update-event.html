@@ -60,11 +60,6 @@
                     <div class="mb-3">
                         <input class="form-control" name="file" type="file">
                     </div>
-                    <div class="container">
-                        <div class="col-md-3" th:object="${event.image}">
-                            <img alt="event-image" style="width:304px;height:228px" th:src="@{${'/images/' + event.image.filename}}">
-                        </div>
-                    </div>
 
                     <div class="text-center">
                         <button class="btn btn-primary">Upload</button>
@@ -73,6 +68,14 @@
             </div>
         </div>
     </form>
+    <form th:object="${event.image}">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="container">
+            <img alt="event-image" style="width:304px;height:228px"
+                 th:src="@{${'/images/' + event.image.filename}}">
+        </div>
+    </form>
+
 </div>
 <script crossorigin="anonymous"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
