@@ -13,8 +13,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@UniqueEmail(message = "Email is already taken")
-@UniqueUsername(message = "Username is already taken")
+@UniqueEmail(message = "That email is already taken. Try again")
+@UniqueUsername(message = "That nickname is already taken. Try again")
 @EqualPasswords(message = "Passwords do not match")
 public class CreateUserForm {
     @NotBlank(message = "Field username is required")
