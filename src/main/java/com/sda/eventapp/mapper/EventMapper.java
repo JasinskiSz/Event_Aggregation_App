@@ -20,6 +20,7 @@ public class EventMapper {
                         .description(event.getDescription())
                         .startingDateTime(event.getStartingDateTime())
                         .endingDateTime(event.getEndingDateTime())
+                        .image(event.getImage())
                         .build())
                 .toList();
     }

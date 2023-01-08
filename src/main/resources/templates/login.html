@@ -1,29 +1,86 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link href="/css/main.css" rel="stylesheet">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <!-- Favicon-->
+    <link href="/assets/favicon.ico" rel="icon" type="image/x-icon"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/login.css" rel="stylesheet"/>
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet">
     <title>Login</title>
 </head>
-<body>
-<div th:if="${param.error}">
-    Invalid username and password.
-</div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-<form method="post" th:action="@{/login}">
-    <div><label> Email: <input name="username" type="email"/> </label></div>
-    <div><label> Password: <input name="password" type="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
-
+<body class="bg-dark text-center">
+<main class="form-signin w-100 m-auto">
+    <!-- Login form-->
+    <form data-bitwarden-watching="1"
+          method="post"
+          th:action="@{/login}">
+        <!-- Logo-->
+        <img alt=""
+             class="mb-4"
+             height="96"
+             src="/assets/android-chrome-192x192.png"
+             width="96"/>
+        <h1 class="h3 mb-3 fw-normal text-white">Please sign in</h1>
+        <!-- Email input-->
+        <div class="form-floating">
+            <input class="form-control"
+                   id="floatingEmail"
+                   name="username"
+                   placeholder="name@example.com"
+                   type="email">
+            <label for="floatingEmail">Email address</label>
+        </div>
+        <!-- Password input-->
+        <div class="form-floating">
+            <input class="form-control"
+                   id="floatingPassword"
+                   name="password"
+                   placeholder="Password"
+                   type="password">
+            <label for="floatingPassword">Password</label>
+        </div>
+        <!-- Param warnings-->
+        <div class="text-center text-danger mb-3 fw-semibold fs-4"
+             th:if="${param.error}">
+            <p>Wrong username and/or password</p>
+        </div>
+        <div class="text-center text-logout mb-3 fw-semibold fs-4"
+             th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <!-- Remember me checkbox-->
+        <div class="checkbox mb-3 text-white">
+            <label>
+                <input data-com.bitwarden.browser.user-edited="yes" type="checkbox" value="remember-me">
+                Remember me
+            </label>
+        </div>
+        <!-- Sign in button-->
+        <button class="w-100 btn btn-lg btn-primary btn-signin-color fw-semibold"
+                type="submit"
+                value="Sign In">
+            Sign in
+        </button>
+        <div class="container">
+            <div class="row">
+                <div class="col text-start px-0">
+                    <a th:href="@{/home}">back to homepage</a>
+                </div>
+                <div class="col-3 text-end px-0">
+                    <a th:href="@{/user/register}">register</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+<!-- Bootstrap core JS-->
 <script crossorigin="anonymous"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
-</script>
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

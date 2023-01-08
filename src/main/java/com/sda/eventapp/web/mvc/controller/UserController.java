@@ -35,9 +35,4 @@ public class UserController {
         userService.save(form);
         return "index";
     }
-
-    @GetMapping("/profile")
-    public String profile() {
-        return "profile";
-    }
 }
