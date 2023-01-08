@@ -15,7 +15,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     //todo: trello reminder #001
     @ManyToOne(fetch = FetchType.LAZY)
