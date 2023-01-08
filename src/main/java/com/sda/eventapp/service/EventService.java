@@ -231,14 +231,21 @@ public class EventService {
 
     public Event signUpForEvent(User user, Long eventId) {
         Event event = this.findByIdFetchOwnerFetchUsers(eventId);
-        event.getUsers().add(user);
-        return repository.save(event);
+        if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
+            event.getUsers().add(user);
+            repository.save(event);
+        }
+        return event;
     }
 
     public Event signOutFromEvent(User user, Long eventId) {
+
         Event event = this.findByIdFetchOwnerFetchUsers(eventId);
-        event.getUsers().remove(user);
-        return repository.save(event);
+        if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
+            event.getUsers().remove(user);
+            repository.save(event);
+        }
+        return event;
     }
 
     /**
