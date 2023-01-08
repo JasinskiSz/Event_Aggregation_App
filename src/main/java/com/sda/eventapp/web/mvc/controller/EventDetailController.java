@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/detail-view")
@@ -39,11 +41,14 @@ public class EventDetailController {
     }
 
     @PostMapping("/{id}")
-    public String addComment(@ModelAttribute("comment") @Valid CreateCommentForm form, Errors errors, @PathVariable("id") Long eventid) {
+    public String addComment(@ModelAttribute("comment") @Valid CreateCommentForm form, Errors errors, @PathVariable("id") Long eventid, RedirectAttributes ra) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
         //todo trello reminder #002
         if (errors.hasErrors()) {
+            ra.addFlashAttribute(
+                    "commentErrors",
+                    errors.getFieldErrors().stream().map(FieldError::getDefaultMessage).toList());
             return "redirect:/detail-view/" + eventid;
         }
         eventService.saveComment(form, eventid, loggedUser);
