@@ -1,5 +1,6 @@
 package com.sda.eventapp.web.mvc.controller;
 
+import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.authentication.IAuthenticationFacade;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
@@ -74,18 +75,20 @@ public class EventController {
 
     @GetMapping("/update/{id}")
     public String update(ModelMap model, @PathVariable Long id) {
-        model.addAttribute("event", eventService.findById(id));
+        EventView eventToUpdate = eventService.findEventViewById(id);
+        model.addAttribute("event", eventToUpdate);
+        model.addAttribute("eventImage", eventToUpdate.getImage());
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
         if (!loggedUser.getId().equals(eventService.findOwnerIdByEventId(id))) {
-
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
         }
         return "update-event";
     }
 
     @PostMapping("/update")
-    public String handleUpdate(@ModelAttribute("event") @Valid EventForm form, Errors errors, @RequestParam MultipartFile file, RedirectAttributes ra) {
+    public String handleUpdate(@ModelAttribute("event") @Valid EventForm form, Errors errors, @RequestParam MultipartFile file, RedirectAttributes ra, ModelMap map) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+        map.addAttribute("eventImage", eventService.findById(form.getId()).getImage());
         if (errors.hasErrors()) {
             return "update-event";
         }
