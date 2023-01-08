@@ -48,14 +48,4 @@ public class EventMapper {
                 .owner(form.getOwner())
                 .build();
     }
-
-    public Event toEventUpdate(EventForm updateEventForm, User owner, Event event) {
-        event.setTitle((updateEventForm.getTitle()));
-        event.setDescription(updateEventForm.getDescription());
-        event.setStartingDateTime(updateEventForm.getStartingDateTime());
-        event.setEndingDateTime(updateEventForm.getEndingDateTime());
-        event.setOwner(owner);
-        event.setImage(updateEventForm.getImage());
-        return event;
-    }
 }
