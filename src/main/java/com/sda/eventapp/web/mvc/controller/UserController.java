@@ -28,16 +28,10 @@ public class UserController {
 
     @PostMapping("/register")
     public String handleRegister(@ModelAttribute("user") @Valid CreateUserForm form, Errors errors) {
-        log.info("Creating user from form: {}", form);
         if (errors.hasErrors()) {
             return "create-user";
         }
         userService.save(form);
         return "index";
-    }
-
-    @GetMapping("/profile")
-    public String profile() {
-        return "profile";
     }
 }
