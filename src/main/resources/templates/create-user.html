@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="/css/main.css" rel="stylesheet">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <!-- Favicon-->
+    <link href="/assets/favicon.ico" rel="icon" type="image/x-icon"/>
+    <!-- custom css-->
+    <link href="/css/main.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" rel="stylesheet">
     <title>Register user</title>
@@ -12,53 +18,62 @@
 <div class="container">
     <form method="post" th:action="@{/user/register}" th:object="${user}">
         <div class="mb-3">
-            <div
-                    th:if="${#fields.hasErrors('global')}"
-                    th:each="err : ${#fields.errors('global')}"
-                    th:text="${err}"
-                    class="invalid-feedback-custom">
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('global')}"
+                 th:each="err : ${#fields.errors('global')}"
+                 th:text="${err}">
             </div>
 
             <label for="username" class="form-label">Username:</label>
             <input th:field="*{username}" id="username" class="form-control" type="text" placeholder="Enter username"
                    required>
-            <div
-                    th:if="${#fields.hasErrors('username')}"
-                    th:text="${#fields.errors('username')}"
-                    class="invalid-feedback-custom">
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('username')}"
+                 th:text="${#fields.errors('username')}">
             </div>
         </div>
         <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input th:field="*{email}" id="email" class="form-control" type="email" placeholder="Enter email" required>
-            <div
-                    th:if="${#fields.hasErrors('email')}"
-                    th:text="${#fields.errors('email')}"
-                    class="invalid-feedback-custom">
+            <label class="form-label" for="email">Email:</label>
+            <input class="form-control" id="email" placeholder="Enter email" required th:field="*{email}" type="email">
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:text="${#fields.errors('email')}">
             </div>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Password:</label>
-            <input th:field="*{password}" id="password" class="form-control" type="password"
-                   placeholder="Enter password" required>
-            <div
-                    th:if="${#fields.hasErrors('password')}"
-                    th:text="${#fields.errors('password')}"
-                    class="invalid-feedback-custom">
+            <label class="form-label"
+                   for="password">
+                Password:
+            </label>
+            <input class="form-control"
+                   id="password"
+                   placeholder="Enter password"
+                   th:field="*{password}"
+                   type="password"
+                   required>
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('password')}"
+                 th:text="${#fields.errors('password')}">
             </div>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="confirm-password">Confirm Password:</label>
-            <input class="form-control" id="confirm-password" th:field="*{confirmPassword}" type="password"
-                   placeholder="Enter password" required>
+            <label class="form-label"
+                   for="confirm-password">
+                Confirm Password:
+            </label>
+            <input class="form-control"
+                   id="confirm-password"
+                   th:field="*{confirmPassword}"
+                   type="password"
+                   placeholder="Enter password"
+                   required>
         </div>
-
-        <input type="submit" class="btn btn-primary" value="Submit">
+        <input class="btn btn-primary" type="submit" value="Submit">
     </form>
 </div>
+<!-- Bootstrap core JS-->
 <script crossorigin="anonymous"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js">
-</script>
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
