@@ -41,6 +41,7 @@ public class EventMapper {
 
     public Event toEvent(EventForm form) {
         return Event.builder()
+                .id(form.getId())
                 .title(form.getTitle())
                 .description(form.getDescription())
                 .startingDateTime(form.getStartingDateTime())
