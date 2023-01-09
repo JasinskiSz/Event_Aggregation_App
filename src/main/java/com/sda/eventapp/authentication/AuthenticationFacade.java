@@ -1,4 +1,4 @@
-package com.sda.eventapp.mapper.authentication;
+package com.sda.eventapp.authentication;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,6 +1,6 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.mapper.authentication.IAuthenticationFacade;
+import com.sda.eventapp.authentication.IAuthenticationFacade;
 import com.sda.eventapp.filters.DateType;
 import com.sda.eventapp.filters.EventFilters;
 import com.sda.eventapp.filters.ParticipationType;
