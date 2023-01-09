@@ -30,6 +30,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class EventService {
     private final static String IMAGES_PATH = "src/main/resources/static/images/";
+
     private final EventRepository repository;
     private final CommentService commentService;
     private final ImageService imageService;
@@ -37,7 +38,6 @@ public class EventService {
 
     public Event save(EventForm form, User owner, MultipartFile file) {
         form.setOwner(owner);
-        form.setId(form.getId());
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form));
     }
@@ -60,6 +60,11 @@ public class EventService {
 
     public Long findOwnerIdByEventId(Long eventId) {
         return repository.findById(eventId).orElseThrow().getOwner().getId();
+    }
+
+    public Event findByIdFetchOwnerFetchUsers(Long id) {
+        return repository.findByIdFetchOwnerFetchUsers(id)
+                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
     private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
@@ -161,7 +166,6 @@ public class EventService {
      * @param file should be checked before if its of required file extension
      * @return {@link com.sda.eventapp.model.Image} build from {@link org.springframework.web.multipart.MultipartFile}
      */
-
     private Image solveImage(MultipartFile file) {
         Image image;
         if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
@@ -177,7 +181,6 @@ public class EventService {
                 Paths.get("").toAbsolutePath(),
                 IMAGES_PATH);
     }
-
 
     /**
      * Creates directory in default location ->  {@link EventService#createImageDirectory()}.
@@ -230,15 +233,21 @@ public class EventService {
     }
 
     public Event signUpForEvent(User user, Long eventId) {
-        Event event = this.findById(eventId);
-        event.getUsers().add(user);
-        return repository.save(event);
+        Event event = this.findByIdFetchOwnerFetchUsers(eventId);
+        if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
+            event.getUsers().add(user);
+            repository.save(event);
+        }
+        return event;
     }
 
     public Event signOutFromEvent(User user, Long eventId) {
-        Event event = this.findById(eventId);
-        event.getUsers().remove(user);
-        return repository.save(event);
+        Event event = this.findByIdFetchOwnerFetchUsers(eventId);
+        if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
+            event.getUsers().remove(user);
+            repository.save(event);
+        }
+        return event;
     }
 
     /**

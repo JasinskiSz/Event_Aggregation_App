@@ -1,0 +1,117 @@
+.header {
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+    word-break: break-all;
+    white-space: normal;
+    font-size: 36px;
+    margin-bottom: 40px;
+!important;
+
+}
+
+.justifying-word {
+    word-break: break-all;
+    white-space: normal;
+
+}
+
+h4 {
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+}
+
+hr {
+    background-color: white;
+    width: 50%;
+
+    height: 10px;
+
+}
+
+p {
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.commentList {
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.column {
+    flex: 1;
+    margin-left: 4%;
+    margin-right: 4%;
+
+}
+
+.columnImage {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin-left: 4%;
+    margin-right: 4%;
+
+}
+
+.event-content {
+
+    display: flex;
+    align-items: center;
+
+    /*margin-left: 4%;*/
+    /*margin-right: 4%;*/
+}
+
+img {
+    width: 480px;
+    height: 270px;
+
+}
+
+.section-divider {
+    background-color: white;
+    width: 50%;
+    height: 10px;
+    margin: 50px 25%;
+}
+
+.comment {
+    font-size: 14px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    background-color: gray;
+    border-radius: 15px;
+
+
+}
+
+.commentDate {
+    font-size: 8px;
+}
+
+.lowerContent {
+    display: flex;
+
+}
+
+.attendingList {
+
+    font-family: Futura, sans-serif;
+    color: white !important;
+    wrap-option: wrap;
+    word-break: break-all;
+    white-space: normal;
+
+}

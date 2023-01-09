@@ -22,4 +22,5 @@ public class EventView {
     private LocalDateTime endingDateTime;
     private Image image;
     private Set<String> usersNicknames;
+    private String ownerNickname;
 }

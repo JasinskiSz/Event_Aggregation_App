@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp ORDER BY event.startingDateTime")
@@ -84,4 +85,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query(value = "SELECT event from Event event left join event.users users WHERE (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
     List<Event> findOwnedAndAttendedAllEventsById(Long id);
+
+    @Query(value = "SELECT event from Event event left join fetch event.owner owner left join fetch event.users users where event.id = ?1")
+    Optional<Event> findByIdFetchOwnerFetchUsers(Long id);
 }
