@@ -27,11 +27,10 @@
              width="96"/>
         <h1 class="h3 mb-3 fw-normal text-white">Please register</h1>
         <!-- GLOBAL ERROR -->
-        <div
-                th:if="${#fields.hasErrors('global')}"
-                th:each="err : ${#fields.errors('global')}"
-                th:text="${err}"
-                class="alert alert-danger">
+        <div class="alert alert-danger"
+             th:each="err : ${#fields.errors('global')}"
+             th:if="${#fields.hasErrors('global')}"
+             th:text="${err}">
         </div>
         <!-- Nickname input-->
         <div class="form-floating">
@@ -42,10 +41,9 @@
                    th:field="*{username}"
                    type="text">
             <label for="floatingNickname">Nickname</label>
-            <div
-                    class="invalid-feedback-custom"
-                    th:if="${#fields.hasErrors('username')}"
-                    th:text="${#fields.errors('username')}">
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('username')}"
+                 th:text="${#fields.errors('username')}">
             </div>
         </div>
         <!-- Email input-->
@@ -56,11 +54,12 @@
                    placeholder="name@example.com"
                    th:field="*{email}"
                    type="email">
-            <label for=floatingEmail>Email address</label>
-            <div
-                    class="invalid-feedback-custom"
-                    th:if="${#fields.hasErrors('email')}"
-                    th:text="${#fields.errors('email')}">
+            <label for=floatingEmail>
+                Email address
+            </label>
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('email')}"
+                 th:text="${#fields.errors('email')}">
             </div>
         </div>
         <!-- Password input-->
@@ -72,10 +71,9 @@
                    th:field="*{password}"
                    type="password">
             <label for="floatingPassword">Password</label>
-            <div
-                    class="invalid-feedback-custom"
-                    th:if="${#fields.hasErrors('password')}"
-                    th:text="${#fields.errors('password')}">
+            <div class="invalid-feedback-custom"
+                 th:if="${#fields.hasErrors('password')}"
+                 th:text="${#fields.errors('password')}">
             </div>
         </div>
         <!-- Confirm password input -->
