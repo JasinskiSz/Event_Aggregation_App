@@ -30,7 +30,6 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class EventService {
     private final static String IMAGES_PATH = "src/main/resources/static/images/";
-
     private final EventRepository repository;
     private final CommentService commentService;
     private final ImageService imageService;
@@ -38,20 +37,20 @@ public class EventService {
 
     public Event save(EventForm form, User owner, MultipartFile file) {
         form.setOwner(owner);
+        form.setId(form.getId());
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form));
     }
 
-    public Event update(EventForm form, User owner, MultipartFile file) {
+    public Event update(EventForm form, MultipartFile file) {
         Event event = this.findById(form.getId());
-        event.setTitle((form.getTitle()));
-        event.setDescription(form.getDescription());
-        event.setStartingDateTime(form.getStartingDateTime());
-        event.setEndingDateTime(form.getEndingDateTime());
-        event.setOwner(owner);
-        form.setImage(solveImageByEditEvent(file, event));
-        event.setImage(form.getImage());
-        return repository.save(event);
+        form.setOwner(event.getOwner());
+        if (file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()) {
+            form.setImage(solveImage(file));
+        } else {
+            form.setImage(event.getImage());
+        }
+        return repository.save(mapper.toEvent(form));
     }
 
     public Event findById(Long id) {
@@ -162,6 +161,7 @@ public class EventService {
      * @param file should be checked before if its of required file extension
      * @return {@link com.sda.eventapp.model.Image} build from {@link org.springframework.web.multipart.MultipartFile}
      */
+
     private Image solveImage(MultipartFile file) {
         Image image;
         if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
@@ -178,15 +178,6 @@ public class EventService {
                 IMAGES_PATH);
     }
 
-    private Image solveImageByEditEvent(MultipartFile file, Event event) {
-        Image image;
-        if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
-            image = imageService.imageByEventId(event);
-        } else {
-            image = saveImageLocally(file);
-        }
-        return image;
-    }
 
     /**
      * Creates directory in default location ->  {@link EventService#createImageDirectory()}.
