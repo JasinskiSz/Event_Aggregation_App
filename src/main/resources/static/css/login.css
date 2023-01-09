@@ -37,15 +37,3 @@ body {
     --bs-green-rgb: 147, 213, 255;
     color: rgba(var(--bs-green-rgb), var(--bs-text-opacity)) !important;
 }
-
-.btn-signin-color {
-    --bs-btn-color: #000 !important;
-    --bs-btn-bg: #45d33e !important;
-    --bs-btn-border-color: #45d33e !important;
-    --bs-btn-hover-color: #000 !important;
-    --bs-btn-hover-bg: #8bcc86 !important;
-    --bs-btn-hover-border-color: #45d33e !important;
-    --bs-btn-active-color: #000 !important;
-    --bs-btn-active-bg: #abc2aa !important;
-    --bs-btn-active-border-color: #45d33e !important;
-}

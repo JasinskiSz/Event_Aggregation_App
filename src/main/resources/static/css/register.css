@@ -11,36 +11,24 @@ body {
     background-color: #f5f5f5;
 }
 
-.form-regist {
+.form-register {
     max-width: 330px;
     padding: 15px;
 }
 
-.form-regist .form-floating:focus-within {
+.form-register .form-floating:focus-within {
     z-index: 4;
 }
 
-.form-regist input[type="email"] {
+.form-register input[type="email"] {
     margin-bottom: 2px;
 }
 
-.form-regist input[type="password"] {
+.form-register input[type="password"] {
     margin-bottom: 2px;
 }
 
-.form-regist input[type="text"] {
+.form-register input[type="text"] {
     margin-bottom: 2px;
     margin-top: 2px;
-}
-
-.btn-signin-color {
-    --bs-btn-color: #000 !important;
-    --bs-btn-bg: #45d33e !important;
-    --bs-btn-border-color: #45d33e !important;
-    --bs-btn-hover-color: #000 !important;
-    --bs-btn-hover-bg: #8bcc86 !important;
-    --bs-btn-hover-border-color: #45d33e !important;
-    --bs-btn-active-color: #000 !important;
-    --bs-btn-active-bg: #abc2aa !important;
-    --bs-btn-active-border-color: #45d33e !important;
 }
