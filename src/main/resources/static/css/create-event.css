@@ -89,7 +89,7 @@ html, body {
     background-color: #fff;
     font-size: 15px;
     font-weight: 300;
-    color: #8D8D8D;
+    color: #000;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
     margin-top: 16px;
@@ -120,7 +120,7 @@ html, body {
     border: 0;
     font-size: 15px;
     font-weight: 300;
-    color: #8D8D8D;
+    color: #000;
     outline: none;
     resize: none;
     height: 120px;
@@ -132,23 +132,9 @@ html, body {
 .form-content textarea:hover, .form-content textarea:focus {
     border: 0;
     background-color: #ebeff8;
-    color: #8D8D8D;
-}
-
-.mv-up {
-    margin-top: -9px !important;
-    margin-bottom: 8px !important;
+    color: #000;
 }
 
 .invalid-feedback {
     color: #ff606e;
 }
-
-.valid-feedback {
-    color: #2acc80;
-}
-
-.text-area-mt-15 {
-    margin-top: 15px;
-}
-
