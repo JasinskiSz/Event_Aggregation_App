@@ -38,3 +38,40 @@
     --bs-btn-active-bg: #abc2aa !important;
     --bs-btn-active-border-color: #45d33e !important;
 }
+
+.input-group-append {
+    cursor: pointer;
+}
+
+.custom-file-button input[type=file] {
+    margin-left: -2px !important;
+}
+
+.custom-file-button input[type=file]::-webkit-file-upload-button {
+    display: none;
+}
+
+.custom-file-button input[type=file]::file-selector-button {
+    display: none;
+
+}
+
+.custom-file-button:hover label {
+    background-color: black !important;
+    border-color: black !important;
+    cursor: pointer;
+}
+
+.custom-button-color {
+    background-color: #424242 !important;
+    border-color: #424242 !important;
+}
+
+.black-button {
+    background-color: #152733 !important;
+    border-color: #3d3d3d !important;
+}
+
+
+
+
