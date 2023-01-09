@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @MaxEventTime(message = "The maximum duration of the event is 2 weeks")
 @DifferentDates(message = "End date must be after start date")
 public class EventForm {
-    private Long id;
+    private long id;
     @NotBlank(message = "Field title is required.")
     private String title;
     private LocalDateTime startingDateTime;
