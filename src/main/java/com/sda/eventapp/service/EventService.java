@@ -59,6 +59,11 @@ public class EventService {
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
+    public Event findByIdFetchOwnerFetchUsers(Long id) {
+        return repository.findByIdFetchOwnerFetchUsers(id)
+                .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+    }
+
     private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         //future
         if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
@@ -225,15 +230,22 @@ public class EventService {
     }
 
     public Event signUpForEvent(User user, Long eventId) {
-        Event event = this.findById(eventId);
-        event.getUsers().add(user);
-        return repository.save(event);
+        Event event = this.findByIdFetchOwnerFetchUsers(eventId);
+        if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
+            event.getUsers().add(user);
+            repository.save(event);
+        }
+        return event;
     }
 
     public Event signOutFromEvent(User user, Long eventId) {
-        Event event = this.findById(eventId);
-        event.getUsers().remove(user);
-        return repository.save(event);
+
+        Event event = this.findByIdFetchOwnerFetchUsers(eventId);
+        if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
+            event.getUsers().remove(user);
+            repository.save(event);
+        }
+        return event;
     }
 
     /**

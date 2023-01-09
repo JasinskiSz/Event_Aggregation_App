@@ -1,0 +1,11 @@
+.hidden-submit-button {
+    visibility: hidden
+}
+
+.date-font-size {
+    font-size: 10px !important;
+}
+
+.comment-mb {
+    margin-bottom: 50px;
+}

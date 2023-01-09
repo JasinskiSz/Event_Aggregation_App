@@ -72,6 +72,6 @@
     border-color: #3d3d3d !important;
 }
 
-
-
-
+.no-bm {
+    margin-bottom: 0px !important;
+}
