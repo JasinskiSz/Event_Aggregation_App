@@ -25,9 +25,8 @@
              height="96"
              src="/assets/android-chrome-192x192.png"
              width="96"/>
-        <h1 class="h3 mb-3 fw-normal text-white">Create User</h1>
-
-        <!--        GLOBAL ERROR -->
+        <h1 class="h3 mb-3 fw-normal text-white">Please register</h1>
+        <!-- GLOBAL ERROR -->
         <div
                 th:if="${#fields.hasErrors('global')}"
                 th:each="err : ${#fields.errors('global')}"
@@ -89,11 +88,11 @@
                    type="password">
             <label for="floatingConfirmPassword">Confirm Password</label>
         </div>
-        <!-- Agree all statements -->
-        <div class="checkbox mb-3 text-white">
+        <!-- Terms of service -->
+        <div class="mb-2 text-white">
             <label>
                 <input type="checkbox" required/>
-                I agree all statements in </br><a href="#"> <u>Terms of service</u></a>
+                I agree all statements in <a href="#">Terms of service</a>
             </label>
         </div>
         <!-- Register form button-->
@@ -102,17 +101,14 @@
                 value="Register">
             Register
         </button>
-        <!-- Message about account-->
-        <div class="checkbox mb-3 text-white">
-            <label>
-                Have already an account? <a th:href="@{/home/login}"><b>Login here</b></a>
-            </label>
-        </div>
         <!-- Homepage-->
         <div class="container">
             <div class="row">
                 <div class="col text-start px-0">
                     <a th:href="@{/home}">back to homepage</a>
+                </div>
+                <div class="col text-end px-0">
+                    <a th:href="@{/home/login}">login</a>
                 </div>
             </div>
         </div>
