@@ -35,7 +35,6 @@ public class EventController {
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
-
     @GetMapping("/create")
     public String create(ModelMap model) {
         model.addAttribute("event", new EventForm());
@@ -79,7 +78,7 @@ public class EventController {
         model.addAttribute("event", eventToUpdate);
         model.addAttribute("eventImage", eventToUpdate.getImage());
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-        if (!loggedUser.getId().equals(eventService.findOwnerIdByEventId(id))) {
+        if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id))) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
         }
         return "update-event";
@@ -87,7 +86,6 @@ public class EventController {
 
     @PostMapping("/update")
     public String handleUpdate(@ModelAttribute("event") @Valid EventForm form, Errors errors, @RequestParam MultipartFile file, RedirectAttributes ra, ModelMap map) {
-        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
         map.addAttribute("eventImage", eventService.findById(form.getId()).getImage());
         if (errors.hasErrors()) {
             return "update-event";
@@ -97,7 +95,7 @@ public class EventController {
                     imageService.wrongFileExtensionMessage());
             return "redirect:/event/create";
         }
-        eventService.update(form, loggedUser, file);
+        eventService.update(form, file);
         return "index";
     }
 }
