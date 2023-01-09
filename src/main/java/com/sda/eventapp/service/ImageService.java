@@ -1,6 +1,5 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.ImageRepository;
@@ -19,7 +18,6 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository repository;
-    private final EventRepository eventRepository;
 
     public boolean existsByFilename(String filename) {
         return repository.existsByFilename(filename);
@@ -37,10 +35,6 @@ public class ImageService {
                 .filename(name)
                 .path(absolutePath + "/" + contentRootPath)
                 .build();
-    }
-
-    public Image imageByEventId(Event event) {
-        return eventRepository.findById(event.getId()).orElseThrow().getImage();
     }
 
     /**
