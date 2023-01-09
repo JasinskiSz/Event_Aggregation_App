@@ -13,12 +13,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@UniqueEmail(message = "That email is already taken.")
-@UniqueUsername(message = "That nickname is already taken.")
+@UniqueEmail(message = "That email is already taken")
+@UniqueUsername(message = "That nickname is already taken")
 @EqualPasswords(message = "Passwords do not match")
 public class CreateUserForm {
     @NotBlank(message = "Field nickname is required")
-    @Size(max = 50, message = "Nickname must be shorter than 50 characters.")
+    @Size(max = 50, message = "Nickname must be shorter than 50 characters")
     private String username;
     @Size(min = 8, max = 30, message = "Password must be 8-30 characters long")
     private String password;
