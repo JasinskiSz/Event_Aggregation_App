@@ -1,7 +1,7 @@
 package com.sda.eventapp.web.mvc.controller;
 
+import com.sda.eventapp.authentication.IAuthenticationFacade;
 import com.sda.eventapp.dto.EventView;
-import com.sda.eventapp.mapper.authentication.IAuthenticationFacade;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.service.ImageService;
