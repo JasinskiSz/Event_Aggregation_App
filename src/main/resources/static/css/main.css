@@ -20,10 +20,23 @@
 }
 
 .invalid-feedback-custom {
-    width: 110%;
+    width: auto;
+    text-align: left;
     margin-top: .25rem;
-    font-size: .875em;
-    color: #f8415c
+    font-size: .875rem;
+    color: rgb(248, 65, 65)
+}
+
+.btn-primary-confirm {
+    --bs-btn-color: #000 !important;
+    --bs-btn-bg: #45d33e !important;
+    --bs-btn-border-color: #45d33e !important;
+    --bs-btn-hover-color: #000 !important;
+    --bs-btn-hover-bg: #8bcc86 !important;
+    --bs-btn-hover-border-color: #45d33e !important;
+    --bs-btn-active-color: #000 !important;
+    --bs-btn-active-bg: #abc2aa !important;
+    --bs-btn-active-border-color: #45d33e !important;
 }
 
 .input-group-append {
