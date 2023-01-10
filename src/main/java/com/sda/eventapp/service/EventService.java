@@ -48,7 +48,8 @@ public class EventService {
         form.setOwner(event.getOwner());
 
         if (file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()) {
-            form.setImage(solveImage(file));
+            // if new file was uploaded
+            form.setImage(saveImageLocally(file));
         } else {
             // otherwise get image from db
             form.setImage(event.getImage());
@@ -63,7 +64,7 @@ public class EventService {
     }
 
     public Long findOwnerIdByEventId(Long eventId) {
-        return repository.findById(eventId).orElseThrow().getOwner().getId();
+        return this.findById(eventId).getOwner().getId();
     }
 
     public Event findByIdFetchOwnerFetchUsers(Long id) {
