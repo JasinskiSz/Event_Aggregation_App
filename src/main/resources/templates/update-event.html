@@ -144,20 +144,20 @@
 
 
         <!-- Update event form-->
-        <div class="container px-5">
-            <div class="row gx-5 align-items-center justify-content-center">
-
-                <div class="form-holder col-lg-8 col-xl-7 col-xxl-6">
-                    <div class="form-content">
-                        <div class="form-items">
-                            <h3>Update your event</h3>
-                            <p>Fill in the data below.</p>
-                            <form enctype="multipart/form-data"
-                                  method="post"
-                                  th:action="@{/event/update}"
-                                  th:object="${event}">
+        <form enctype="multipart/form-data"
+              method="post"
+              th:action="@{/event/update}"
+              th:object="${event}">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center justify-content-center">
+                    <div class="form-holder col-lg-8 col-xl-7 col-xxl-6">
+                        <div class="form-content">
+                            <div class="form-items">
+                                <h3>Update your event</h3>
+                                <p>Fill in the data below.</p>
                                 <!-- Title input-->
                                 <div class="col-md-12">
+                                    <input th:field="*{id}" type="hidden"/>
                                     <div class="form-floating mb-3">
                                         <input class="form-control"
                                                id="floatingTitle"
@@ -178,12 +178,12 @@
                                 <!-- Description text area-->
                                 <div class="col-md-12">
                                     <div class="form-floating mb-3">
-                                        <textarea class="form-control"
-                                                  id="floatingDescription"
-                                                  name="email"
-                                                  placeholder="Description"
-                                                  th:field="*{description}"
-                                                  type="email"></textarea>
+                                            <textarea class="form-control"
+                                                      id="floatingDescription"
+                                                      name="email"
+                                                      placeholder="Description"
+                                                      th:field="*{description}"
+                                                      type="email"></textarea>
                                         <label class="text-black" for="floatingDescription">
                                             Description
                                         </label>
@@ -242,20 +242,17 @@
                                 <div class="form-button mt-3">
                                     <button class="btn btn-primary" type="submit" value="Send">Update an event</button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center" th:object="${eventImage}">
+                        <img alt="event-image" class="img-fluid rounded-3 my-5"
+                             th:src="@{${'/images/' + eventImage.filename}}"/>
+                    </div>
                 </div>
-                <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
-                    <img alt="..." class="img-fluid rounded-3 my-5" th:src="@{${'/images/' + event.image.filename}}"/>
-                </div>
-
             </div>
-        </div>
-
-
+        </form>
     </div>
-
 </div>
 <!-- Bootstrap core JS-->
 <script crossorigin="anonymous"
