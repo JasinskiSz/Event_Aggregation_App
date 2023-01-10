@@ -1,7 +1,6 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.model.Image;
-import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -44,12 +44,16 @@ public class EventService {
 
     public Event update(EventForm form, MultipartFile file) {
         Event event = this.findById(form.getId());
+
         form.setOwner(event.getOwner());
+
         if (file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()) {
             form.setImage(solveImage(file));
         } else {
+            // otherwise get image from db
             form.setImage(event.getImage());
         }
+
         return repository.save(mapper.toEvent(form));
     }
 

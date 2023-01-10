@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class MaxEventTimeValidator implements ConstraintValidator<MaxEventTime, EventForm> {
+
     @Override
     public void initialize(MaxEventTime constraint) {
     }

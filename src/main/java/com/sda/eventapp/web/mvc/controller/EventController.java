@@ -75,8 +75,10 @@ public class EventController {
     @GetMapping("/update/{id}")
     public String update(ModelMap model, @PathVariable Long id) {
         EventView eventToUpdate = eventService.findEventViewById(id);
+
         model.addAttribute("event", eventToUpdate);
         model.addAttribute("eventImage", eventToUpdate.getImage());
+
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
         if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id))) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
@@ -85,11 +87,18 @@ public class EventController {
     }
 
     @PostMapping("/update")
-    public String handleUpdate(@ModelAttribute("event") @Valid EventForm form, Errors errors, @RequestParam MultipartFile file, RedirectAttributes ra, ModelMap map) {
+    public String handleUpdate(@ModelAttribute("event") @Valid EventForm form, Errors errors,
+                               @RequestParam MultipartFile file, RedirectAttributes ra, ModelMap map) {
         map.addAttribute("eventImage", eventService.findById(form.getId()).getImage());
+
         if (errors.hasErrors()) {
             return "update-event";
         }
+
+        // Not sure if this should be handled by ImageService.
+        // But check should be here, to have proper redirect.
+
+        // If file is uploaded (is not empty) and file is not an image.
         if (!file.isEmpty() && !imageService.isImage(file)) {
             ra.addFlashAttribute("wrongFileExtension",
                     imageService.wrongFileExtensionMessage());

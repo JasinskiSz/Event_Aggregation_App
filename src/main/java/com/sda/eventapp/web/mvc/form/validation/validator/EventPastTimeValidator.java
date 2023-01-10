@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDateTime;
 
 public class EventPastTimeValidator implements ConstraintValidator<EventPastTime, EventForm> {
+
     @Override
     public void initialize(EventPastTime constraint) {
     }
