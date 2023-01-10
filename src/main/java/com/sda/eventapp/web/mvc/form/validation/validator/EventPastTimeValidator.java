@@ -1,19 +1,21 @@
 package com.sda.eventapp.web.mvc.form.validation.validator;
 
+
 import com.sda.eventapp.web.mvc.form.EventForm;
-import com.sda.eventapp.web.mvc.form.validation.constraint.DifferentDates;
+import com.sda.eventapp.web.mvc.form.validation.constraint.EventPastTime;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class DifferentDatesValidator implements ConstraintValidator<DifferentDates, EventForm> {
+import java.time.LocalDateTime;
+
+public class EventPastTimeValidator implements ConstraintValidator<EventPastTime, EventForm> {
 
     @Override
-    public void initialize(DifferentDates constraint) {
+    public void initialize(EventPastTime constraint) {
     }
 
     @Override
     public boolean isValid(EventForm form, ConstraintValidatorContext context) {
-        return form.getStartingDateTime()
-                .isBefore(form.getEndingDateTime());
+        return form.getStartingDateTime().isAfter(LocalDateTime.now());
     }
 }
