@@ -105,6 +105,6 @@ public class EventController {
             return "redirect:/event/create";
         }
         eventService.update(form, file);
-        return "index";
+        return "redirect:/home";
     }
 }
