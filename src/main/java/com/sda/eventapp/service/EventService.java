@@ -8,7 +8,7 @@ import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
-import com.sda.eventapp.web.mvc.form.CreateEventForm;
+import com.sda.eventapp.web.mvc.form.EventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -36,27 +36,35 @@ public class EventService {
     private final ImageService imageService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form, User owner, MultipartFile file) {
+    public Event save(EventForm form, User owner, MultipartFile file) {
         form.setOwner(owner);
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form));
     }
 
-    public Event update(CreateEventForm form) {
-        Event event = repository.findById(form.getId())
-                .orElseThrow(() -> new RuntimeException("Event not found"));
-        event.setId((form.getId()));
-        event.setTitle((form.getTitle()));
-        event.setDescription(form.getDescription());
-        event.setStartingDateTime(form.getStartingDateTime());
-        event.setEndingDateTime(form.getEndingDateTime());
+    public Event update(EventForm form, MultipartFile file) {
+        Event event = this.findById(form.getId());
 
-        return repository.save(event);
+        form.setOwner(event.getOwner());
+
+        if (file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()) {
+            // if new file was uploaded
+            form.setImage(saveImageLocally(file));
+        } else {
+            // otherwise get image from db
+            form.setImage(event.getImage());
+        }
+
+        return repository.save(mapper.toEvent(form));
     }
 
     public Event findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+    }
+
+    public Long findOwnerIdByEventId(Long eventId) {
+        return this.findById(eventId).getOwner().getId();
     }
 
     public Event findByIdFetchOwnerFetchUsers(Long id) {
@@ -239,7 +247,6 @@ public class EventService {
     }
 
     public Event signOutFromEvent(User user, Long eventId) {
-
         Event event = this.findByIdFetchOwnerFetchUsers(eventId);
         if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
             event.getUsers().remove(user);

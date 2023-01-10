@@ -3,6 +3,8 @@ package com.sda.eventapp.web.mvc.form;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.web.mvc.form.validation.constraint.DifferentDates;
+import com.sda.eventapp.web.mvc.form.validation.constraint.EventPastTime;
+import com.sda.eventapp.web.mvc.form.validation.constraint.MaxEventTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -14,9 +16,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@DifferentDates(message = "Starting date must be before ending date of event")
-public class CreateEventForm {
-    private Long id;
+@EventPastTime(message = "Start date cannot be before today")
+@MaxEventTime(message = "The maximum duration of the event is 2 weeks")
+@DifferentDates(message = "End date must be after start date")
+public class EventForm {
+    private long id;
     @NotBlank(message = "Field title is required.")
     private String title;
     private LocalDateTime startingDateTime;
