@@ -26,6 +26,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -97,7 +98,6 @@ class EventDetailControllerTest {
     @Test
     void shouldSignUpForEvent() throws Exception {
         //given
-        Set<User> usersTest = new HashSet<>();
         User user1 = User.builder()
                 .username("user-test")
                 .email("user-test@gmail.com")
@@ -108,7 +108,6 @@ class EventDetailControllerTest {
                 .email("user2-test@gmail.com")
                 .password("user2user2")
                 .build();
-        usersTest.add(user1);
         userRepository.save(user1);
         userRepository.save(user2);
         Image defaultImage = Image.builder()
@@ -120,12 +119,12 @@ class EventDetailControllerTest {
                 .startingDateTime(LocalDateTime.now().plusDays(7))
                 .endingDateTime(LocalDateTime.now().plusDays(14))
                 .owner(user1)
-                .users(usersTest)
+
                 .image(defaultImage)
                 .build());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(user(User.builder().build())))
-                .andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
+                .andExpect(status().is3xxRedirection());
     }
 
 }

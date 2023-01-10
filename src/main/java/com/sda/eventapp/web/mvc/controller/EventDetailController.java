@@ -13,7 +13,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Controller
 @RequestMapping("/detail-view")
@@ -58,6 +62,10 @@ public class EventDetailController {
     @PostMapping("/{id}/sign-up-for-event")
     public String signupForEvent(@PathVariable("id") Long eventId) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+
+        if (eventService.findByIdFetchOwnerFetchUsers(eventId).getOwner().getUsername().equals(loggedUser.getUsername())) {
+            throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
+        }
 
         eventService.signUpForEvent(loggedUser, eventId);
 
