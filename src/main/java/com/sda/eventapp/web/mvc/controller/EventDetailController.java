@@ -29,12 +29,12 @@ public class EventDetailController {
 
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+            map.addAttribute("comment", new CreateCommentForm());
             map.addAttribute("loggedUser", loggedUser);
         }
 
 
         map.addAttribute("event", eventService.findEventViewById(eventId));
-        map.addAttribute("comment", new CreateCommentForm());
         map.addAttribute("comments", eventService.findCommentViewsByEventId(eventId));
 
         return "event-detail-view";
