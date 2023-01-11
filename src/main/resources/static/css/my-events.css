@@ -9,7 +9,8 @@
 }
 
 .select-selected {
-    background-color: DodgerBlue;
+    background-color: #0d6efd;
+
 }
 
 /* Style the arrow inside the select element: */
@@ -42,7 +43,7 @@
 /* Style items (options): */
 .select-items {
     position: absolute;
-    background-color: DodgerBlue;
+    background-color: #0d6efd;
     top: 100%;
     left: 0;
     right: 0;
@@ -56,4 +57,10 @@
 
 .select-items div:hover, .same-as-selected {
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+.select-width {
+    width: 200px;
+
+
 }

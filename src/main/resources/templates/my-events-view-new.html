@@ -37,7 +37,7 @@
                       role="search"
                       th:action="@{/my-events}">
                     <div class="input-group">
-                        <div class="custom-select" style="width:200px;">
+                        <div class="custom-select select-width">
                             <select name="participationType" value="participationType">
                                 <option value="0">Participation Filter</option>
                                 <option th:each="participationType: ${participationTypes}"
@@ -45,7 +45,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="custom-select" style="width:200px;">
+                        <div class="custom-select select-width">
                             <select name="dateType" value="dateType">
                                 <option value="0">Date Filter</option>
                                 <option th:each="dateType: ${dateTypes}"
