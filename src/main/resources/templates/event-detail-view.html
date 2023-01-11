@@ -149,9 +149,16 @@
                         <h4 class="display-6 fw-bolder text-white mb-2"
                             th:text="${#strings.concat(event.startingDateTime, ' - ', event.endingDateTime)}"></h4>
                         <p class=" text-break lead fw-normal text-white-50 mb-4" th:text="${event.description}"></p>
-                        <!--sign up/out-->
+
                         <div sec:authorize="isAuthenticated()">
                             <div th:if="${event.startingDateTime.isAfter(#temporals.createNow())}">
+                                <!--Update event if Owner and If Future-->
+                                <div th:if="${#strings.equals(event.ownerNickname, loggedUser.username)}">
+                                    <a class="btn btn-success btn-lg px-4 me-sm-3"
+                                       th:href="@{/event/update/__${event.id}__}">Update an Event
+                                    </a>
+                                </div>
+                                <!--sign up/out-->
                                 <div th:unless="${#strings.equals(event.ownerNickname, loggedUser.username)}">
                                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start"
                                          th:if="!${#sets.contains(event.usersNicknames, loggedUser.username)}">
