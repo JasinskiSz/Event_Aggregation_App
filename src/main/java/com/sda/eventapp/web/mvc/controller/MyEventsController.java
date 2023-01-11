@@ -14,6 +14,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Arrays;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -31,16 +33,16 @@ public class MyEventsController {
     public String getMyEventView(ModelMap map,
                                  @Param("participationType") String participationType,
                                  @Param("dateType") String dateType) {
-
-        if (participationType != null || dateType != null) {
-            if (!dateType.equals("0")) {
-                eventFilters.setDateType(dateType);
-            }
-            if (!participationType.equals("0")) {
-                eventFilters.setParticipationType(participationType);
-            }
+        if (Arrays.stream(ParticipationType.values())
+                .map(ParticipationType::getName)
+                .anyMatch(pt -> pt.equals(participationType))) {
+            eventFilters.setParticipationType(participationType);
         }
-
+        if (Arrays.stream(DateType.values())
+                .map(DateType::getName)
+                .anyMatch(pt -> pt.equals(dateType))) {
+            eventFilters.setDateType(dateType);
+        }
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
         map.addAttribute("loggedUser", loggedUser);
