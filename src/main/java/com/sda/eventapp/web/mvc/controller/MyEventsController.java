@@ -32,9 +32,13 @@ public class MyEventsController {
                                  @Param("participationType") String participationType,
                                  @Param("dateType") String dateType) {
 
-        if (participationType != null && dateType != null) {
-            eventFilters.setParticipationType(participationType);
-            eventFilters.setDateType(dateType);
+        if (participationType != null || dateType != null) {
+            if (!dateType.equals("0")) {
+                eventFilters.setDateType(dateType);
+            }
+            if (!participationType.equals("0")) {
+                eventFilters.setParticipationType(participationType);
+            }
         }
 
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
@@ -53,6 +57,6 @@ public class MyEventsController {
                 ));
         map.addAttribute("eventFilters", eventFilters);
 
-        return "my-events-view";
+        return "my-events-view-new";
     }
 }
