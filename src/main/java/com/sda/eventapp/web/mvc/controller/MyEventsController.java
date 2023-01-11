@@ -57,6 +57,6 @@ public class MyEventsController {
                 ));
         map.addAttribute("eventFilters", eventFilters);
 
-        return "my-events-view-new";
+        return "my-events-view";
     }
 }
