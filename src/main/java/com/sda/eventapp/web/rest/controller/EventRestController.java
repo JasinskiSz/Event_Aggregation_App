@@ -14,14 +14,15 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/event")
+@RequestMapping({"/events"})
 @RequiredArgsConstructor
 public class EventRestController {
     private final EventService eventService;
 
-    @GetMapping("/all")
+
+    @GetMapping("/future")
     public List<EventView> getEventViews() {
-        return eventService.findAllEventViews();
+        return eventService.findAllEventViewsFuture();
     }
 
     @GetMapping("/date")
