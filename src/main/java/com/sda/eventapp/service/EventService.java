@@ -264,57 +264,57 @@ public class EventService {
     public List<EventView> findAllEventViews(Long userId, String participationType, String dateType) {
 
         //Owned + Future
-        if (participationType.equals("Owned Events") && dateType.equals("Future")) {
+        if (participationType.equals("Owned") && dateType.equals("Future")) {
             return mapper.toEventViewList(repository.findOwnedFutureEventsByOwner_Id(userId));
         }
 
         //Owned + FutureOngoing
-        else if (participationType.equals("Owned Events") && dateType.equals("Future and Ongoing")) {
+        else if (participationType.equals("Owned") && dateType.equals("Future and Ongoing")) {
             return mapper.toEventViewList(repository.findOwnedFutureAndOngoingEventsByOwner_Id(userId));
         }
 
         //Owned + Past
-        else if (participationType.equals("Owned Events") && dateType.equals("Past")) {
+        else if (participationType.equals("Owned") && dateType.equals("Past")) {
             return mapper.toEventViewList(repository.findOwnedPastEventsByOwner_Id(userId));
         }
 
         //Owned + All
-        else if (participationType.equals("Owned Events") && dateType.equals("All")) {
+        else if (participationType.equals("Owned") && dateType.equals("All")) {
             return mapper.toEventViewList(repository.findOwnedAllEventsByOwner_IdOrderByStartingDateTime(userId));
         }
 
         //Attended + Future
-        else if (participationType.equals("Attended Events") && dateType.equals("Future")) {
+        else if (participationType.equals("Attended") && dateType.equals("Future")) {
             return mapper.toEventViewList(repository.findAttendedFutureEventsById(userId));
         }
 
         //Attended + FutureOngoing
-        else if (participationType.equals("Attended Events") && dateType.equals("Future and Ongoing")) {
+        else if (participationType.equals("Attended") && dateType.equals("Future and Ongoing")) {
             return mapper.toEventViewList(repository.findAttendedFutureAndOngoingEventsById(userId));
         }
 
         //Attended + Past
-        else if (participationType.equals("Attended Events") && dateType.equals("Past")) {
+        else if (participationType.equals("Attended") && dateType.equals("Past")) {
             return mapper.toEventViewList(repository.findAttendedPastEventsById(userId));
         }
 
         //Attended + All
-        else if (participationType.equals("Attended Events") && dateType.equals("All")) {
+        else if (participationType.equals("Attended") && dateType.equals("All")) {
             return mapper.toEventViewList(repository.findAttendedAllEventsByUsers_IdOrderByStartingDateTime(userId));
         }
 
         //All + Future
-        else if (participationType.equals("All Events") && dateType.equals("Future")) {
+        else if (participationType.equals("All") && dateType.equals("Future")) {
             return mapper.toEventViewList(repository.findOwnedAndAttendedFutureEventsById(userId));
         }
 
         //All + FutureOngoing
-        else if (participationType.equals("All Events") && dateType.equals("Future and Ongoing")) {
+        else if (participationType.equals("All") && dateType.equals("Future and Ongoing")) {
             return mapper.toEventViewList(repository.findOwnedAndAttendedFutureAndOngoingEventsById(userId));
         }
 
         //All + Past
-        else if (participationType.equals("All Events") && dateType.equals("Past")) {
+        else if (participationType.equals("All") && dateType.equals("Past")) {
             return mapper.toEventViewList(repository.findOwnedAndAttendedPastEventsById(userId));
         }
 
