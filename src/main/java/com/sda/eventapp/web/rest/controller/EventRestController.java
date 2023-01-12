@@ -14,17 +14,17 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/event")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class EventRestController {
     private final EventService eventService;
 
-    @GetMapping("/all")
+    @GetMapping("/events")
     public List<EventView> getEventViews() {
-        return eventService.findAllEventViews();
+        return eventService.findAllFutureEventsViews();
     }
 
-    @GetMapping("/date")
+    @GetMapping("/range-date")
     public List<EventView> getEventViewsByDateRange(@RequestParam LocalDateTime start, @RequestParam LocalDateTime end) {
         return eventService.findEventViewsByDateRange(start, end);
     }
