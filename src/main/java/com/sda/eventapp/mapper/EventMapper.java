@@ -55,4 +55,17 @@ public class EventMapper {
                 .owner(form.getOwner())
                 .build();
     }
+
+    public List<EventView> toEventViewListClient(List<Event> events) {
+        return events.stream()
+                .map(event -> EventView
+                        .builder()
+                        .id(event.getId())
+                        .title(event.getTitle())
+                        .description(event.getDescription())
+                        .startingDateTime(event.getStartingDateTime())
+                        .endingDateTime(event.getEndingDateTime())
+                        .build())
+                .toList();
+    }
 }
