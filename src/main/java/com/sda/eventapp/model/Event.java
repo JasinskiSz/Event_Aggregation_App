@@ -1,5 +1,6 @@
 package com.sda.eventapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,6 +28,7 @@ public class Event {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "owner_id")
     private User owner;
 
@@ -53,6 +55,7 @@ public class Event {
     private Set<Comment> comments;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
