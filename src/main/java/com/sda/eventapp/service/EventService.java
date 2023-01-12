@@ -139,7 +139,7 @@ public class EventService {
         return mapper.toEventView(this.findById(id));
     }
 
-    public List<EventView> findAllEventViews() {
+    public List<EventView> findAllFutureEventsViews() {
         return mapper.toEventViewList(repository.findAll());
     }
 
