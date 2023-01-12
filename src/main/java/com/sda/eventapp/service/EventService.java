@@ -139,8 +139,8 @@ public class EventService {
         return mapper.toEventView(this.findById(id));
     }
 
-    public List<EventView> findAllEventViews() {
-        return mapper.toEventViewList(repository.findAll());
+    public List<EventView> findAllEventViewsFuture() {
+        return mapper.toEventViewListClient(repository.findAllFutureEvents());
     }
 
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
@@ -152,7 +152,7 @@ public class EventService {
     }
 
     public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
+        return mapper.toEventViewListClient(repository.findAllEventByDateRange(start, end));
     }
 
     public List<CommentView> findCommentViewsByEventId(Long eventId) {
