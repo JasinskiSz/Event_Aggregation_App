@@ -139,8 +139,8 @@ public class EventService {
         return mapper.toEventView(this.findById(id));
     }
 
-    public List<EventView> findAllEventViews() {
-        return mapper.toEventViewList(repository.findAll());
+    public EventView[] findAllEventViewsArray() {
+        return mapper.toEventViewArray(repository.findAll());
     }
 
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {

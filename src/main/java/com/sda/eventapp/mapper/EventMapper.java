@@ -55,4 +55,9 @@ public class EventMapper {
                 .owner(form.getOwner())
                 .build();
     }
+
+    public EventView[] toEventViewArray(List<Event> events) {
+        List<EventView> eventViews = this.toEventViewList(events);
+        return eventViews.toArray(new EventView[0]);
+    }
 }

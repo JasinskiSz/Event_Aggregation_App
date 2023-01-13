@@ -1,5 +1,6 @@
 package com.sda.eventapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sda.eventapp.model.Image;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,11 +17,16 @@ public class EventView {
     private long id;
     private String title;
     private String description;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startingDateTime;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endingDateTime;
+
+    @JsonManagedReference
     private Image image;
+
     private Set<String> usersNicknames;
     private String ownerNickname;
 }

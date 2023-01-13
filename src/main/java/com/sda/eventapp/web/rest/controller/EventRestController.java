@@ -19,9 +19,9 @@ import java.util.List;
 public class EventRestController {
     private final EventService eventService;
 
-    @GetMapping("/all")
-    public List<EventView> getEventViews() {
-        return eventService.findAllEventViews();
+    @GetMapping()
+    public EventView[] getEventViews() {
+        return eventService.findAllEventViewsArray();
     }
 
     @GetMapping("/date")
