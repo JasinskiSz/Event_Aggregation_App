@@ -1,6 +1,7 @@
 package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.configuration.SecurityConfig;
+import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
@@ -38,13 +40,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class EventDetailControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    EventService eventService;
 
     @Autowired
     EventRepository eventRepository;
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    EventMapper mapper;
+    //create after each with deleting entities from every repository
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
     void shouldAllowAccessForAnonymousUser() throws Exception {
@@ -55,7 +62,15 @@ class EventDetailControllerTest {
                 .email("user-test@gmail.com")
                 .password("useruser")
                 .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        Set<User> attendingUsers = new HashSet<>();
+        attendingUsers.add(user2);
         userRepository.save(user1);
+        userRepository.save(user2);
         Image defaultImage = Image.builder()
                 .filename("default-event-image.jpeg")
                 .build();
@@ -66,6 +81,7 @@ class EventDetailControllerTest {
                 .endingDateTime(LocalDateTime.now().plusDays(7))
                 .owner(user1)
                 .image(defaultImage)
+                .users(attendingUsers)
                 .build());
 
 
@@ -77,6 +93,10 @@ class EventDetailControllerTest {
                 .andExpect(model().attributeExists("event"))
                 .andExpect(model().attributeDoesNotExist("comment"))
                 .andExpect(model().attributeDoesNotExist("loggedUser"));
+
+        //todo is it correct approach?
+        assertThat(eventService.findByIdFetchOwnerFetchUsers(testEvent.getId())).isEqualTo(testEvent);
+        // assertThat(eventService.findEventViewById(testEvent.getId()).getTitle()).isEqualTo("test event x");
     }
 
     @Test
