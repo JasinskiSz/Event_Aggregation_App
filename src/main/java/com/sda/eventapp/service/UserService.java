@@ -18,13 +18,13 @@ public class UserService {
     public User save(CreateUserForm form) {
         User user = mapper.toUser(form);
         user.setPassword(passwordEncoder.encode(form.getPassword()));
+        user.setRole(User.Roles.ROLE_USER);
         return repository.save(user);
     }
 
     public boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
-
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }
