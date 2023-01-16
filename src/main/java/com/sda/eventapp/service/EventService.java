@@ -136,7 +136,7 @@ public class EventService {
     }
 
     public EventView findEventViewById(Long id) {
-        return mapper.toEventView(this.findById(id));
+        return mapper.toEventView(this.findByIdFetchOwnerFetchUsers(id));
     }
 
     public List<EventView> findAllEventViews() {
