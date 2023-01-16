@@ -176,7 +176,8 @@ class EventDetailControllerTest {
                 .build());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user1.getId()).get())))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError())
+                .andExpect(status().reason("ACCESS DENIED - OWNER CANNOT SIGN UP FOR AN EVENT"));
     }
 
     @Test
@@ -208,7 +209,8 @@ class EventDetailControllerTest {
                 .build());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGN UP FOR AN EVENT THAT HAS ALREADY STARTED"));
     }
 
     @Test
@@ -240,7 +242,8 @@ class EventDetailControllerTest {
                 .build());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGNUP FOR AN EVENT IF ALREADY ASSIGNED"));
     }
 
 
@@ -308,7 +311,8 @@ class EventDetailControllerTest {
                 .build());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user1.getId()).get())))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError())
+                .andExpect(status().reason("ACCESS DENIED - OWNER CANNOT SIGN OUT FROM AN EVENT"));
     }
 
     @Test
@@ -342,11 +346,11 @@ class EventDetailControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().isBadRequest())
-                .andExpect(status().reason("CANNOT SIGN OUT FROM EVENT HAS ALREADY STARTED"));
+                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGN OUT FROM AN EVENT THAT HAS ALREADY STARTED"));
     }
 
     @Test
-    void shouldNotSignOutFromEventIfIsNotSignedUp() throws Exception {
+    void shouldNotSignOutFromEventIfNotSignedUp() throws Exception {
         //given
         User user1 = User.builder()
                 .username("user-test")
@@ -374,7 +378,8 @@ class EventDetailControllerTest {
                 .build());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGNUP OUT FROM AN EVENT IF HAS NOT ASSIGNED"));
     }
 
 }

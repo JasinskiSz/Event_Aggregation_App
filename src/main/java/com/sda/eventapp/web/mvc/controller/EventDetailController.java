@@ -67,13 +67,13 @@ public class EventDetailController {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
         if (eventService.findByIdFetchOwnerFetchUsers(eventId).getOwner().getUsername().equals(loggedUser.getUsername())) {
-            throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
+            throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - OWNER CANNOT SIGN UP FOR AN EVENT");
         }
         if (eventService.findByIdFetchOwnerFetchUsers(eventId).getStartingDateTime().isBefore(LocalDateTime.now())) {
-            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED");
+            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN UP FOR AN EVENT THAT HAS ALREADY STARTED");
         }
         if (eventService.findByIdFetchOwnerFetchUsers(eventId).getUsers().contains(loggedUser)) {
-            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED");
+            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGNUP FOR AN EVENT IF ALREADY ASSIGNED");
         }
         eventService.signUpForEvent(loggedUser, eventId);
 
@@ -85,13 +85,13 @@ public class EventDetailController {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
         if (eventService.findByIdFetchOwnerFetchUsers(eventId).getOwner().getUsername().equals(loggedUser.getUsername())) {
-            throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
+            throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - OWNER CANNOT SIGN OUT FROM AN EVENT");
         }
         if (eventService.findByIdFetchOwnerFetchUsers(eventId).getStartingDateTime().isBefore(LocalDateTime.now())) {
-            throw new ResponseStatusException(BAD_REQUEST, "CANNOT SIGN OUT FROM EVENT HAS ALREADY STARTED");
+            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN OUT FROM AN EVENT THAT HAS ALREADY STARTED");
         }
         if (!eventService.findByIdFetchOwnerFetchUsers(eventId).getUsers().contains(loggedUser)) {
-            throw new ResponseStatusException(BAD_REQUEST, "ACESS DENIED");
+            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGNUP OUT FROM AN EVENT IF HAS NOT ASSIGNED");
         }
 
         eventService.signOutFromEvent(loggedUser, eventId);
