@@ -8,7 +8,7 @@ import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
-import com.sda.eventapp.web.mvc.form.CreateEventForm;
+import com.sda.eventapp.web.mvc.form.EventForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -36,27 +36,35 @@ public class EventService {
     private final ImageService imageService;
     private final EventMapper mapper;
 
-    public Event save(CreateEventForm form, User owner, MultipartFile file) {
+    public Event save(EventForm form, User owner, MultipartFile file) {
         form.setOwner(owner);
         form.setImage(solveImage(file));
         return repository.save(mapper.toEvent(form));
     }
 
-    public Event update(CreateEventForm form) {
-        Event event = repository.findById(form.getId())
-                .orElseThrow(() -> new RuntimeException("Event not found"));
-        event.setId((form.getId()));
-        event.setTitle((form.getTitle()));
-        event.setDescription(form.getDescription());
-        event.setStartingDateTime(form.getStartingDateTime());
-        event.setEndingDateTime(form.getEndingDateTime());
+    public Event update(EventForm form, MultipartFile file) {
+        Event event = this.findById(form.getId());
 
-        return repository.save(event);
+        form.setOwner(event.getOwner());
+
+        if (file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()) {
+            // if new file was uploaded
+            form.setImage(saveImageLocally(file));
+        } else {
+            // otherwise get image from db
+            form.setImage(event.getImage());
+        }
+
+        return repository.save(mapper.toEvent(form));
     }
 
     public Event findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
+    }
+
+    public Long findOwnerIdByEventId(Long eventId) {
+        return this.findById(eventId).getOwner().getId();
     }
 
     public Event findByIdFetchOwnerFetchUsers(Long id) {
@@ -239,7 +247,6 @@ public class EventService {
     }
 
     public Event signOutFromEvent(User user, Long eventId) {
-
         Event event = this.findByIdFetchOwnerFetchUsers(eventId);
         if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
             event.getUsers().remove(user);
@@ -257,57 +264,57 @@ public class EventService {
     public List<EventView> findAllEventViews(Long userId, String participationType, String dateType) {
 
         //Owned + Future
-        if (participationType.equals("Owned Events") && dateType.equals("Future")) {
+        if (participationType.equals("Owned") && dateType.equals("Future")) {
             return mapper.toEventViewList(repository.findOwnedFutureEventsByOwner_Id(userId));
         }
 
         //Owned + FutureOngoing
-        else if (participationType.equals("Owned Events") && dateType.equals("Future and Ongoing")) {
+        else if (participationType.equals("Owned") && dateType.equals("Future and Ongoing")) {
             return mapper.toEventViewList(repository.findOwnedFutureAndOngoingEventsByOwner_Id(userId));
         }
 
         //Owned + Past
-        else if (participationType.equals("Owned Events") && dateType.equals("Past")) {
+        else if (participationType.equals("Owned") && dateType.equals("Past")) {
             return mapper.toEventViewList(repository.findOwnedPastEventsByOwner_Id(userId));
         }
 
         //Owned + All
-        else if (participationType.equals("Owned Events") && dateType.equals("All")) {
+        else if (participationType.equals("Owned") && dateType.equals("All")) {
             return mapper.toEventViewList(repository.findOwnedAllEventsByOwner_IdOrderByStartingDateTime(userId));
         }
 
         //Attended + Future
-        else if (participationType.equals("Attended Events") && dateType.equals("Future")) {
+        else if (participationType.equals("Attended") && dateType.equals("Future")) {
             return mapper.toEventViewList(repository.findAttendedFutureEventsById(userId));
         }
 
         //Attended + FutureOngoing
-        else if (participationType.equals("Attended Events") && dateType.equals("Future and Ongoing")) {
+        else if (participationType.equals("Attended") && dateType.equals("Future and Ongoing")) {
             return mapper.toEventViewList(repository.findAttendedFutureAndOngoingEventsById(userId));
         }
 
         //Attended + Past
-        else if (participationType.equals("Attended Events") && dateType.equals("Past")) {
+        else if (participationType.equals("Attended") && dateType.equals("Past")) {
             return mapper.toEventViewList(repository.findAttendedPastEventsById(userId));
         }
 
         //Attended + All
-        else if (participationType.equals("Attended Events") && dateType.equals("All")) {
+        else if (participationType.equals("Attended") && dateType.equals("All")) {
             return mapper.toEventViewList(repository.findAttendedAllEventsByUsers_IdOrderByStartingDateTime(userId));
         }
 
         //All + Future
-        else if (participationType.equals("All Events") && dateType.equals("Future")) {
+        else if (participationType.equals("All") && dateType.equals("Future")) {
             return mapper.toEventViewList(repository.findOwnedAndAttendedFutureEventsById(userId));
         }
 
         //All + FutureOngoing
-        else if (participationType.equals("All Events") && dateType.equals("Future and Ongoing")) {
+        else if (participationType.equals("All") && dateType.equals("Future and Ongoing")) {
             return mapper.toEventViewList(repository.findOwnedAndAttendedFutureAndOngoingEventsById(userId));
         }
 
         //All + Past
-        else if (participationType.equals("All Events") && dateType.equals("Past")) {
+        else if (participationType.equals("All") && dateType.equals("Past")) {
             return mapper.toEventViewList(repository.findOwnedAndAttendedPastEventsById(userId));
         }
 
