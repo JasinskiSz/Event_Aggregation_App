@@ -8,6 +8,10 @@ import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.UserRepository;
 import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.web.mvc.form.CreateCommentForm;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -52,6 +56,8 @@ class EventDetailControllerTest {
     //create after each with deleting entities from every repository
     @Autowired
     private MockMvc mockMvc;
+
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     void shouldAllowAccessForAnonymousUser() throws Exception {
@@ -380,6 +386,171 @@ class EventDetailControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().isBadRequest())
                 .andExpect(status().reason("ACCESS DENIED - CANNOT SIGNUP OUT FROM AN EVENT IF HAS NOT ASSIGNED"));
+    }
+
+    private static String blankComment() {
+        return "";
+    }
+
+    private static String commentWith500Characters() {
+        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
+                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
+                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
+                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
+                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
+                " Cras dapibu";
+    }
+
+    private static String commentWith501Characters() {
+        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
+                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
+                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
+                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
+                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
+                " Cras dapibu1";
+    }
+
+    @Test
+    void shouldAddComment() throws Exception {
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().plusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(14))
+                .owner(user1)
+                .users(Set.of(user2))
+                .image(defaultImage)
+                .build());
+        String testComment = commentWith500Characters();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}", testEvent.getId())
+                        .with(csrf())
+                        .with(user(userRepository.findById(user2.getId()).get()))
+                        .param("text", testComment)
+                        .with(csrf()))
+
+                // for positive scenario this part of test is redundant (there is no flash().attributeDoesNotExist() method.
+                //That is why I added assertJ test
+                //.andExpect(flash().attributeExists("commentErrors"))
+
+                .andExpect(status().is3xxRedirection());
+
+        //todo should it be made as an isolated unit test?
+        CreateCommentForm cfm = new CreateCommentForm();
+        cfm.setText(testComment);
+        Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
+        assertThat(violations).isEmpty();
+    }
+
+    @Test
+    void shouldNotAddCommentIfCommentIsEmpty() throws Exception {
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().plusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(14))
+                .owner(user1)
+                .users(Set.of(user2))
+                .image(defaultImage)
+                .build());
+        String testComment = blankComment();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}", testEvent.getId())
+                        .with(csrf())
+                        .with(user(userRepository.findById(user2.getId()).get()))
+                        .param("text", testComment)
+                        .with(csrf()))
+                .andExpect(flash().attributeExists("commentErrors"))
+                .andExpect(status().is3xxRedirection());
+
+        //todo should it be made as an isolated unit test?
+        CreateCommentForm cfm = new CreateCommentForm();
+        cfm.setText(testComment);
+        Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
+        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot be empty"))
+                .findFirst().map(v -> v.getMessage()).get())
+                .isEqualTo("Comment cannot be empty");
+    }
+
+    @Test
+    void shouldNotAddCommentIfCommentHasOver500Characters() throws Exception {
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().plusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(14))
+                .owner(user1)
+                .users(Set.of(user2))
+                .image(defaultImage)
+                .build());
+        String testComment = commentWith501Characters();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}", testEvent.getId())
+                        .with(csrf())
+                        .with(user(userRepository.findById(user2.getId()).get()))
+                        .param("text", testComment)
+                        .with(csrf()))
+                .andExpect(flash().attributeExists("commentErrors"))
+                .andExpect(status().is3xxRedirection());
+
+        //todo should it be made as an isolated unit test?
+        CreateCommentForm cfm = new CreateCommentForm();
+        cfm.setText(testComment);
+        Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
+        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot have more than 500 characters"))
+                .findFirst().map(v -> v.getMessage()).get())
+                .isEqualTo("Comment cannot have more than 500 characters");
     }
 
 }
