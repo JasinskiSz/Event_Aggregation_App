@@ -80,7 +80,7 @@ public class EventController {
         model.addAttribute("eventImage", eventToUpdate.getImage());
 
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-        if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id))) {
+        if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id)) && !loggedUser.getRole().equals(User.Roles.ROLE_ADMIN)) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
         }
         return "update-event";
