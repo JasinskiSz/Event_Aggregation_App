@@ -321,7 +321,7 @@ public class EventService {
         }
     }
 
-    public EventApiWrapper findAllFutureEventViewsWrapped() {
+    public EventApiWrapper getEventApiWrapperWithAllFutureEvents() {
         return new EventApiWrapper(
                 mapper.toEventApiList(
                         repository.findAllFutureEvents()

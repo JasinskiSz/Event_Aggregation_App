@@ -22,7 +22,7 @@ public class EventRestController {
 
     @GetMapping()
     public EventApiWrapper getAllFutureEvents() {
-        return eventService.findAllFutureEventViewsWrapped();
+        return eventService.getEventApiWrapperWithAllFutureEvents();
     }
 
     @GetMapping("/date")
