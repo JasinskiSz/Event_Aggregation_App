@@ -28,6 +28,13 @@ public class User implements UserDetails {
 
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Roles role;
+
+    public enum Roles {
+        ROLE_USER, ROLE_ADMIN
+    }
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
