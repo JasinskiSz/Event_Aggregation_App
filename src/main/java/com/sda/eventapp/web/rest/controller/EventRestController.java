@@ -1,5 +1,6 @@
 package com.sda.eventapp.web.rest.controller;
 
+import com.sda.eventapp.dto.EventApiWrapper;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class EventRestController {
     private final EventService eventService;
 
     @GetMapping()
-    public EventView[] getEventViews() {
-        return eventService.findAllEventViewsArray();
+    public EventApiWrapper getAllFutureEvents() {
+        return eventService.findAllFutureEventViewsWrapped();
     }
 
     @GetMapping("/date")

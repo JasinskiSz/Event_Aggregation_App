@@ -1,6 +1,7 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.CommentView;
+import com.sda.eventapp.dto.EventApiWrapper;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
@@ -137,10 +138,6 @@ public class EventService {
 
     public EventView findEventViewById(Long id) {
         return mapper.toEventView(this.findById(id));
-    }
-
-    public EventView[] findAllEventViewsArray() {
-        return mapper.toEventViewArray(repository.findAll());
     }
 
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
@@ -322,5 +319,13 @@ public class EventService {
         else {
             return mapper.toEventViewList(repository.findOwnedAndAttendedAllEventsById(userId));
         }
+    }
+
+    public EventApiWrapper findAllFutureEventViewsWrapped() {
+        return new EventApiWrapper(
+                mapper.toEventApiList(
+                        repository.findAllFutureEvents()
+                )
+        );
     }
 }
