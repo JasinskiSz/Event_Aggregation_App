@@ -55,11 +55,6 @@ public class EventMapper {
                 .build();
     }
 
-    public EventView[] toEventViewArray(List<Event> events) {
-        List<EventView> eventViews = this.toEventViewList(events);
-        return eventViews.toArray(new EventView[0]);
-    }
-
     public List<EventApi> toEventApiList(List<Event> events) {
         return events.stream()
                 .map(event -> EventApi.builder()
