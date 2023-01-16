@@ -68,7 +68,6 @@ public class EventMapper {
                         .description(event.getDescription())
                         .startingDateTime(event.getStartingDateTime())
                         .endingDateTime(event.getEndingDateTime())
-                        .image(event.getImage())
                         .attenders(getUsersNicknames(event))
                         .ownerNickname(getOwnerNickname(event))
                         .build())

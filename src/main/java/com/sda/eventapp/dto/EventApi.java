@@ -1,6 +1,5 @@
 package com.sda.eventapp.dto;
 
-import com.sda.eventapp.model.Image;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ public class EventApi {
     private String description;
     private LocalDateTime startingDateTime;
     private LocalDateTime endingDateTime;
-    private Image image;
     private Set<String> attenders;
     private String ownerNickname;
 }
