@@ -61,50 +61,8 @@ class EventDetailControllerTest {
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    @Test
-    void shouldAllowAccessForAnonymousUser() throws Exception {
-
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        Set<User> attendingUsers = new HashSet<>();
-        attendingUsers.add(user2);
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().minusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(7))
-                .owner(user1)
-                .image(defaultImage)
-                .users(attendingUsers)
-                .build());
-
-
-        //todo null title handling
-        mockMvc.perform(MockMvcRequestBuilders.get("/detail-view/{id}", testEvent.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("event-detail-view"))
-                .andExpect(model().attributeExists("comments"))
-                .andExpect(model().attributeExists("event"))
-                .andExpect(model().attributeDoesNotExist("comment"))
-                .andExpect(model().attributeDoesNotExist("loggedUser"));
-
-        //todo is it correct approach?
-        assertThat(eventService.findByIdFetchOwnerFetchUsers(testEvent.getId())).isEqualTo(testEvent);
-        // assertThat(eventService.findEventViewById(testEvent.getId()).getTitle()).isEqualTo("test event x");
+    private static String blankComment() {
+        return "";
     }
 
     @Test
@@ -121,37 +79,22 @@ class EventDetailControllerTest {
                 .andExpect(model().attributeExists("loggedUser"));
     }
 
+    private static String commentWith500Characters() {
+        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
+                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
+                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
+                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
+                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
+                " Cras dapibu";
+    }
 
-    @Test
-    void shouldSignUpForEvent() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-
-                .image(defaultImage)
-                .build());
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
-                .andExpect(status().is3xxRedirection());
+    private static String commentWith501Characters() {
+        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
+                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
+                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
+                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
+                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
+                " Cras dapibu1";
     }
 
 
@@ -254,9 +197,54 @@ class EventDetailControllerTest {
                 .andExpect(status().reason("ACCESS DENIED - CANNOT SIGNUP FOR AN EVENT IF ALREADY ASSIGNED"));
     }
 
+    @Test
+    void shouldAllowAccessForAnonymousUser() throws Exception {
+
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        Set<User> attendingUsers = new HashSet<>();
+        attendingUsers.add(user2);
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().minusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(7))
+                .owner(user1)
+                .image(defaultImage)
+                .users(attendingUsers)
+                .build());
+
+
+        //todo null title handling
+        mockMvc.perform(MockMvcRequestBuilders.get("/detail-view/{id}", testEvent.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("event-detail-view"))
+                .andExpect(model().attributeExists("comments"))
+                .andExpect(model().attributeExists("event"))
+                .andExpect(model().attributeDoesNotExist("comment"))
+                .andExpect(model().attributeDoesNotExist("loggedUser"));
+
+        //todo is it correct approach?
+        //assertThat(eventService.findByIdFetchOwnerFetchUsers(testEvent.getId())).isEqualTo(testEvent);
+        assertThat(eventService.findEventViewById(testEvent.getId()).getTitle()).isEqualTo("test event x");
+    }
 
     @Test
-    void shouldSignOutFromEvent() throws Exception {
+    void shouldSignUpForEvent() throws Exception {
         //given
         User user1 = User.builder()
                 .username("user-test")
@@ -279,13 +267,13 @@ class EventDetailControllerTest {
                 .startingDateTime(LocalDateTime.now().plusDays(7))
                 .endingDateTime(LocalDateTime.now().plusDays(14))
                 .owner(user1)
-                .users(Set.of(user2))
 
                 .image(defaultImage)
                 .build());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
-                .andExpect(status().is3xxRedirection());
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/detail-view/**"));
     }
 
 
@@ -390,26 +378,104 @@ class EventDetailControllerTest {
                 .andExpect(status().reason("ACCESS DENIED - CANNOT SIGNUP OUT FROM AN EVENT IF HAS NOT ASSIGNED"));
     }
 
-    private static String blankComment() {
-        return "";
+    @Test
+    void shouldNotSignUpForEventIfAnonymousUser() throws Exception {
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().plusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(14))
+                .owner(user1)
+
+                .image(defaultImage)
+                .build());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
     }
 
-    private static String commentWith500Characters() {
-        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
-                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
-                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
-                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
-                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
-                " Cras dapibu";
+    @Test
+    void shouldSignOutFromEvent() throws Exception {
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().plusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(14))
+                .owner(user1)
+                .users(Set.of(user2))
+
+                .image(defaultImage)
+                .build());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/detail-view/**"));
     }
 
-    private static String commentWith501Characters() {
-        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
-                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
-                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
-                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
-                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
-                " Cras dapibu1";
+    @Test
+    void shouldNotSignOutFromEventIfAnonymousUser() throws Exception {
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().plusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(14))
+                .owner(user1)
+
+                .image(defaultImage)
+                .build());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
     }
 
     @Test
@@ -442,7 +508,7 @@ class EventDetailControllerTest {
         String testComment = commentWith500Characters();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}", testEvent.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
                         .with(csrf())
                         .with(user(userRepository.findById(user2.getId()).get()))
                         .param("text", testComment)
@@ -491,7 +557,7 @@ class EventDetailControllerTest {
         String testComment = blankComment();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}", testEvent.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
                         .with(csrf())
                         .with(user(userRepository.findById(user2.getId()).get()))
                         .param("text", testComment)
@@ -540,7 +606,7 @@ class EventDetailControllerTest {
         String testComment = commentWith501Characters();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}", testEvent.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
                         .with(csrf())
                         .with(user(userRepository.findById(user2.getId()).get()))
                         .param("text", testComment)
@@ -557,6 +623,49 @@ class EventDetailControllerTest {
 //                .findFirst().map(v -> v.getMessage()).get())
 //                .isEqualTo("Comment cannot have more than 500 characters");
         assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Comment cannot have more than 500 characters"));
+    }
+
+    @Test
+    void shouldNotAddCommentIfAnonymousUser() throws Exception {
+        //given
+        User user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        User user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        Image defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        Event testEvent = eventRepository.save(Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().plusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(14))
+                .owner(user1)
+                .users(Set.of(user2))
+                .image(defaultImage)
+                .build());
+        String testComment = commentWith500Characters();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
+                        .with(csrf())
+                        //.with(user(userRepository.findById(user2.getId()).get()))
+                        .param("text", testComment)
+                        .with(csrf()))
+                //.andExpect(flash().attributeExists("commentErrors"))
+                //.andExpect(flash().attribute("commentErrors", List.of("Comment cannot have more than 500 characters")))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+
+
     }
 
 }
