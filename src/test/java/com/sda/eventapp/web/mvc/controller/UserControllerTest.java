@@ -99,7 +99,7 @@ class UserControllerTest {
     }
 
     @BeforeEach
-    void prepareTestData() {
+    void prepareUserTestData() {
         testUser = User.builder()
                 .username("user-test")
                 .email("user-test@gmail.com")
