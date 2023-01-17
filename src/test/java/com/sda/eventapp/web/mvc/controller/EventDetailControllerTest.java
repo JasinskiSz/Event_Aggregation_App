@@ -27,7 +27,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -495,15 +497,17 @@ class EventDetailControllerTest {
                         .param("text", testComment)
                         .with(csrf()))
                 .andExpect(flash().attributeExists("commentErrors"))
+                .andExpect(flash().attribute("commentErrors", List.of("Comment cannot be empty")))
                 .andExpect(status().is3xxRedirection());
 
         //todo should it be made as an isolated unit test?
         CreateCommentForm cfm = new CreateCommentForm();
         cfm.setText(testComment);
         Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
-        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot be empty"))
-                .findFirst().map(v -> v.getMessage()).get())
-                .isEqualTo("Comment cannot be empty");
+//        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot be empty"))
+//                .findFirst().map(v -> v.getMessage()).get())
+//                .isEqualTo("Comment cannot be empty");
+        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Comment cannot be empty"));
     }
 
     @Test
@@ -542,15 +546,17 @@ class EventDetailControllerTest {
                         .param("text", testComment)
                         .with(csrf()))
                 .andExpect(flash().attributeExists("commentErrors"))
+                .andExpect(flash().attribute("commentErrors", List.of("Comment cannot have more than 500 characters")))
                 .andExpect(status().is3xxRedirection());
 
         //todo should it be made as an isolated unit test?
         CreateCommentForm cfm = new CreateCommentForm();
         cfm.setText(testComment);
         Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
-        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot have more than 500 characters"))
-                .findFirst().map(v -> v.getMessage()).get())
-                .isEqualTo("Comment cannot have more than 500 characters");
+//        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot have more than 500 characters"))
+//                .findFirst().map(v -> v.getMessage()).get())
+//                .isEqualTo("Comment cannot have more than 500 characters");
+        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Comment cannot have more than 500 characters"));
     }
 
 }
