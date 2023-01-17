@@ -5,13 +5,17 @@ import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
+import com.sda.eventapp.repository.CommentRepository;
 import com.sda.eventapp.repository.EventRepository;
+import com.sda.eventapp.repository.ImageRepository;
 import com.sda.eventapp.repository.UserRepository;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -44,33 +48,103 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 class EventDetailControllerTest {
-
     @Autowired
     EventService eventService;
-
     @Autowired
     EventRepository eventRepository;
-
     @Autowired
     UserRepository userRepository;
+    private static final String BLANK_COMMENT = "";
+    private static final String COMMENT_WITH_500_CHARACTERS = """
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,
+            ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
+            fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis
+            vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu""";
     @Autowired
     EventMapper mapper;
-    //create after each with deleting entities from every repository
     @Autowired
     private MockMvc mockMvc;
-
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private static final String COMMENT_WITH_501_CHARACTERS = """
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,
+            ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
+            fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis
+            vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu1""";
+    @Autowired
+    CommentRepository commentRepository;
+    @Autowired
+    ImageRepository imageRepository;
+    Set<User> attendingUsers = new HashSet<>();
+    Image defaultImage;
+    Event testEvent;
+    private User user1;
+    private User user2;
 
-    private static String blankComment() {
-        return "";
+    @BeforeEach
+    void prepareTestData() {
+        user1 = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("useruser")
+                .build();
+        user2 = User.builder()
+                .username("user2-test")
+                .email("user2-test@gmail.com")
+                .password("user2user2")
+                .build();
+        attendingUsers.add(user2);
+        userRepository.save(user1);
+        userRepository.save(user2);
+        defaultImage = Image.builder()
+                .filename("default-event-image.jpeg")
+                .build();
+        testEvent = Event.builder()
+                .title("test event x")
+                .description("test event x description")
+                .startingDateTime(LocalDateTime.now().minusDays(7))
+                .endingDateTime(LocalDateTime.now().plusDays(7))
+                .owner(user1)
+                .image(defaultImage)
+                .users(attendingUsers)
+                .build();
+    }
+
+    @AfterEach
+    void deleteTestDataFromDatabase() {
+        commentRepository.deleteAll();
+        imageRepository.deleteAll();
+        eventRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @Test
+    void shouldAllowAccessForAnonymousUser() throws Exception {
+        eventRepository.save(testEvent);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/detail-view/{id}", testEvent.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("event-detail-view"))
+                .andExpect(model().attributeExists("comments"))
+                .andExpect(model().attributeExists("event"))
+                .andExpect(model().attributeDoesNotExist("comment"))
+                .andExpect(model().attributeDoesNotExist("loggedUser"));
+
+        //todo #001 is it correct approach? maybe in different test?
+        //assertThat(eventService.findByIdFetchOwnerFetchUsers(testEvent.getId())).isEqualTo(testEvent);
+        assertThat(eventService.findEventViewById(testEvent.getId()).getTitle()).isEqualTo("test event x");
     }
 
     @Test
     void shouldAllowAccessForAuthenticatedUser() throws Exception {
+        testEvent.getUsers().clear();
+        eventRepository.save(testEvent);
 
-        //todo handle with empty User, handle good url???
         mockMvc
-                .perform(MockMvcRequestBuilders.get("/detail-view/1").with(user(User.builder().build())))
+                .perform(MockMvcRequestBuilders
+                        .get("/detail-view/{id}", testEvent.getId())
+                        .with(csrf()).with(user(userRepository.findById(user1.getId()).get()))) //todo optional handling?
                 .andExpect(status().isOk())
                 .andExpect(view().name("event-detail-view"))
                 .andExpect(model().attributeExists("comments"))
@@ -79,53 +153,9 @@ class EventDetailControllerTest {
                 .andExpect(model().attributeExists("loggedUser"));
     }
 
-    private static String commentWith500Characters() {
-        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
-                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
-                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
-                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
-                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
-                " Cras dapibu";
-    }
-
-    private static String commentWith501Characters() {
-        return "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor." +
-                " Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." +
-                " Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim." +
-                " Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut," +
-                " imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt." +
-                " Cras dapibu1";
-    }
-
-
     @Test
     void shouldNotSignUpForEventIfOwner() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-
-                .image(defaultImage)
-                .build());
-
+        eventRepository.save(testEvent);
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user1.getId()).get())))
                 .andExpect(status().is4xxClientError())
                 .andExpect(status().reason("ACCESS DENIED - OWNER CANNOT SIGN UP FOR AN EVENT"));
@@ -133,31 +163,9 @@ class EventDetailControllerTest {
 
     @Test
     void shouldNotSignUpForEventIfEventStartingDateIsBeforeNow() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().minusDays(7))
-                .endingDateTime(LocalDateTime.now().minusDays(4))
-                .owner(user1)
-
-                .image(defaultImage)
-                .build());
+        testEvent.getUsers().clear();
+        testEvent.setEndingDateTime(LocalDateTime.now().minusDays(4));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().isBadRequest())
@@ -166,31 +174,9 @@ class EventDetailControllerTest {
 
     @Test
     void shouldNotSignUpForEventIfAlreadySignedUp() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-                .users(Set.of(user2))
-                .image(defaultImage)
-                .build());
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().isBadRequest())
@@ -198,113 +184,22 @@ class EventDetailControllerTest {
     }
 
     @Test
-    void shouldAllowAccessForAnonymousUser() throws Exception {
-
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        Set<User> attendingUsers = new HashSet<>();
-        attendingUsers.add(user2);
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().minusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(7))
-                .owner(user1)
-                .image(defaultImage)
-                .users(attendingUsers)
-                .build());
-
-
-        //todo null title handling
-        mockMvc.perform(MockMvcRequestBuilders.get("/detail-view/{id}", testEvent.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("event-detail-view"))
-                .andExpect(model().attributeExists("comments"))
-                .andExpect(model().attributeExists("event"))
-                .andExpect(model().attributeDoesNotExist("comment"))
-                .andExpect(model().attributeDoesNotExist("loggedUser"));
-
-        //todo is it correct approach?
-        //assertThat(eventService.findByIdFetchOwnerFetchUsers(testEvent.getId())).isEqualTo(testEvent);
-        assertThat(eventService.findEventViewById(testEvent.getId()).getTitle()).isEqualTo("test event x");
-    }
-
-    @Test
     void shouldSignUpForEvent() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-
-                .image(defaultImage)
-                .build());
+        testEvent.getUsers().clear();
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/detail-view/**"));
     }
 
-
     @Test
     void shouldNotSignOutFromEventIfOwner() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-                .users(Set.of(user2))
-
-                .image(defaultImage)
-                .build());
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user1.getId()).get())))
                 .andExpect(status().is4xxClientError())
@@ -313,32 +208,8 @@ class EventDetailControllerTest {
 
     @Test
     void shouldNotSignOutFromEventIfEventStartingDateIsBeforeNow() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().minusDays(7))
-                .endingDateTime(LocalDateTime.now().minusDays(4))
-                .owner(user1)
-                .users(Set.of(user2))
-
-                .image(defaultImage)
-                .build());
+        testEvent.setEndingDateTime(LocalDateTime.now().minusDays(4));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().isBadRequest())
@@ -347,31 +218,10 @@ class EventDetailControllerTest {
 
     @Test
     void shouldNotSignOutFromEventIfNotSignedUp() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-
-                .image(defaultImage)
-                .build());
+        testEvent.getUsers().clear();
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().isBadRequest())
@@ -380,31 +230,10 @@ class EventDetailControllerTest {
 
     @Test
     void shouldNotSignUpForEventIfAnonymousUser() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-
-                .image(defaultImage)
-                .build());
+        testEvent.getUsers().clear();
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-up-for-event", testEvent.getId()).with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -413,32 +242,9 @@ class EventDetailControllerTest {
 
     @Test
     void shouldSignOutFromEvent() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-                .users(Set.of(user2))
-
-                .image(defaultImage)
-                .build());
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()).with(user(userRepository.findById(user2.getId()).get())))
                 .andExpect(status().is3xxRedirection())
@@ -447,31 +253,10 @@ class EventDetailControllerTest {
 
     @Test
     void shouldNotSignOutFromEventIfAnonymousUser() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-
-                .image(defaultImage)
-                .build());
+        testEvent.getUsers().clear();
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/sign-out-from-event", testEvent.getId()).with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -480,192 +265,83 @@ class EventDetailControllerTest {
 
     @Test
     void shouldAddComment() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-                .users(Set.of(user2))
-                .image(defaultImage)
-                .build());
-        String testComment = commentWith500Characters();
-
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
                         .with(csrf())
                         .with(user(userRepository.findById(user2.getId()).get()))
-                        .param("text", testComment)
+                        .param("text", COMMENT_WITH_500_CHARACTERS)
                         .with(csrf()))
-
-                // for positive scenario this part of test is redundant (there is no flash().attributeDoesNotExist() method.
-                //That is why I added assertJ test
-                //.andExpect(flash().attributeExists("commentErrors"))
-
                 .andExpect(status().is3xxRedirection());
 
+        //todo#002
+        //for positive scenario this part of test is redundant (there is no flash().attributeDoesNotExist() method.
+        //That is why I added assertJ test
         //todo should it be made as an isolated unit test?
         CreateCommentForm cfm = new CreateCommentForm();
-        cfm.setText(testComment);
+        cfm.setText(COMMENT_WITH_500_CHARACTERS);
         Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
         assertThat(violations).isEmpty();
     }
 
     @Test
     void shouldNotAddCommentIfCommentIsEmpty() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-                .users(Set.of(user2))
-                .image(defaultImage)
-                .build());
-        String testComment = blankComment();
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
                         .with(csrf())
                         .with(user(userRepository.findById(user2.getId()).get()))
-                        .param("text", testComment)
+                        .param("text", BLANK_COMMENT)
                         .with(csrf()))
                 .andExpect(flash().attributeExists("commentErrors"))
                 .andExpect(flash().attribute("commentErrors", List.of("Comment cannot be empty")))
                 .andExpect(status().is3xxRedirection());
 
-        //todo should it be made as an isolated unit test?
+        //todo #002 should it be made as an isolated unit test?
         CreateCommentForm cfm = new CreateCommentForm();
-        cfm.setText(testComment);
+        cfm.setText(BLANK_COMMENT);
         Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
-//        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot be empty"))
-//                .findFirst().map(v -> v.getMessage()).get())
-//                .isEqualTo("Comment cannot be empty");
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Comment cannot be empty"));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Comment cannot be empty"));
     }
 
     @Test
     void shouldNotAddCommentIfCommentHasOver500Characters() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-                .users(Set.of(user2))
-                .image(defaultImage)
-                .build());
-        String testComment = commentWith501Characters();
-
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
                         .with(csrf())
                         .with(user(userRepository.findById(user2.getId()).get()))
-                        .param("text", testComment)
+                        .param("text", COMMENT_WITH_501_CHARACTERS)
                         .with(csrf()))
                 .andExpect(flash().attributeExists("commentErrors"))
                 .andExpect(flash().attribute("commentErrors", List.of("Comment cannot have more than 500 characters")))
                 .andExpect(status().is3xxRedirection());
 
-        //todo should it be made as an isolated unit test?
+        //todo#002 should it be made as an isolated unit test?
         CreateCommentForm cfm = new CreateCommentForm();
-        cfm.setText(testComment);
+        cfm.setText(COMMENT_WITH_501_CHARACTERS);
         Set<ConstraintViolation<CreateCommentForm>> violations = validator.validate(cfm);
-//        assertThat(violations.stream().filter(v -> v.getMessage().equals("Comment cannot have more than 500 characters"))
-//                .findFirst().map(v -> v.getMessage()).get())
-//                .isEqualTo("Comment cannot have more than 500 characters");
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Comment cannot have more than 500 characters"));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Comment cannot have more than 500 characters"));
     }
 
     @Test
     void shouldNotAddCommentIfAnonymousUser() throws Exception {
-        //given
-        User user1 = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
-        User user2 = User.builder()
-                .username("user2-test")
-                .email("user2-test@gmail.com")
-                .password("user2user2")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        Image defaultImage = Image.builder()
-                .filename("default-event-image.jpeg")
-                .build();
-        Event testEvent = eventRepository.save(Event.builder()
-                .title("test event x")
-                .description("test event x description")
-                .startingDateTime(LocalDateTime.now().plusDays(7))
-                .endingDateTime(LocalDateTime.now().plusDays(14))
-                .owner(user1)
-                .users(Set.of(user2))
-                .image(defaultImage)
-                .build());
-        String testComment = commentWith500Characters();
-
+        testEvent.setStartingDateTime(LocalDateTime.now().plusDays(7));
+        testEvent.setEndingDateTime(LocalDateTime.now().plusDays(14));
+        eventRepository.save(testEvent);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/detail-view/{id}/add-comment", testEvent.getId())
                         .with(csrf())
-                        //.with(user(userRepository.findById(user2.getId()).get()))
-                        .param("text", testComment)
+                        .param("text", COMMENT_WITH_500_CHARACTERS)
                         .with(csrf()))
-                //.andExpect(flash().attributeExists("commentErrors"))
-                //.andExpect(flash().attribute("commentErrors", List.of("Comment cannot have more than 500 characters")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"));
-
-
     }
-
 }
