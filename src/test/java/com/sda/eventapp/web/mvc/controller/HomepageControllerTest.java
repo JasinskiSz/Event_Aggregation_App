@@ -44,7 +44,7 @@ class HomepageControllerTest {
 
     @Nested
     class HomepageControllerTestWithUserTestData {
-        User testUser;
+        private User testUser;
 
         @BeforeEach
         void prepareTestData() {
@@ -53,6 +53,7 @@ class HomepageControllerTest {
                     .email("user-test@gmail.com")
                     .password("usertest")
                     .build();
+            userRepository.save(testUser);
         }
 
         @AfterEach
@@ -62,7 +63,6 @@ class HomepageControllerTest {
 
         @Test
         void shouldAllowAccessForAuthenticatedUser() throws Exception {
-            userRepository.save(testUser);
             mockMvc
                     .perform(MockMvcRequestBuilders.get("/home")
                             .param("title", "")
@@ -73,6 +73,4 @@ class HomepageControllerTest {
                     .andExpect(model().attributeExists("title"));
         }
     }
-
-
 }
