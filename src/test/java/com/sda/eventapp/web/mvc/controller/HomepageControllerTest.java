@@ -65,6 +65,7 @@ class HomepageControllerTest {
                 .andExpect(model().attributeExists("events"))
                 .andExpect(model().attributeExists("title"));
 
-        userRepository.deleteAll();
+        //todo: refactor deleting data from db
+        //userRepository.deleteAll();
     }
 }
