@@ -2,12 +2,16 @@ package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.configuration.SecurityConfig;
 import com.sda.eventapp.model.User;
+import com.sda.eventapp.repository.EventRepository;
+import com.sda.eventapp.repository.ImageRepository;
 import com.sda.eventapp.repository.UserRepository;
 import com.sda.eventapp.web.mvc.form.CreateUserForm;
 import com.sda.eventapp.web.mvc.form.EventForm;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,32 +41,40 @@ class EventControllerTest {
 
     @Autowired
     UserRepository userRepository;
+    //todo #001 should assertion validation be in different methods?
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    @Autowired
+    EventRepository eventRepository;
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    ImageRepository imageRepository;
+    private User testUser1;
+    private EventForm testEventForm;
 
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-
-    private static User prepareUserTestData() {
-        return User.builder()
+    @BeforeEach
+    void prepareTestData() {
+        testUser1 = User.builder()
                 .username("user-test")
                 .email("user-test@gmail.com")
                 .password("useruser")
                 .build();
-    }
-
-    private static EventForm prepareEventTestData() {
-        EventForm testEventForm = new EventForm();
+        testEventForm = new EventForm();
         testEventForm.setTitle("test-title");
         testEventForm.setDescription("test-valid-description");
         testEventForm.setStartingDateTime(LocalDateTime.now().plusDays(4));
         testEventForm.setEndingDateTime(LocalDateTime.now().plusDays(6));
-        return testEventForm;
+    }
+
+    @AfterEach
+    void deleteTestDataFromDatabase() {
+        imageRepository.deleteAll();
+        eventRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     void shouldAllowAccessForAuthenticatedUser() throws Exception {
-
-        User testUser1 = prepareUserTestData();
         userRepository.save(testUser1);
         mockMvc
                 .perform(MockMvcRequestBuilders.get("/event/create")
@@ -70,30 +82,24 @@ class EventControllerTest {
                 .andExpect(view().name("create-event"))
                 .andExpect(model().attributeExists("event"))
                 .andExpect(status().isOk());
-
-        //todo: uncomment when setting ddl-auto to create-drop
-        //userRepository.deleteAll();
     }
 
     @Test
     void shouldNotAllowAccessForAnonymousUser() throws Exception {
-
         mockMvc
                 .perform(MockMvcRequestBuilders.get("/event/create"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"));
-
-        //todo: uncomment when setting ddl-auto to create-drop
-
     }
 
     @Test
     void shouldCreateNewEventWithProperImage() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -107,17 +113,19 @@ class EventControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/home/**"));
 
+        //todo#001
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations).isEmpty();
     }
 
     @Test
     void shouldCreateNewEventWithNoImage() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-        MockMultipartFile testFile = new MockMultipartFile("file", "", "text/plain", (byte[]) null);
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "",
+                "text/plain",
+                (byte[]) null);
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -131,17 +139,18 @@ class EventControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/home/**"));
 
+        //todo#001
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations).isEmpty();
     }
 
     @Test
     void shouldNotCreateNewEventIfImageWrongFileExtension() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.txt", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile("file",
+                "test_file.txt",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -159,12 +168,12 @@ class EventControllerTest {
 
     @Test
     void shouldNotCreateNewEventIfEventStartingDateBeforeNow() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -178,21 +187,25 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-
+        //todo#001
         testEventForm.setStartingDateTime(testEventForm.getStartingDateTime().minusDays(45));
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(45));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Start date cannot be before today"));
+        assertThat(violations
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Start date cannot be before today"));
     }
 
     @Test
     void shouldNotCreateNewEventIfEventStartingDateAfterEventEndingDate() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -206,19 +219,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(4));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("End date must be after start date"));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("End date must be after start date"));
     }
 
     @Test
     void shouldNotCreateNewEventIfEventLastsOver14Days() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -232,19 +246,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().plusDays(13));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
     }
 
     @Test
     void shouldNotCreateNewEventIfTitleIsNull() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -258,19 +273,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setTitle(null);
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
     }
 
     @Test
     void shouldNotCreateNewEventIfTitleIsEmpty() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -284,19 +300,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setTitle("");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
     }
 
     @Test
     void shouldNotCreateNewEventIfTitleIsBlank() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -310,19 +327,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setTitle("    ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
     }
 
     @Test
     void shouldNotCreateNewEventIfDescriptionIsNull() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -336,19 +354,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setDescription(null);
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
     }
 
     @Test
     void shouldNotCreateNewEventIfDescriptionIsEmpty() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -362,19 +381,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setDescription("");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
     }
 
     @Test
     void shouldNotCreateNewEventIfDescriptionIsBlankLessThan20Characters() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -388,19 +408,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setDescription(" ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
     }
 
     @Test
     void shouldNotCreateNewEventIfDescriptionIsBlankWith20Characters() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -414,19 +435,20 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setDescription("                    ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
     }
 
     @Test
     void shouldNotCreateNewEventIfDescriptionSizeIsLessThan20Characters() throws Exception {
-        User testUser1 = prepareUserTestData();
-        EventForm testEventForm = prepareEventTestData();
         userRepository.save(testUser1);
-
-        MockMultipartFile testFile = new MockMultipartFile("file", "test_file.jpg", "text/plain", "test".getBytes());
-
+        MockMultipartFile testFile = new MockMultipartFile(
+                "file",
+                "test_file.jpg",
+                "text/plain",
+                "test".getBytes());
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
@@ -440,9 +462,9 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
+        //todo#001
         testEventForm.setDescription("19-characters-test-");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(v -> v.getMessage()).collect(Collectors.toSet())).isEqualTo(Set.of("Description must be at least 20 characters long."));
+        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Description must be at least 20 characters long."));
     }
-
 }
