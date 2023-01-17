@@ -148,7 +148,7 @@ public class EventService {
         }
     }
 
-    public EventApiWrapper findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
+    public EventApiWrapper getEventApiWrapperWithEventsInDateRange(LocalDateTime start, LocalDateTime end) {
         return new EventApiWrapper(
                 mapper.toEventApiList(
                         repository.findAllEventByDateRange(start, end))

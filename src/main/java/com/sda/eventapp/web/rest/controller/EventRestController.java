@@ -25,6 +25,6 @@ public class EventRestController {
 
     @GetMapping(params = {"start", "end"})
     public EventApiWrapper getEventsInDateRange(@RequestParam("start") LocalDateTime start, @RequestParam("end") LocalDateTime end) {
-        return eventService.findEventViewsByDateRange(start, end);
+        return eventService.getEventApiWrapperWithEventsInDateRange(start, end);
     }
 }
