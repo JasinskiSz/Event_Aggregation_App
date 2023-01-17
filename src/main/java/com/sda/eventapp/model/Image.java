@@ -1,6 +1,5 @@
 package com.sda.eventapp.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +17,6 @@ public class Image {
     private String filename;
     private String path;
 
-    @JsonBackReference
     @OneToOne(mappedBy = "image")
     private Event event;
 }
