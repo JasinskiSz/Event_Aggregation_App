@@ -47,7 +47,7 @@ public class EventDetailController {
         return "event-detail-view";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/add-comment")
     public String addComment(@ModelAttribute("comment") @Valid CreateCommentForm form, Errors errors, @PathVariable("id") Long eventid, RedirectAttributes ra) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
