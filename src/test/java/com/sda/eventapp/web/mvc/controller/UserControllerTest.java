@@ -10,6 +10,9 @@ import com.sda.eventapp.web.mvc.form.validation.validator.UniqueEmailValidator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,26 +38,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("/application-test.properties")
 class UserControllerTest {
 
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    //todo #001 description line 76
+    //private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     @Autowired
     UserRepository userRepository;
     @Autowired
-    UserService userService;
-    @Autowired
     private MockMvc mockMvc;
+    private User testUser;
 
-    private static User prepareTestData() {
-        return User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("useruser")
-                .build();
+    @AfterEach
+    void deleteDataFromDatabase() {
+        userRepository.deleteAll();
     }
 
     @Test
     void shouldAllowAccessForAnonymousUser() throws Exception {
-
-
         mockMvc
                 .perform(MockMvcRequestBuilders.get("/user/register"))
                 .andExpect(status().isOk())
@@ -63,24 +61,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldNotAllowAccessForAuthenticatedUser() throws Exception {
-
-        User testUser1 = prepareTestData();
-        userRepository.save(testUser1);
-        mockMvc
-                .perform(MockMvcRequestBuilders.get("/user/register")
-                        .with(user(userRepository.findById(testUser1.getId()).get()))) //todo optional handling?
-                .andExpect(model().attributeDoesNotExist("user"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/home/**"));
-
-        userRepository.deleteAll();
-    }
-
-    @Test
     void shouldRedirectToHomeAfterCreatingNewUser() throws Exception {
-        userRepository.deleteAll();
-
         mockMvc
                 .perform(MockMvcRequestBuilders.post("/user/register")
                         .param("username", "create-test-user3")
@@ -91,10 +72,8 @@ class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/home/**"));
 
-
-        //todo there is a problem with instantiating custom validation annotation (maybe because of connecting with db?)
-
-        //        CreateUserForm cum = new CreateUserForm();
+        //todo #001 there is a problem with instantiating custom validation annotation (maybe because of connecting with db?)
+//        CreateUserForm cum = new CreateUserForm();
 //        cum.setUsername("create-test-user2");
 //        cum.setEmail("createtestuser2@gmail.com");
 //        cum.setPassword("test-password");
@@ -106,8 +85,6 @@ class UserControllerTest {
 
     @Test
     void shouldNotCreateNewUserAndRedirectToUserRegisterIfPasswordLessThan8Characters() throws Exception {
-        userRepository.deleteAll();
-
         mockMvc
                 .perform(MockMvcRequestBuilders.post("/user/register")
                         .param("username", "create-test-user3")
@@ -118,17 +95,33 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-user"));
 
-
-        //todo there is a problem with instantiating custom validation annotation (maybe because of connecting with db?)
-
-        //        CreateUserForm cum = new CreateUserForm();
-//        cum.setUsername("create-test-user2");
-//        cum.setEmail("createtestuser2@gmail.com");
-//        cum.setPassword("test-password");
-//        cum.setConfirmPassword("test-password");
-//
-//        Set<ConstraintViolation<CreateUserForm>> violations = validator.validate(cum);
-//        assertThat(violations).isEmpty();
+        //todo #001
     }
 
+    @BeforeEach
+    void prepareTestData() {
+        testUser = User.builder()
+                .username("user-test")
+                .email("user-test@gmail.com")
+                .password("usertest")
+                .build();
+        userRepository.save(testUser);
+    }
+
+    @Test
+    void shouldNotAllowAccessForAuthenticatedUser() throws Exception {
+        mockMvc
+                .perform(MockMvcRequestBuilders.get("/user/register")
+                        .with(user(userRepository.findById(testUser.getId()).get()))) //todo optional handling?
+                .andExpect(model().attributeDoesNotExist("user"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/home/**"));
+
+        userRepository.deleteAll();
+    }
+
+    @Nested
+    class UserControllerTestWithUserTestData {
+
+    }
 }
