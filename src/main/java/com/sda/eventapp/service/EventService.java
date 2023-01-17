@@ -148,8 +148,11 @@ public class EventService {
         }
     }
 
-    public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
+    public EventApiWrapper findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
+        return new EventApiWrapper(
+                mapper.toEventApiList(
+                        repository.findAllEventByDateRange(start, end))
+        );
     }
 
     public List<CommentView> findCommentViewsByEventId(Long eventId) {
