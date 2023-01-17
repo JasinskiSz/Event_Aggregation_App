@@ -29,7 +29,7 @@ import java.util.stream.StreamSupport;
 @Service
 @RequiredArgsConstructor
 public class EventService {
-    private final static String IMAGES_PATH = "src/main/resources/static/images/";
+    private final static String IMAGES_PATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "images" + File.separator;
 
     private final EventRepository repository;
     private final CommentService commentService;
