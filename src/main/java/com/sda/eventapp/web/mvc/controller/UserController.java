@@ -41,6 +41,6 @@ public class UserController {
             return "create-user";
         }
         userService.save(form);
-        return "index";
+        return "redirect:/home";
     }
 }
