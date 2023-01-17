@@ -2,6 +2,9 @@ package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
+import com.sda.eventapp.filters.DateType;
+import com.sda.eventapp.filters.EventFilters;
+import com.sda.eventapp.filters.ParticipationType;
 import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
@@ -21,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -254,6 +258,19 @@ public class EventService {
         }
         return event;
     }
+    public void filterByTypeEvents(EventFilters eventFilters, String participationType, String dateType) {
+        if (Arrays.stream(ParticipationType.values())
+                .map(ParticipationType::getName)
+                .anyMatch(pt -> pt.equals(participationType))) {
+            eventFilters.setParticipationType(participationType);
+        }
+        if (Arrays.stream(DateType.values())
+                .map(DateType::getName)
+                .anyMatch(pt -> pt.equals(dateType))) {
+            eventFilters.setDateType(dateType);
+        }
+    }
+
 
     /**
      * @param userId            id of {@link User} for whom event views should be found
