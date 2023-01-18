@@ -45,7 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 class EventControllerTest {
-
     @Autowired
     UserRepository userRepository;
     //todo #001 should assertion validation be in different methods?
@@ -56,8 +55,13 @@ class EventControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ImageRepository imageRepository;
+    private static final String EXCEPTION_MESSAGE = "User not found";
+    @Autowired
+    private EventService eventService;
     private User testUser1;
     private EventForm testEventForm;
+    @Autowired
+    private ImageService imageService;
 
     @BeforeEach
     void prepareTestData() {
@@ -71,8 +75,6 @@ class EventControllerTest {
         testEventForm.setDescription("test-valid-description");
         testEventForm.setStartingDateTime(LocalDateTime.now().plusDays(4));
         testEventForm.setEndingDateTime(LocalDateTime.now().plusDays(6));
-
-        //delete user in methods
         userRepository.save(testUser1);
     }
 
@@ -85,10 +87,10 @@ class EventControllerTest {
 
     @Test
     void shouldAllowAccessToCreateEventForAuthenticatedUser() throws Exception {
-        //userRepository.save(testUser1);
         mockMvc
                 .perform(MockMvcRequestBuilders.get("/event/create")
-                        .with(user(userRepository.findById(testUser1.getId()).get()))) //todo optional handling?
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                 .andExpect(view().name("create-event"))
                 .andExpect(model().attributeExists("event"))
                 .andExpect(status().isOk());
@@ -112,7 +114,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -137,7 +140,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -161,7 +165,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -183,7 +188,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().minusDays(45).toString())
@@ -197,8 +203,7 @@ class EventControllerTest {
         testEventForm.setStartingDateTime(testEventForm.getStartingDateTime().minusDays(45));
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(45));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations
-                .stream()
+        assertThat(violations.stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.toSet()))
                 .isEqualTo(Set.of("Start date cannot be before today"));
@@ -214,7 +219,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -227,7 +233,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(4));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("End date must be after start date"));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("End date must be after start date"));
     }
 
     @Test
@@ -240,7 +249,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -253,7 +263,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().plusDays(13));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
     }
 
     @Test
@@ -266,7 +279,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", (String) null)
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -279,7 +293,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setTitle(null);
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Field title is required."));
     }
 
     @Test
@@ -292,7 +309,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", "")
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -305,7 +323,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setTitle("");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Field title is required."));
     }
 
     @Test
@@ -318,7 +339,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", "    ")
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -331,7 +353,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setTitle("    ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Field title is required."));
     }
 
     @Test
@@ -344,7 +369,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", (String) null)
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -357,7 +383,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setDescription(null);
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Field description is required."));
     }
 
     @Test
@@ -370,7 +399,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", "")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -383,7 +413,11 @@ class EventControllerTest {
         //todo#001
         testEventForm.setDescription("");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Field description is required.",
+                        "Description must be at least 20 characters long."));
     }
 
     @Test
@@ -396,7 +430,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", " ")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -409,7 +444,11 @@ class EventControllerTest {
         //todo#001
         testEventForm.setDescription(" ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Field description is required.",
+                        "Description must be at least 20 characters long."));
     }
 
     @Test
@@ -422,7 +461,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", "                    ")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -435,7 +475,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setDescription("                    ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Field description is required."));
     }
 
     @Test
@@ -448,7 +491,8 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId()).get()))
+                        .with(user(userRepository.findById(testUser1.getId())
+                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                         .param("title", testEventForm.getTitle())
                         .param("description", "19-characters-test-")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -461,7 +505,10 @@ class EventControllerTest {
         //todo#001
         testEventForm.setDescription("19-characters-test-");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-        assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Description must be at least 20 characters long."));
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toSet()))
+                .isEqualTo(Set.of("Description must be at least 20 characters long."));
     }
 
 
@@ -469,10 +516,6 @@ class EventControllerTest {
 
     @Nested
     class EventControllerTestEventUpdateTest {
-        @Autowired
-        private EventService eventService;
-        @Autowired
-        private ImageService imageService;
         private EventView testEventToUpdate;
         private Event testEvent;
         private User testNotOwnerUser2;
@@ -497,7 +540,8 @@ class EventControllerTest {
             testEventToUpdate = eventService.findEventViewById(testEvent.getId());
             mockMvc
                     .perform(MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
-                            .with(user(userRepository.findById(testUser1.getId()).get()))) //todo optional handling?
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))) //todo optional handling?
                     .andExpect(view().name("update-event"))
                     .andExpect(model().attributeExists("event"))
                     .andExpect(model().attributeExists("eventImage"))
@@ -525,8 +569,10 @@ class EventControllerTest {
                     .build();
             userRepository.save(testNotOwnerUser2);
             mockMvc
-                    .perform(MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
-                            .with(user(userRepository.findById(testNotOwnerUser2.getId()).get())))
+                    .perform(MockMvcRequestBuilders
+                            .get("/event/update/{id}", testEventToUpdate.getId())
+                            .with(user(userRepository.findById(testNotOwnerUser2.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                     .andExpect(status().isForbidden())
                     .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
             ;
@@ -538,8 +584,10 @@ class EventControllerTest {
             eventRepository.save(testEvent);
             testEventToUpdate = eventService.findEventViewById(testEvent.getId());
             mockMvc
-                    .perform(MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
-                            .with(user(userRepository.findById(testUser1.getId()).get())))
+                    .perform(MockMvcRequestBuilders
+                            .get("/event/update/{id}", testEventToUpdate.getId())
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                     .andExpect(status().isBadRequest())
                     .andExpect(status().reason("ACCESS DENIED - CANNOT UPDATE AN EVENT AFTER ITS START DATE"));
             ;
@@ -579,7 +627,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", testEventForm.getDescription())
@@ -606,7 +655,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", testEventForm.getDescription())
@@ -632,7 +682,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", testEventForm.getDescription())
@@ -656,7 +707,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", testEventForm.getDescription())
@@ -689,7 +741,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", testEventForm.getDescription())
@@ -703,7 +756,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(4));
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("End date must be after start date"));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("End date must be after start date"));
         }
 
         @Test
@@ -717,7 +773,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", testEventForm.getDescription())
@@ -731,7 +788,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().plusDays(13));
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
         }
 
         @Test
@@ -745,7 +805,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", (String) null)
                             .param("description", testEventForm.getDescription())
@@ -759,7 +820,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setTitle(null);
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Field title is required."));
         }
 
         @Test
@@ -773,7 +837,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", "")
                             .param("description", testEventForm.getDescription())
@@ -787,7 +852,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setTitle("");
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Field title is required."));
         }
 
         @Test
@@ -801,7 +869,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", "    ")
                             .param("description", testEventForm.getDescription())
@@ -815,7 +884,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setTitle("    ");
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field title is required."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Field title is required."));
         }
 
         @Test
@@ -829,7 +901,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", (String) null)
@@ -843,7 +916,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setDescription(null);
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Field description is required."));
         }
 
         @Test
@@ -857,7 +933,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", "")
@@ -871,7 +948,11 @@ class EventControllerTest {
             //todo#001
             testEventForm.setDescription("");
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Field description is required.",
+                            "Description must be at least 20 characters long."));
         }
 
         @Test
@@ -885,7 +966,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", " ")
@@ -899,7 +981,11 @@ class EventControllerTest {
             //todo#001
             testEventForm.setDescription(" ");
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required.", "Description must be at least 20 characters long."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Field description is required.",
+                            "Description must be at least 20 characters long."));
         }
 
         @Test
@@ -913,7 +999,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", "                    ")
@@ -927,7 +1014,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setDescription("                    ");
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Field description is required."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Field description is required."));
         }
 
         @Test
@@ -941,7 +1031,8 @@ class EventControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.multipart("/event/update")
                             .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId()).get()))
+                            .with(user(userRepository.findById(testUser1.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
                             .param("id", testEvent.getId().toString())
                             .param("title", testEventForm.getTitle())
                             .param("description", "19-characters-test-")
@@ -955,7 +1046,10 @@ class EventControllerTest {
             //todo#001
             testEventForm.setDescription("19-characters-test-");
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet())).isEqualTo(Set.of("Description must be at least 20 characters long."));
+            assertThat(violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+                    .isEqualTo(Set.of("Description must be at least 20 characters long."));
         }
     }
 }

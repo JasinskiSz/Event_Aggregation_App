@@ -25,10 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("/application-test.properties")
 class MyEventsControllerTest {
 
-    @Autowired
-    UserRepository userRepository;
+    private static final String EXCEPTION_MESSAGE = "User not found";
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void shouldNotAllowAccessForAnonymousUser() throws Exception {
@@ -65,7 +66,8 @@ class MyEventsControllerTest {
                     .perform(MockMvcRequestBuilders.get("/my-events")
                             .param("participationType", "")
                             .param("dateType", "")
-                            .with(user(userRepository.findById(testUser.getId()).get()))) //todo optional handling?
+                            .with(user(userRepository.findById(testUser.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                     .andExpect(view().name("my-events-view"))
                     .andExpect(model().attributeExists("loggedUser"))
                     .andExpect(model().attributeExists("participationTypes"))

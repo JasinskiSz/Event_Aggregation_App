@@ -24,10 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("/application-test.properties")
 class HomepageControllerTest {
 
-    @Autowired
-    UserRepository userRepository;
+    private static final String EXCEPTION_MESSAGE = "User not found";
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Test
@@ -66,7 +67,8 @@ class HomepageControllerTest {
             mockMvc
                     .perform(MockMvcRequestBuilders.get("/home")
                             .param("title", "")
-                            .with(user(userRepository.findById(testUser.getId()).get()))) //todo optional handling?
+                            .with(user(userRepository.findById(testUser.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                     .andExpect(status().isOk())
                     .andExpect(view().name("index"))
                     .andExpect(model().attributeExists("events"))

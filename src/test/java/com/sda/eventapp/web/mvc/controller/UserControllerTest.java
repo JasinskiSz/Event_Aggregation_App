@@ -38,13 +38,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("/application-test.properties")
 class UserControllerTest {
 
+    private static final String EXCEPTION_MESSAGE = "User not found";
+    @Autowired
+    private MockMvc mockMvc;
+
+    private User testUser;
     //todo #001 description line 76
     //private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    private MockMvc mockMvc;
-    private User testUser;
+    private UserRepository userRepository;
 
     @AfterEach
     void deleteDataFromDatabase() {
@@ -72,7 +74,8 @@ class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/home/**"));
 
-        //todo #001 there is a problem with instantiating custom validation annotation (maybe because of connecting with db?)
+        //todo #001 there is a problem with instantiating custom
+        // validation annotation (maybe because of connecting with db?)
 //        CreateUserForm cum = new CreateUserForm();
 //        cum.setUsername("create-test-user2");
 //        cum.setEmail("createtestuser2@gmail.com");
@@ -115,7 +118,8 @@ class UserControllerTest {
         void shouldNotAllowAccessForAuthenticatedUser() throws Exception {
             mockMvc
                     .perform(MockMvcRequestBuilders.get("/user/register")
-                            .with(user(userRepository.findById(testUser.getId()).get()))) //todo optional handling?
+                            .with(user(userRepository.findById(testUser.getId())
+                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                     .andExpect(model().attributeDoesNotExist("user"))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrlPattern("/home/**"));
