@@ -25,7 +25,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "SELECT event from Event event WHERE event.endingDateTime < current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime ORDER BY event.startingDateTime")
     List<Event> findAllOngoingAndPastEvents();
 
-    @Query(value = "SELECT event from Event event WHERE event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime ORDER BY event.startingDateTime")
+    @Query(value = "SELECT event from Event event left join fetch event.owner owner left join fetch event.users users left join fetch event.image image WHERE event.startingDateTime > current_timestamp or current_timestamp >= event.startingDateTime and current_timestamp <= event.endingDateTime ORDER BY event.startingDateTime")
     List<Event> findAllOngoingAndFutureEvents();
 
     @Query(value = "SELECT event from Event event WHERE event.title like %?1% ORDER BY event.startingDateTime")

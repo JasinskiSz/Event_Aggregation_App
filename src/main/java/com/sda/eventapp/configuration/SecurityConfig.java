@@ -20,7 +20,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/home",
                                 "/user/register",
-                                "/detail-view/**",
+                                "/detail-view/*",
                                 "/css/**", "/js/**", "/assets/**", "/images/**")
                         .permitAll()
                         .anyRequest()

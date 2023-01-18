@@ -201,7 +201,7 @@
                             <div class="card-body">
                                 <!-- Comment form-->
                                 <div sec:authorize="isAuthenticated()">
-                                    <form method="post" th:action="@{/detail-view/__${event.id}__}"
+                                    <form method="post" th:action="@{/detail-view/__${event.id}__/add-comment}"
                                           th:object="${comment}">
 
                                         <input class="form-control"
