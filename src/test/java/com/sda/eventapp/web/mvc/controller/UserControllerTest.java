@@ -98,30 +98,29 @@ class UserControllerTest {
         //todo #001
     }
 
-    @BeforeEach
-    void prepareUserTestData() {
-        testUser = User.builder()
-                .username("user-test")
-                .email("user-test@gmail.com")
-                .password("usertest")
-                .build();
-        userRepository.save(testUser);
-    }
-
-    @Test
-    void shouldNotAllowAccessForAuthenticatedUser() throws Exception {
-        mockMvc
-                .perform(MockMvcRequestBuilders.get("/user/register")
-                        .with(user(userRepository.findById(testUser.getId()).get()))) //todo optional handling?
-                .andExpect(model().attributeDoesNotExist("user"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/home/**"));
-
-        userRepository.deleteAll();
-    }
-
     @Nested
     class UserControllerTestWithUserTestData {
 
+        @BeforeEach
+        void prepareUserTestData() {
+            testUser = User.builder()
+                    .username("user-test")
+                    .email("user-test@gmail.com")
+                    .password("usertest")
+                    .build();
+            userRepository.save(testUser);
+        }
+
+        @Test
+        void shouldNotAllowAccessForAuthenticatedUser() throws Exception {
+            mockMvc
+                    .perform(MockMvcRequestBuilders.get("/user/register")
+                            .with(user(userRepository.findById(testUser.getId()).get()))) //todo optional handling?
+                    .andExpect(model().attributeDoesNotExist("user"))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(redirectedUrlPattern("/home/**"));
+
+            userRepository.deleteAll();
+        }
     }
 }
