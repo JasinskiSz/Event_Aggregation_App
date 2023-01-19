@@ -63,7 +63,7 @@ public class EventMapper {
                         .description(event.getDescription())
                         .startingDateTime(event.getStartingDateTime())
                         .endingDateTime(event.getEndingDateTime())
-                        .imageUrl(event.getImage().getPath() + event.getImage().getFilename())
+                        .imageUrl("http://localhost:8080/images/" + event.getImage().getFilename())
                         .attenders(getUsersNicknames(event))
                         .ownerNickname(getOwnerNickname(event))
                         .build())
