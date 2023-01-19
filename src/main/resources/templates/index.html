@@ -157,9 +157,14 @@
                                    th:text="${#strings.abbreviate(event.description,50)}"/>
                             </div>
                             <div class="card-footer">
-                                <span th:text="${event.startingDateTime}">start date</span>
-                                ->
-                                <span th:text="${event.endingDateTime}">end date</span>
+                                <div class="text-start"
+                                     th:text="'start: ' + ${#temporals.format(event.startingDateTime,
+                                      'dd-MM-yyyy HH:mm')}">
+                                </div>
+                                <div class="text-start"
+                                     th:text="'end: ' + ${#temporals.format(event.endingDateTime,
+                                      'dd-MM-yyyy HH:mm')}">
+                                </div>
                             </div>
                         </div>
                     </div>

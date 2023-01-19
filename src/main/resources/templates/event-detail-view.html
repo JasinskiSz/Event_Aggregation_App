@@ -146,8 +146,10 @@
                     <div class="my-5 text-center text-xl-start">
                         <h1 class=" text-break display-1 fw-bolder text-white mb-2" th:text="${event.title}"></h1>
 
-                        <h4 class="display-6 fw-bolder text-white mb-2"
-                            th:text="${#strings.concat(event.startingDateTime, ' - ', event.endingDateTime)}"></h4>
+                        <h4 class="display-6 fw-semibold text-white mb-2"
+                            th:text="'start: ' + ${#temporals.format(event.startingDateTime, 'dd-MM-yyyy HH:mm')}"></h4>
+                        <h4 class="display-6 fw-semibold text-white mb-2"
+                            th:text="'end: ' + ${#temporals.format(event.endingDateTime, 'dd-MM-yyyy HH:mm')}"></h4>
                         <p class=" text-break lead fw-normal text-white-50 mb-4" th:text="${event.description}"></p>
 
                         <div sec:authorize="isAuthenticated()">

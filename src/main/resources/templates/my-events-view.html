@@ -142,9 +142,14 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <span th:text="${boundEvent.startingDateTime}">start date</span>
-                                ->
-                                <span th:text="${boundEvent.endingDateTime}">end date</span>
+                                <div class="text-start"
+                                     th:text="'start: ' + ${#temporals.format(boundEvent.startingDateTime,
+                                      'dd-MM-yyyy HH:mm')}">
+                                </div>
+                                <div class="text-start"
+                                     th:text="'end: ' + ${#temporals.format(boundEvent.endingDateTime,
+                                      'dd-MM-yyyy HH:mm')}">
+                                </div>
                             </div>
 
                         </div>
