@@ -25,6 +25,7 @@ public class EventForm {
     private String title;
     private LocalDateTime startingDateTime;
     private LocalDateTime endingDateTime;
+    @NotBlank(message = "Field description is required.")
     @Size(min = 20, message = "Description must be at least 20 characters long.")
     private String description;
     private Image image;
