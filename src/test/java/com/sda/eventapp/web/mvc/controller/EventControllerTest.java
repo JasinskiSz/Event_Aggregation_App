@@ -3,14 +3,12 @@ package com.sda.eventapp.web.mvc.controller;
 import com.sda.eventapp.configuration.SecurityConfig;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.ImageRepository;
 import com.sda.eventapp.repository.UserRepository;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.service.ImageService;
-import com.sda.eventapp.web.mvc.form.CreateUserForm;
 import com.sda.eventapp.web.mvc.form.EventForm;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -28,9 +26,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -528,9 +524,7 @@ class EventControllerTest {
                     .startingDateTime(LocalDateTime.now().plusDays(7))
                     .endingDateTime(LocalDateTime.now().plusDays(14))
                     .owner(testUser1)
-                    .image(imageService.buildDefaultImage(
-                            Paths.get("").toAbsolutePath(),
-                            "src/main/resources/static/images/"))
+                    .image(imageService.solveImage(new MockMultipartFile("testImage.jpg", "test".getBytes())))
                     .build();
         }
 
@@ -575,7 +569,6 @@ class EventControllerTest {
                                     .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                     .andExpect(status().isForbidden())
                     .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
-            ;
         }
 
         @Test
@@ -590,7 +583,6 @@ class EventControllerTest {
                                     .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
                     .andExpect(status().isBadRequest())
                     .andExpect(status().reason("ACCESS DENIED - CANNOT UPDATE AN EVENT AFTER ITS START DATE"));
-            ;
         }
 
         @Test
