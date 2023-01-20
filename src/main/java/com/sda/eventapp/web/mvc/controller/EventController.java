@@ -19,6 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Slf4j
@@ -74,15 +77,19 @@ public class EventController {
 
     @GetMapping("/update/{id}")
     public String update(ModelMap model, @PathVariable Long id) {
-        EventView eventToUpdate = eventService.findEventViewById(id);
+        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
+        if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id))) {
+            throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT");
+        }
+        if (eventService.findByIdFetchOwnerFetchUsers(id).getStartingDateTime().isBefore(LocalDateTime.now())) {
+            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT UPDATE AN EVENT AFTER ITS START DATE");
+        }
 
+        EventView eventToUpdate = eventService.findEventViewById(id);
         model.addAttribute("event", eventToUpdate);
         model.addAttribute("eventImage", eventToUpdate.getImage());
 
-        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-        if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id))) {
-            throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED");
-        }
+
         return "update-event";
     }
 
@@ -102,7 +109,7 @@ public class EventController {
         if (!file.isEmpty() && !imageService.isImage(file)) {
             ra.addFlashAttribute("wrongFileExtension",
                     imageService.wrongFileExtensionMessage());
-            return "redirect:/event/create";
+            return "redirect:/event/update";
         }
         eventService.update(form, file);
         return "redirect:/my-events";

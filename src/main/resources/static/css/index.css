@@ -3,3 +3,12 @@
     background-position: center center;
     background-size: cover;
 }
+
+.img-card-cover-fit {
+    object-fit: cover;
+!important;
+    max-height: 12rem;
+!important;
+    width: 100%;
+!important;
+}

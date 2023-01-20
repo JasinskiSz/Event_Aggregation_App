@@ -1,29 +1,22 @@
 package com.sda.eventapp.dto;
 
-import com.sda.eventapp.model.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Builder
 @Getter
 @Setter
-@Builder
-public class EventView {
-    private long id;
+public class EventApi {
+    private Long id;
     private String title;
     private String description;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startingDateTime;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endingDateTime;
-
-    private Image image;
-    private Set<String> usersNicknames;
+    private String imageUrl; // If not on localhost this would be real imageUrl
+    private Set<String> attenders;
     private String ownerNickname;
 }

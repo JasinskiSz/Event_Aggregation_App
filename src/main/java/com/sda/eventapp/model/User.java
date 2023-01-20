@@ -3,10 +3,8 @@ package com.sda.eventapp.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -28,6 +26,9 @@ public class User implements UserDetails {
 
     private String email;
 
+    @Transient
+    private Set<GrantedAuthority> authorities;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Comment> comments;
 
@@ -48,11 +49,6 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new HashSet<>(Set.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
     @Override

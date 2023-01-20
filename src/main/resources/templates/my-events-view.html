@@ -76,8 +76,8 @@
                         class="dropdown-menu dropdown-menu-end">
                         <li>
                             <a class="dropdown-item"
-                               th:href="@{/profile}">
-                                Profile
+                               th:href="@{/event/create}">
+                                Create an Event
                             </a>
                         </li>
                         <li>
@@ -134,14 +134,22 @@
                                 <p class="card-text text-break"
                                    th:text="${#strings.abbreviate(boundEvent.description,50)}"/>
                             </div>
-                            <!--Edit/detail button-->
+                            <!--Edit button-->
                             <div class="m-3" th:if="${#strings.equals(boundEvent.ownerNickname, loggedUser.username)}">
-                                <a class="btn btn-success" role="button" th:href="@{event/update/__${boundEvent.id}__}">Update</a>
+                                <div th:if="${boundEvent.startingDateTime.isAfter(#temporals.createNow())}">
+                                    <a class="btn btn-success" role="button"
+                                       th:href="@{event/update/__${boundEvent.id}__}">Update</a>
+                                </div>
                             </div>
                             <div class="card-footer">
-                                <span th:text="${boundEvent.startingDateTime}">start date</span>
-                                ->
-                                <span th:text="${boundEvent.endingDateTime}">end date</span>
+                                <div class="text-start"
+                                     th:text="'start: ' + ${#temporals.format(boundEvent.startingDateTime,
+                                      'dd-MM-yyyy HH:mm')}">
+                                </div>
+                                <div class="text-start"
+                                     th:text="'end: ' + ${#temporals.format(boundEvent.endingDateTime,
+                                      'dd-MM-yyyy HH:mm')}">
+                                </div>
                             </div>
 
                         </div>
