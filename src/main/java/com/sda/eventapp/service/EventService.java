@@ -88,7 +88,7 @@ public class EventService {
         }
         //future ongoing past
         else if (futureEventsFilter && pastEventsFilter) {
-            return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
+            return repository.findAllEvents();
         }
         //default - ongoing + future
         else {
