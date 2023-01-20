@@ -156,6 +156,13 @@
                                 <p class="card-text text-break"
                                    th:text="${#strings.abbreviate(event.description,50)}"/>
                             </div>
+                            <!--Edit button-->
+                            <div class="m-3" sec:authorize="hasRole('ADMIN')">
+                                <div th:if="${event.startingDateTime.isAfter(#temporals.createNow())}">
+                                    <a class="btn btn-success" role="button"
+                                       th:href="@{event/update/__${event.id}__}">Update</a>
+                                </div>
+                            </div>
                             <div class="card-footer">
                                 <div class="text-start"
                                      th:text="'start: ' + ${#temporals.format(event.startingDateTime,
