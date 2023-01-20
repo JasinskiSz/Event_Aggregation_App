@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface CommentRepository extends CrudRepository<Comment, Long> {
     List<Comment> findAllByEvent_IdOrderByWritingDateDesc(long event_id);
+
+
+
+
 }
