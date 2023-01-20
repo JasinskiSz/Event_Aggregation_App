@@ -157,8 +157,9 @@
                         <div sec:authorize="isAuthenticated()">
                             <div th:if="${event.startingDateTime.isAfter(#temporals.createNow())}">
                                 <!--Update event if Owner and If Future-->
-                                <div th:if="${#strings.equals(event.ownerNickname, loggedUser.username)} or ${#sets.contains(loggedUser.authorities, adminRole)}">
-                                    <a class="btn btn-success btn-lg px-4 me-sm-3"
+                                <div th:if="${#strings.equals(event.ownerNickname, loggedUser.username)}
+                                or ${#sets.contains(loggedUser.authorities, adminRole)}">
+                                    <a class="btn btn-success btn-lg px-4 me-sm-3 mb-3"
                                        th:href="@{/event/update/__${event.id}__}">Update an Event
                                     </a>
                                 </div>
