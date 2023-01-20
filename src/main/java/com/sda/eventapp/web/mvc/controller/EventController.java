@@ -65,7 +65,7 @@ public class EventController {
             return "redirect:/event/create";
         }
         eventService.save(form, loggedUser, file);
-        return "redirect:/home";
+        return "redirect:/my-events";
     }
 
     @ExceptionHandler({MaxUploadSizeExceededException.class})
@@ -112,6 +112,6 @@ public class EventController {
             return "redirect:/event/update";
         }
         eventService.update(form, file);
-        return "redirect:/home";
+        return "redirect:/my-events";
     }
 }

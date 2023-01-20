@@ -119,7 +119,7 @@ class EventControllerTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/home/**"));
+                .andExpect(redirectedUrl("/my-events"));
 
         //todo#001
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
@@ -145,7 +145,7 @@ class EventControllerTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/home/**"));
+                .andExpect(redirectedUrl("/my-events"));
 
         //todo#001
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
@@ -629,7 +629,7 @@ class EventControllerTest {
                             .contentType(MediaType.MULTIPART_FORM_DATA)
                             .with(csrf()))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrlPattern("/home/**"));
+                    .andExpect(redirectedUrl("/my-events"));
 
             //todo#001
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
@@ -657,7 +657,7 @@ class EventControllerTest {
                             .contentType(MediaType.MULTIPART_FORM_DATA)
                             .with(csrf()))
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrlPattern("/home/**"));
+                    .andExpect(redirectedUrl("/my-events"));
 
             //todo#001
             Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
