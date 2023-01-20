@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -65,6 +66,7 @@ class EventControllerTest {
                 .username("user-test")
                 .email("user-test@gmail.com")
                 .password("useruser")
+                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
                 .build();
         testEventForm = new EventForm();
         testEventForm.setTitle("test-title");
@@ -560,13 +562,13 @@ class EventControllerTest {
                     .username("user-not-owner-test")
                     .email("user-not-owner-test@gmail.com")
                     .password("usernotowner")
+                    .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
                     .build();
             userRepository.save(testNotOwnerUser2);
             mockMvc
                     .perform(MockMvcRequestBuilders
                             .get("/event/update/{id}", testEventToUpdate.getId())
-                            .with(user(userRepository.findById(testNotOwnerUser2.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
+                            .with(user(testNotOwnerUser2)))
                     .andExpect(status().isForbidden())
                     .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
         }
