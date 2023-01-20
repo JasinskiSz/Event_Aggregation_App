@@ -17,8 +17,6 @@ public class Image {
 
     private String filename;
 
-    private String path;
-
     @OneToOne(mappedBy = "image")
     private Event event;
 }
