@@ -29,8 +29,9 @@ public class AdminAccountCreator {
         if (!userRepository.existsByEmail(adminEmail)) {
             // create new admin user
             User admin = new User();
-            admin.setUsername(adminEmail);
+            admin.setEmail(adminEmail);
             admin.setPassword(passwordEncoder.encode(adminPassword));
+            admin.setUsername("Admin");
             userRepository.save(admin);
         }
     }
