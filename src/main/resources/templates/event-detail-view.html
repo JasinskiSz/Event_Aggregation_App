@@ -144,6 +144,8 @@
             <div class="row gx-5 align-items-center justify-content-center">
                 <div class="col-lg-8 col-xl-7 col-xxl-6">
                     <div class="my-5 text-center text-xl-start">
+                        Authenticated user roles:
+                        <div sec:authentication="principal.authorities"></div>
                         <h1 class=" text-break display-1 fw-bolder text-white mb-2" th:text="${event.title}"></h1>
 
                         <h4 class="display-6 fw-semibold text-white mb-2"
@@ -155,7 +157,7 @@
                         <div sec:authorize="isAuthenticated()">
                             <div th:if="${event.startingDateTime.isAfter(#temporals.createNow())}">
                                 <!--Update event if Owner and If Future-->
-                                <div th:if="${#strings.equals(event.ownerNickname, loggedUser.username)}">
+                                <div th:if="${#strings.equals(event.ownerNickname, loggedUser.username)} or ${#sets.contains(loggedUser.authorities, adminRole)}">
                                     <a class="btn btn-success btn-lg px-4 me-sm-3"
                                        th:href="@{/event/update/__${event.id}__}">Update an Event
                                     </a>

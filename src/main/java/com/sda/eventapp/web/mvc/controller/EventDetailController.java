@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
@@ -38,6 +39,7 @@ public class EventDetailController {
             User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
             map.addAttribute("comment", new CreateCommentForm());
             map.addAttribute("loggedUser", loggedUser);
+            map.addAttribute("adminRole", new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
 
