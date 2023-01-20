@@ -139,6 +139,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "SELECT event from Event event left join event.users users WHERE (event.owner.id = ?1 or users.id = ?1) ORDER BY event.startingDateTime")
     List<Event> findOwnedAndAttendedAllEventsById(Long id);
 
-    @Query(value = "SELECT event from Event event left join fetch event.owner owner left join fetch event.users users where event.id = ?1")
-    Optional<Event> findByIdFetchOwnerFetchUsers(Long id);
+    @Query(value = "SELECT event from Event event " +
+            "left join fetch event.owner owner left join fetch event.users users left join fetch event.image image " +
+            "where event.id = ?1")
+    Optional<Event> findByIdFetchOwnerFetchUsersFetchImage(Long id);
 }

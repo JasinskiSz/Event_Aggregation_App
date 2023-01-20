@@ -16,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -59,8 +57,8 @@ public class EventService {
         return this.findById(eventId).getOwner().getId();
     }
 
-    public Event findByIdFetchOwnerFetchUsers(Long id) {
-        return repository.findByIdFetchOwnerFetchUsers(id)
+    public Event findByIdFetchOwnerFetchUsersFetchImage(Long id) {
+        return repository.findByIdFetchOwnerFetchUsersFetchImage(id)
                 .orElseThrow(() -> new RuntimeException("Event with id " + id + " not found"));
     }
 
@@ -128,7 +126,7 @@ public class EventService {
     }
 
     public EventView findEventViewById(Long id) {
-        return mapper.toEventView(this.findByIdFetchOwnerFetchUsers(id));
+        return mapper.toEventView(this.findByIdFetchOwnerFetchUsersFetchImage(id));
     }
 
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
@@ -155,7 +153,7 @@ public class EventService {
     }
 
     public Event signUpForEvent(User user, Long eventId) {
-        Event event = this.findByIdFetchOwnerFetchUsers(eventId);
+        Event event = this.findByIdFetchOwnerFetchUsersFetchImage(eventId);
         if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
             event.getUsers().add(user);
             repository.save(event);
@@ -164,7 +162,7 @@ public class EventService {
     }
 
     public Event signOutFromEvent(User user, Long eventId) {
-        Event event = this.findByIdFetchOwnerFetchUsers(eventId);
+        Event event = this.findByIdFetchOwnerFetchUsersFetchImage(eventId);
         if (event.getStartingDateTime().isAfter(LocalDateTime.now())) {
             event.getUsers().remove(user);
             repository.save(event);

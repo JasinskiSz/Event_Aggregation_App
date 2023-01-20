@@ -81,7 +81,7 @@ public class EventController {
         if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id))) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT");
         }
-        if (eventService.findByIdFetchOwnerFetchUsers(id).getStartingDateTime().isBefore(LocalDateTime.now())) {
+        if (eventService.findByIdFetchOwnerFetchUsersFetchImage(id).getStartingDateTime().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT UPDATE AN EVENT AFTER ITS START DATE");
         }
 

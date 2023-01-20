@@ -6,7 +6,6 @@ import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -66,13 +65,13 @@ public class EventDetailController {
     public String signupForEvent(@PathVariable("id") Long eventId) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
-        if (eventService.findByIdFetchOwnerFetchUsers(eventId).getOwner().getUsername().equals(loggedUser.getUsername())) {
+        if (eventService.findByIdFetchOwnerFetchUsersFetchImage(eventId).getOwner().getUsername().equals(loggedUser.getUsername())) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - OWNER CANNOT SIGN UP FOR AN EVENT");
         }
-        if (eventService.findByIdFetchOwnerFetchUsers(eventId).getStartingDateTime().isBefore(LocalDateTime.now())) {
+        if (eventService.findByIdFetchOwnerFetchUsersFetchImage(eventId).getStartingDateTime().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN UP FOR AN EVENT THAT HAS ALREADY STARTED");
         }
-        if (eventService.findByIdFetchOwnerFetchUsers(eventId).getUsers().contains(loggedUser)) {
+        if (eventService.findByIdFetchOwnerFetchUsersFetchImage(eventId).getUsers().contains(loggedUser)) {
             throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGNUP FOR AN EVENT IF ALREADY ASSIGNED");
         }
         eventService.signUpForEvent(loggedUser, eventId);
@@ -84,13 +83,13 @@ public class EventDetailController {
     public String signOutFromEvent(@PathVariable("id") Long eventId) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
-        if (eventService.findByIdFetchOwnerFetchUsers(eventId).getOwner().getUsername().equals(loggedUser.getUsername())) {
+        if (eventService.findByIdFetchOwnerFetchUsersFetchImage(eventId).getOwner().getUsername().equals(loggedUser.getUsername())) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - OWNER CANNOT SIGN OUT FROM AN EVENT");
         }
-        if (eventService.findByIdFetchOwnerFetchUsers(eventId).getStartingDateTime().isBefore(LocalDateTime.now())) {
+        if (eventService.findByIdFetchOwnerFetchUsersFetchImage(eventId).getStartingDateTime().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN OUT FROM AN EVENT THAT HAS ALREADY STARTED");
         }
-        if (!eventService.findByIdFetchOwnerFetchUsers(eventId).getUsers().contains(loggedUser)) {
+        if (!eventService.findByIdFetchOwnerFetchUsersFetchImage(eventId).getUsers().contains(loggedUser)) {
             throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGNUP OUT FROM AN EVENT IF HAS NOT ASSIGNED");
         }
 
