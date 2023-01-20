@@ -1,6 +1,7 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.CommentView;
+import com.sda.eventapp.dto.EventApiWrapper;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.mapper.EventMapper;
 import com.sda.eventapp.model.Event;
@@ -130,10 +131,6 @@ public class EventService {
         return mapper.toEventView(this.findByIdFetchOwnerFetchUsers(id));
     }
 
-    public List<EventView> findAllEventViews() {
-        return mapper.toEventViewList(repository.findAll());
-    }
-
     public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
         if (title == null || title.equals("") || title.isBlank()) {
             return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
@@ -142,8 +139,11 @@ public class EventService {
         }
     }
 
-    public List<EventView> findEventViewsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return mapper.toEventViewList(repository.findAllEventByDateRange(start, end));
+    public EventApiWrapper getEventApiWrapperWithEventsInDateRange(LocalDateTime start, LocalDateTime end) {
+        return new EventApiWrapper(
+                mapper.toEventApiList(
+                        repository.findAllEventByDateRange(start, end))
+        );
     }
 
     public List<CommentView> findCommentViewsByEventId(Long eventId) {
@@ -239,5 +239,13 @@ public class EventService {
         else {
             return mapper.toEventViewList(repository.findOwnedAndAttendedAllEventsById(userId));
         }
+    }
+
+    public EventApiWrapper getEventApiWrapperWithAllFutureEvents() {
+        return new EventApiWrapper(
+                mapper.toEventApiList(
+                        repository.findAllFutureEvents()
+                )
+        );
     }
 }
