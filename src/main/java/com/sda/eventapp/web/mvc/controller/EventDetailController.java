@@ -2,6 +2,7 @@ package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.authentication.IAuthenticationFacade;
 import com.sda.eventapp.model.User;
+import com.sda.eventapp.service.CommentService;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @RequiredArgsConstructor
 public class EventDetailController {
     private final EventService eventService;
+    private final CommentService commentService;
     private final IAuthenticationFacade authenticationFacade;
 
     @GetMapping("/{id}")
@@ -40,11 +42,8 @@ public class EventDetailController {
             map.addAttribute("loggedUser", loggedUser);
             map.addAttribute("adminRole", new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
-
-
         map.addAttribute("event", eventService.findEventViewById(eventId));
-        map.addAttribute("comments", eventService.findCommentViewsByEventId(eventId));
-
+        map.addAttribute("comments", commentService.findCommentViewsByEventId(eventId));
         return "event-detail-view";
     }
 
