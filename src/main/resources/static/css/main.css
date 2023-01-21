@@ -9,14 +9,23 @@
     scrollbar-width: none; /* Firefox */
 }
 
+#pageContentWrapper {
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
 .img-navbar-logo {
     width: 12.5rem;
     height: 3.5625rem;
 }
 
-#pageContentWrapper {
-    min-width: 100vw;
-    min-height: 100vh;
+.img-card-cover-fit {
+    object-fit: cover;
+!important;
+    max-height: 12rem;
+!important;
+    width: 100%;
+!important;
 }
 
 .invalid-feedback-custom {
