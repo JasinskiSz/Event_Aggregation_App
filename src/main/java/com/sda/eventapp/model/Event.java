@@ -23,18 +23,20 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 65535)
+    @Column(nullable = false, length = 65535)
     private String description;
 
+
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(nullable = false, name = "owner_id")
     private User owner;
 
-    @Column(name = "starting_date_time")
+    @Column(nullable = false, name = "starting_date_time")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startingDateTime;
 
-    @Column(name = "ending_date_time")
+    @Column(nullable = false, name = "ending_date_time")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endingDateTime;
 
@@ -53,7 +55,7 @@ public class Event {
     private Set<Comment> comments;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    @JoinColumn(nullable = false, name = "image_id", referencedColumnName = "id")
     private Image image;
 
     @Override

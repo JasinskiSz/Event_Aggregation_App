@@ -19,16 +19,16 @@ public class Comment {
 
     //todo: trello reminder #001
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(length = 500)
+    @Column(nullable = false, length = 500)
     private String text;
 
-    @Column(name = "writing_date")
+    @Column(nullable = false, name = "writing_date")
     private LocalDateTime writingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
+    @JoinColumn(nullable = false, name = "event_id")
     private Event event;
 }
