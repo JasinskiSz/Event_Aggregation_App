@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
@@ -78,7 +79,8 @@ public class EventController {
     @GetMapping("/update/{id}")
     public String update(ModelMap model, @PathVariable Long id) {
         User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-        if (loggedUser.getId() != (eventService.findOwnerIdByEventId(id))) {
+        if (loggedUser.getId() != eventService.findOwnerIdByEventId(id)
+                && !loggedUser.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT");
         }
         if (eventService.findByIdFetchOwnerFetchUsers(id).getStartingDateTime().isBefore(LocalDateTime.now())) {
