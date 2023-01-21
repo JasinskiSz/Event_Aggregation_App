@@ -232,7 +232,7 @@
                                                 <td th:text="${c.userNickname}"></td>
                                             </div>
                                             <div class="fw-bold date-font-size">
-                                                <td th:text="${c.writingDate}"></td>
+                                                <td  th:text="${#temporals.format(c.writingDate, 'dd-MM-yyyy HH:mm')}"></td>
                                             </div>
                                             <div class="mb-2 text-break">
                                                 <td th:text="${c.text}"></td>
