@@ -13,6 +13,7 @@ import com.sda.eventapp.web.mvc.form.EventForm;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -42,27 +43,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 class EventControllerTest {
-    @Autowired
-    UserRepository userRepository;
-    //todo #001 should assertion validation be in different methods?
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    @Autowired
-    private EventRepository eventRepository;
+    private final Validator validator;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private EventRepository eventRepository;
+    @Autowired
     private ImageRepository imageRepository;
-    private static final String EXCEPTION_MESSAGE = "User not found";
     @Autowired
     private EventService eventService;
-    private User testUser1;
-    private EventForm testEventForm;
     @Autowired
     private ImageService imageService;
 
+    private User testUser;
+    private EventForm testEventForm;
+
+    public EventControllerTest() {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            this.validator = factory.getValidator();
+        } // no need for catch because ValidatorFactory implements AutoCloseable interface
+    }
+
     @BeforeEach
     void prepareTestData() {
-        testUser1 = User.builder()
+        testUser = User.builder()
                 .username("user-test")
                 .email("user-test@gmail.com")
                 .password("useruser")
@@ -87,8 +93,7 @@ class EventControllerTest {
     void shouldAllowAccessToCreateEventForAuthenticatedUser() throws Exception {
         mockMvc
                 .perform(MockMvcRequestBuilders.get("/event/create")
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
+                        .with(user(testUser)))
                 .andExpect(view().name("create-event"))
                 .andExpect(model().attributeExists("event"))
                 .andExpect(status().isOk());
@@ -96,8 +101,7 @@ class EventControllerTest {
 
     @Test
     void shouldNotAllowAccessToCreateEventForAnonymousUser() throws Exception {
-        mockMvc
-                .perform(MockMvcRequestBuilders.get("/event/create"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/event/create"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("**/login"));
     }
@@ -112,8 +116,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -130,22 +133,18 @@ class EventControllerTest {
 
     @Test
     void shouldCreateNewEventWithNoImage() throws Exception {
-        MockMultipartFile testFile = new MockMultipartFile(
-                "file",
-                "",
-                "text/plain",
-                (byte[]) null);
-        mockMvc
-                .perform(MockMvcRequestBuilders.multipart("/event/create")
+        MockMultipartFile testFile = new MockMultipartFile("file", "", "text/plain", (byte[]) null);
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
                         .param("endingDateTime", testEventForm.getEndingDateTime().toString())
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .with(csrf()))
+                        .with(csrf())
+                )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/my-events"));
 
@@ -163,8 +162,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -186,8 +184,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().minusDays(45).toString())
@@ -217,8 +214,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -247,8 +243,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -277,8 +272,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", (String) null)
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -307,8 +301,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", "")
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -337,8 +330,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", "    ")
                         .param("description", testEventForm.getDescription())
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -367,8 +359,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", (String) null)
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -397,8 +388,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", "")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -428,8 +418,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", " ")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -459,8 +448,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", "                    ")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -489,8 +477,7 @@ class EventControllerTest {
         mockMvc
                 .perform(MockMvcRequestBuilders.multipart("/event/create")
                         .file(testFile)
-                        .with(user(userRepository.findById(testUser1.getId())
-                                .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
+                        .with(user(testUser))
                         .param("title", testEventForm.getTitle())
                         .param("description", "19-characters-test-")
                         .param("startingDateTime", testEventForm.getStartingDateTime().toString())
@@ -516,16 +503,17 @@ class EventControllerTest {
     class EventControllerTestEventUpdateTest {
         private EventView testEventToUpdate;
         private Event testEvent;
-        private User testNotOwnerUser2;
+        private User testNotOwnerUser;
 
         @BeforeEach
         void prepareEventTestData() {
             testEvent = Event.builder()
+                    .id(123L)
                     .title("test event to update")
                     .description("test event to update")
                     .startingDateTime(LocalDateTime.now().plusDays(7))
                     .endingDateTime(LocalDateTime.now().plusDays(14))
-                    .owner(testUser1)
+                    .owner(testUser)
                     .image(imageService.solveImage(new MockMultipartFile("testImage.jpg", "test".getBytes())))
                     .build();
         }
@@ -534,10 +522,11 @@ class EventControllerTest {
         void shouldAllowAccessToUpdateEventForAuthenticatedUser() throws Exception {
             eventRepository.save(testEvent);
             testEventToUpdate = eventService.findEventViewById(testEvent.getId());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))) //todo optional handling?
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
+                                    .with(user(testUser)) //todo optional handling?
+                    )
                     .andExpect(view().name("update-event"))
                     .andExpect(model().attributeExists("event"))
                     .andExpect(model().attributeExists("eventImage"))
@@ -548,8 +537,8 @@ class EventControllerTest {
         void shouldNotAllowAccessToUpdateEventForAnonymousUser() throws Exception {
             eventRepository.save(testEvent);
             testEventToUpdate = eventService.findEventViewById(testEvent.getId());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId()))
+
+            mockMvc.perform(MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId()))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrlPattern("**/login"));
         }
@@ -558,17 +547,17 @@ class EventControllerTest {
         void shouldNotAllowAccessToUpdateEventIfLoggedUserIsNotOwner() throws Exception {
             eventRepository.save(testEvent);
             testEventToUpdate = eventService.findEventViewById(testEvent.getId());
-            testNotOwnerUser2 = User.builder()
+            testNotOwnerUser = User.builder()
                     .username("user-not-owner-test")
                     .email("user-not-owner-test@gmail.com")
                     .password("usernotowner")
                     .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
                     .build();
-            userRepository.save(testNotOwnerUser2);
-            mockMvc
-                    .perform(MockMvcRequestBuilders
-                            .get("/event/update/{id}", testEventToUpdate.getId())
-                            .with(user(testNotOwnerUser2)))
+            userRepository.save(testNotOwnerUser);
+            mockMvc.perform(
+                            MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
+                                    .with(user(testNotOwnerUser))
+                    )
                     .andExpect(status().isForbidden())
                     .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
         }
@@ -578,11 +567,12 @@ class EventControllerTest {
             testEvent.setStartingDateTime(LocalDateTime.now().minusDays(10));
             eventRepository.save(testEvent);
             testEventToUpdate = eventService.findEventViewById(testEvent.getId());
-            mockMvc
-                    .perform(MockMvcRequestBuilders
-                            .get("/event/update/{id}", testEventToUpdate.getId())
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE)))))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders
+                                    .get("/event/update/{id}", testEventToUpdate.getId())
+                                    .with(user(testUser))
+                    )
                     .andExpect(status().isBadRequest())
                     .andExpect(status().reason("ACCESS DENIED - CANNOT UPDATE AN EVENT AFTER ITS START DATE"));
         }
@@ -595,16 +585,18 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrlPattern("**/login"));
         }
@@ -618,18 +610,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrl("/my-events"));
 
@@ -646,18 +639,19 @@ class EventControllerTest {
                     "",
                     "text/plain",
                     (byte[]) null);
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrl("/my-events"));
 
@@ -673,18 +667,19 @@ class EventControllerTest {
                     "test_file.txt",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().is3xxRedirection())
                     .andExpect(flash().attributeExists("wrongFileExtension"))
                     .andExpect(redirectedUrl("/event/update"));
@@ -698,18 +693,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().minusDays(45).toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(45).toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().minusDays(45).toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(45).toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -732,18 +728,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(4).toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(4).toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -764,19 +761,20 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().plusDays(13).toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
-                    .andExpect(status().isOk())
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().plusDays(13).toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf()))
+                    .andExpect(status().isOk()
+                    )
                     .andExpect(view().name("update-event"));
 
             //todo#001
@@ -796,18 +794,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", (String) null)
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", (String) null)
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -828,18 +827,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", "")
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", "")
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -860,18 +860,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", "    ")
-                            .param("description", testEventForm.getDescription())
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", "    ")
+                                    .param("description", testEventForm.getDescription())
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -892,18 +893,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", (String) null)
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", (String) null)
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -924,18 +926,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", "")
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", "")
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -957,18 +960,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", " ")
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", " ")
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -990,18 +994,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", "                    ")
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", "                    ")
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
@@ -1022,18 +1027,19 @@ class EventControllerTest {
                     "test_file.jpg",
                     "text/plain",
                     "test".getBytes());
-            mockMvc
-                    .perform(MockMvcRequestBuilders.multipart("/event/update")
-                            .file(testFile)
-                            .with(user(userRepository.findById(testUser1.getId())
-                                    .orElseThrow(() -> new RuntimeException(EXCEPTION_MESSAGE))))
-                            .param("id", testEvent.getId().toString())
-                            .param("title", testEventForm.getTitle())
-                            .param("description", "19-characters-test-")
-                            .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                            .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                            .contentType(MediaType.MULTIPART_FORM_DATA)
-                            .with(csrf()))
+
+            mockMvc.perform(
+                            MockMvcRequestBuilders.multipart("/event/update")
+                                    .file(testFile)
+                                    .with(user(testUser))
+                                    .param("id", testEvent.getId().toString())
+                                    .param("title", testEventForm.getTitle())
+                                    .param("description", "19-characters-test-")
+                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                                    .with(csrf())
+                    )
                     .andExpect(status().isOk())
                     .andExpect(view().name("update-event"));
 
