@@ -1,6 +1,7 @@
 package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.model.User;
+import com.sda.eventapp.service.CommentService;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ import static com.sda.eventapp.utils.AuthUtils.isUserLoggedIn;
 @RequiredArgsConstructor
 public class EventDetailController {
     private final EventService eventService;
+    private final CommentService commentService;
 
     @GetMapping("/{id}")
     public String getDetailEventView(ModelMap map, Authentication authentication, @PathVariable("id") Long eventId) {
@@ -33,7 +35,7 @@ public class EventDetailController {
         }
 
         map.addAttribute("event", eventService.findEventViewById(eventId));
-        map.addAttribute("comments", eventService.findCommentViewsByEventId(eventId));
+        map.addAttribute("comments", commentService.findCommentViewsByEventId(eventId));
 
         return "event-detail-view";
     }
