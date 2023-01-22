@@ -1,7 +1,7 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.form.CreateUserForm;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.UserRepository;
 import com.sda.eventapp.utils.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;

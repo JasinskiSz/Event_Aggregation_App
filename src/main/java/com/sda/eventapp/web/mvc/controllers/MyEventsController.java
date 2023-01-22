@@ -1,8 +1,8 @@
 package com.sda.eventapp.web.mvc.controllers;
 
-import com.sda.eventapp.entities.User;
 import com.sda.eventapp.filters.DateType;
 import com.sda.eventapp.filters.ParticipationType;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.service.FiltersService;
 import lombok.RequiredArgsConstructor;

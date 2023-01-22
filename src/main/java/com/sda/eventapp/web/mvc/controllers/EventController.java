@@ -2,7 +2,7 @@ package com.sda.eventapp.web.mvc.controllers;
 
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.dto.form.EventForm;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.service.ImageService;
 import jakarta.validation.Valid;
