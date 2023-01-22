@@ -134,7 +134,7 @@ public class EventService {
             throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN UP FOR AN EVENT THAT HAS ALREADY STARTED");
         }
         if (findByIdFetchOwnerFetchUsersFetchImage(eventId).getUsers().contains(user)) {
-            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGNUP FOR AN EVENT IF ALREADY ASSIGNED");
+            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN UP FOR AN EVENT IF ALREADY ASSIGNED");
         }
     }
 
@@ -146,7 +146,7 @@ public class EventService {
             throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN OUT FROM AN EVENT THAT HAS ALREADY STARTED");
         }
         if (!findByIdFetchOwnerFetchUsersFetchImage(eventId).getUsers().contains(user)) {
-            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGNUP OUT FROM AN EVENT IF HAS NOT ASSIGNED");
+            throw new ResponseStatusException(BAD_REQUEST, "ACCESS DENIED - CANNOT SIGN OUT FROM AN EVENT IF HAS NOT ASSIGNED");
         }
     }
 }
