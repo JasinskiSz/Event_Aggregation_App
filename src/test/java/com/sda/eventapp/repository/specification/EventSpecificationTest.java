@@ -1,7 +1,7 @@
 package com.sda.eventapp.repository.specification;
 
-import com.sda.eventapp.entities.Event;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.Event;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;

@@ -1,9 +1,9 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.entities.Event;
 import com.sda.eventapp.filters.DateType;
 import com.sda.eventapp.filters.ParticipationType;
 import com.sda.eventapp.model.EventFilters;
+import com.sda.eventapp.model.entities.Event;
 import com.sda.eventapp.repository.specification.EventSpecification;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;

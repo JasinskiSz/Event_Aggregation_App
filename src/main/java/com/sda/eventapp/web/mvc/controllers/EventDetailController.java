@@ -1,7 +1,7 @@
 package com.sda.eventapp.web.mvc.controllers;
 
 import com.sda.eventapp.dto.form.CreateCommentForm;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.service.CommentService;
 import com.sda.eventapp.service.EventService;
 import jakarta.validation.Valid;

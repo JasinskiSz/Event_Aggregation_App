@@ -2,9 +2,9 @@ package com.sda.eventapp.utils.mappers;
 
 import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.form.CreateCommentForm;
-import com.sda.eventapp.entities.Comment;
-import com.sda.eventapp.entities.Event;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.Comment;
+import com.sda.eventapp.model.entities.Event;
+import com.sda.eventapp.model.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.sda.eventapp.entities;
+package com.sda.eventapp.model.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
