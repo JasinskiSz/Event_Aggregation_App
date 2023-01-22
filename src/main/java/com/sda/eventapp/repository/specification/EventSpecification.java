@@ -32,4 +32,13 @@ public class EventSpecification {
                         criteriaBuilder.greaterThan(root.get("endingDateTime"), LocalDateTime.now())
                 );
     }
+
+    public static Specification<Event> titleContains(String title) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + title + "%");
+    }
+
+    public static Specification<Event> orderByEventStartingDate() {
+        return (root, query, criteriaBuilder) ->
+                query.orderBy(criteriaBuilder.asc(root.get("startingDateTime"))).getRestriction();
+    }
 }

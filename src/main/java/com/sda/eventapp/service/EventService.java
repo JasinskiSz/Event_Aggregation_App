@@ -74,12 +74,8 @@ public class EventService {
         return mapper.toEventView(this.findByIdFetchOwnerFetchUsersFetchImage(id));
     }
 
-    public List<EventView> findAllEventViews(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
-        if (title == null || title.equals("") || title.isBlank()) {
-            return mapper.toEventViewList(findAllWithFilters(futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
-        } else {
-            return mapper.toEventViewList(findAllWithFilters(title, futureEventsFilter, ongoingEventsFilter, pastEventsFilter));
-        }
+    public List<EventView> findAllEventViews(String title, boolean future, boolean ongoing, boolean past) {
+        return mapper.toEventViewList(repository.findAll(filtersService.prepareSpecification(title, future, ongoing, past)));
     }
 
     public EventApiWrapper getEventApiWrapperWithEventsInDateRange(LocalDateTime start, LocalDateTime end) {
@@ -133,69 +129,6 @@ public class EventService {
                         repository.findAllFutureEvents()
                 )
         );
-    }
-
-    private List<Event> findAllWithFilters(boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
-        //future
-        if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
-            return repository.findAllFutureEvents();
-        }
-        //ongoing
-        else if (!futureEventsFilter && ongoingEventsFilter && !pastEventsFilter) {
-            return repository.findAllOngoingEvents();
-        }
-        //past
-        else if (!futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
-            return repository.findAllPastEvents();
-        }
-
-        //future past
-        else if (futureEventsFilter && !ongoingEventsFilter) {
-            return repository.findAllFutureAndPastEvents();
-        }
-        //ongoing past
-        else if (!futureEventsFilter && ongoingEventsFilter) {
-            return repository.findAllOngoingAndPastEvents();
-        }
-        //future ongoing past
-        else if (futureEventsFilter && pastEventsFilter) {
-            return repository.findAllEvents();
-        }
-        //default - ongoing + future
-        else {
-            return repository.findAllOngoingAndFutureEvents();
-        }
-    }
-
-    private List<Event> findAllWithFilters(String title, boolean futureEventsFilter, boolean ongoingEventsFilter, boolean pastEventsFilter) {
-        //future
-        if (futureEventsFilter && !ongoingEventsFilter && !pastEventsFilter) {
-            return repository.findAllFutureEventsByTitle(title);
-        }
-        //ongoing
-        else if (!futureEventsFilter && ongoingEventsFilter && !pastEventsFilter) {
-            return repository.findAllOngoingEventsByTitle(title);
-        }
-        //past
-        else if (!futureEventsFilter && !ongoingEventsFilter && pastEventsFilter) {
-            return repository.findAllPastEventsByTitle(title);
-        }
-        //future past
-        else if (futureEventsFilter && !ongoingEventsFilter) {
-            return repository.findAllFutureAndPastEventsByTitle(title);
-        }
-        //ongoing past
-        else if (!futureEventsFilter && ongoingEventsFilter) {
-            return repository.findAllOngoingAndPastEventsByTitle(title);
-        }
-        //future ongoing past
-        else if (futureEventsFilter && pastEventsFilter) {
-            return repository.findAllByTitle(title);
-        }
-        //default - ongoing + future
-        else {
-            return repository.findAllOngoingAndFutureEventsByTitle(title);
-        }
     }
 
     private void canSignUpForEvent(User user, Long eventId) {

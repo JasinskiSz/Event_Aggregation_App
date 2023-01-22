@@ -24,8 +24,14 @@ public class FiltersService {
         DateType dateTypeEnum = DateType.FUTURE;
 
         // fix possible name error when enums name is with spaces
-        String participationTypeFixed = participationType.replaceAll(" ", "_");
-        String dateTypeFixed = dateType.replaceAll(" ", "_");
+        String participationTypeFixed = "";
+        String dateTypeFixed = "";
+        if (participationType != null) {
+            participationTypeFixed = participationType.replaceAll(" ", "_");
+        }
+        if (dateType != null) {
+            dateTypeFixed = dateType.replaceAll(" ", "_");
+        }
 
         // if filter is valid, set it to variable
         if (EnumUtils.isValidEnumIgnoreCase(ParticipationType.class, participationTypeFixed)) {
@@ -59,6 +65,28 @@ public class FiltersService {
         }
 
         return specification;
+    }
+
+    public Specification<Event> prepareSpecification(String title, boolean future, boolean ongoing, boolean past) {
+        Specification<Event> specification = Specification.where(null);
+
+        if (title != null && !title.isBlank()) {
+            specification = specification.or(EventSpecification.titleContains(title));
+        }
+
+        if (future) {
+            specification = specification.or(EventSpecification.isFuture());
+        }
+
+        if (ongoing) {
+            specification = specification.or(EventSpecification.isOngoing());
+        }
+
+        if (past) {
+            specification = specification.or(EventSpecification.isPast());
+        }
+
+        return specification.and(EventSpecification.orderByEventStartingDate());
     }
 
     public EventFilters getEventFilters() {
