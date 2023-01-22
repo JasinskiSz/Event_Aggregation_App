@@ -1,10 +1,7 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.User;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+import com.sda.eventapp.entities.Event;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.repository.EventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +12,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EventServiceTest {

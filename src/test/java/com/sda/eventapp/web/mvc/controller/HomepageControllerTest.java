@@ -1,7 +1,7 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.configuration.SecurityConfig;
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.config.SecurityConfig;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

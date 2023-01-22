@@ -1,6 +1,6 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.model.Image;
+import com.sda.eventapp.entities.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -54,7 +54,7 @@ public class ImageService {
      * If false, it does {@link com.sda.eventapp.service.ImageService#saveImageLocally(MultipartFile)}
      *
      * @param file should be checked before if its of required file extension
-     * @return {@link com.sda.eventapp.model.Image} build from {@link org.springframework.web.multipart.MultipartFile}
+     * @return {@link com.sda.eventapp.entities.Image} build from {@link org.springframework.web.multipart.MultipartFile}
      */
     public Image solveImage(MultipartFile file) {
         Image image;
@@ -76,8 +76,8 @@ public class ImageService {
      * <br>
      *
      * @param file {@link org.springframework.web.multipart.MultipartFile} that is meant to be saved
-     *             locally and built {@link com.sda.eventapp.model.Image} out of it
-     * @return built and saved locally {@link com.sda.eventapp.model.Image}
+     *             locally and built {@link com.sda.eventapp.entities.Image} out of it
+     * @return built and saved locally {@link com.sda.eventapp.entities.Image}
      */
     private Image saveImageLocally(MultipartFile file) {
         if (createImageDirectory()) {

@@ -1,7 +1,7 @@
 package com.sda.eventapp.repository.specification;
 
-import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.entities.Event;
+import com.sda.eventapp.entities.User;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
