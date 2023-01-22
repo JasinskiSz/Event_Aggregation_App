@@ -23,7 +23,6 @@ import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @TestPropertySource("/application-test.properties")
-@ExtendWith(MockitoExtension.class)
 class AppUserDetailsServiceTest {
 
 
