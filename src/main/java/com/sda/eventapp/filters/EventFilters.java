@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class EventFilters {
-    private String participationType;
-    private String dateType;
+    private ParticipationType participationType;
+    private DateType dateType;
 }

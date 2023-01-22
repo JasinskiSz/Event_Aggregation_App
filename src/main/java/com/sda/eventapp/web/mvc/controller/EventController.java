@@ -1,6 +1,5 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.authentication.IAuthenticationFacade;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
@@ -10,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -34,8 +34,6 @@ public class EventController {
     private final EventService eventService;
     private final ImageService imageService;
 
-    private final IAuthenticationFacade authenticationFacade;
-
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
@@ -48,13 +46,13 @@ public class EventController {
     // TODO #005: Maybe MultipartFile parameter can have some annotation to valid it? Ex. valid file extension.
     // If we'll choose to do so, we can handle file extension error via if (errors.hasErrors()), I think.
     @PostMapping("/create")
-    public String handleCreate(@ModelAttribute("event") @Valid EventForm form, Errors errors,
+    public String handleCreate(@AuthenticationPrincipal User user,
+                               @ModelAttribute("event") @Valid EventForm form,
+                               Errors errors,
                                @RequestParam MultipartFile file, RedirectAttributes ra) {
         if (errors.hasErrors()) {
             return "create-event";
         }
-
-        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
         // Not sure if this should be handled by ImageService.
         // But check should be here, to have proper redirect.
@@ -65,7 +63,7 @@ public class EventController {
                     imageService.wrongFileExtensionMessage());
             return "redirect:/event/create";
         }
-        eventService.save(form, loggedUser, file);
+        eventService.save(form, user, file);
         return "redirect:/my-events";
     }
 
@@ -77,10 +75,11 @@ public class EventController {
     }
 
     @GetMapping("/update/{id}")
-    public String update(ModelMap model, @PathVariable Long id) {
-        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
-        if (loggedUser.getId() != eventService.findOwnerIdByEventId(id)
-                && !loggedUser.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+    public String update(ModelMap model,
+                         @AuthenticationPrincipal User user,
+                         @PathVariable Long id) {
+        if (user.getId() != eventService.findOwnerIdByEventId(id)
+                && !user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             throw new ResponseStatusException(FORBIDDEN, "ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT");
         }
         if (eventService.findByIdFetchOwnerFetchUsersFetchImage(id).getStartingDateTime().isBefore(LocalDateTime.now())) {
@@ -96,8 +95,11 @@ public class EventController {
     }
 
     @PostMapping("/update")
-    public String handleUpdate(@ModelAttribute("event") @Valid EventForm form, Errors errors,
-                               @RequestParam MultipartFile file, RedirectAttributes ra, ModelMap map) {
+    public String handleUpdate(@ModelAttribute("event") @Valid EventForm form,
+                               Errors errors,
+                               @RequestParam MultipartFile file,
+                               RedirectAttributes ra,
+                               ModelMap map) {
         map.addAttribute("eventImage", eventService.findById(form.getId()).getImage());
 
         if (errors.hasErrors()) {
