@@ -24,11 +24,11 @@ public class CommentMapper {
                 .toList();
     }
 
-    public Comment toComment(CreateCommentForm form, Event event, User loggedUser) {
+    public Comment toComment(CreateCommentForm form, Event event, User user) {
         return Comment.builder()
                 .text(form.getText())
                 .writingDate(LocalDateTime.now())
-                .user(loggedUser)
+                .user(user)
                 .event(event)
                 .build();
     }

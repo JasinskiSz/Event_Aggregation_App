@@ -1,6 +1,5 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.authentication.IAuthenticationFacade;
 import com.sda.eventapp.filters.DateType;
 import com.sda.eventapp.filters.EventFilters;
 import com.sda.eventapp.filters.ParticipationType;
@@ -9,6 +8,7 @@ import com.sda.eventapp.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,6 @@ import java.util.Arrays;
 @RequestMapping({"/my-events"})
 public class MyEventsController {
     private final EventService eventService;
-    private final IAuthenticationFacade authenticationFacade;
 
     private final EventFilters eventFilters = EventFilters.builder()
             .participationType(ParticipationType.OWNED_EVENTS.getName())
@@ -31,6 +30,7 @@ public class MyEventsController {
 
     @GetMapping()
     public String getMyEventView(ModelMap map,
+                                 @AuthenticationPrincipal User user,
                                  @Param("participationType") String participationType,
                                  @Param("dateType") String dateType) {
         if (Arrays.stream(ParticipationType.values())
@@ -43,14 +43,13 @@ public class MyEventsController {
                 .anyMatch(pt -> pt.equals(dateType))) {
             eventFilters.setDateType(dateType);
         }
-        User loggedUser = (User) authenticationFacade.getAuthentication().getPrincipal();
 
-        map.addAttribute("loggedUser", loggedUser);
+        map.addAttribute("loggedUser", user);
         map.addAttribute("participationTypes", ParticipationType.values());
         map.addAttribute("dateTypes", DateType.values());
         map.addAttribute("boundEvents",
                 eventService.findAllEventViews(
-                        loggedUser.getId(),
+                        user.getId(),
                         eventFilters.getParticipationType(),
                         eventFilters.getDateType()
                 ));
