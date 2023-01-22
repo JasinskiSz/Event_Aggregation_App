@@ -35,6 +35,9 @@ public class EventSpecification {
     }
 
     public static Specification<Event> titleContains(String title) {
+        if(title == null || title.isBlank()){
+            return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + "" + "%");
+        }
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + title + "%");
     }
 
