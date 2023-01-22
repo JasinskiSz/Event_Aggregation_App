@@ -23,7 +23,7 @@ public class EventSpecification {
 
     public static Specification<Event> isPast() {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThan(root.get("startingDateTime"), LocalDateTime.now());
+                criteriaBuilder.lessThan(root.get("endingDateTime"), LocalDateTime.now());
     }
 
     public static Specification<Event> isOngoing() {
