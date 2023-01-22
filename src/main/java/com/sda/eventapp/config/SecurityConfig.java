@@ -16,14 +16,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/", "/home",
-                                "/api/v1/events",
+        http.authorizeHttpRequests(requests -> requests
+                        .requestMatchers(
+                                "/", "/home",
                                 "/user/register",
                                 "/detail-view/*",
-                                "/css/**", "/js/**", "/assets/**", "/images/**")
-                        .permitAll()
+                                "/api/v1/events",
+                                "/css/**", "/js/**", "/assets/**", "/images/**"
+                        ).permitAll()
                         .anyRequest()
                         .authenticated()
                 )
@@ -33,10 +33,12 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
+                        // custom logout url to not give away on which framework server is running
                         .logoutUrl("/perform-log-out")
                         .logoutRequestMatcher(new AntPathRequestMatcher("/perform-log-out", "GET"))
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .clearAuthentication(true)
                         .permitAll());
 
