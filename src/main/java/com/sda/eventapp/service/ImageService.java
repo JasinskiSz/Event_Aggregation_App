@@ -26,16 +26,6 @@ public class ImageService {
     private final static Path IMAGES_PATH = Path.of("src", "main", "resources", "static", "images");
     private final static String DEFAULT_IMAGE_NAME = "default-event-image.jpeg";
 
-    private Image buildImage() {
-        return buildImage(DEFAULT_IMAGE_NAME);
-    }
-
-    private Image buildImage(String name) {
-        return Image.builder()
-                .filename(name)
-                .build();
-    }
-
     /**
      * Returns {@code true} if the file extension matches with any value in the enum {@link com.sda.eventapp.service.ImageService.AllowedExtensions}.
      *
@@ -56,15 +46,6 @@ public class ImageService {
                 .mapToObj(i -> extensions[i] + (i < extensions.length - 1 ? ", " : ""))
                 .forEach(messageSB::append);
         return messageSB.toString();
-    }
-
-    /**
-     * Creates directory named after path: {@link com.sda.eventapp.service.ImageService#IMAGES_PATH} if it doesn't already exist.
-     *
-     * @return true in the same manner as {@link java.io.File#mkdirs()}
-     */
-    private boolean createImageDirectory() {
-        return new File(IMAGES_PATH.toString()).mkdirs();
     }
 
     /**
@@ -103,10 +84,9 @@ public class ImageService {
             log.debug("Directory created");
         }
 
-        String filename = (LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        String filename = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))
                 + UUID.randomUUID()
-                + file.getOriginalFilename())
-                .replaceAll(":", "-");
+                + file.getOriginalFilename();
 
         Image image = buildImage(filename);
 
@@ -119,6 +99,25 @@ public class ImageService {
             throw new RuntimeException(e);
         }
         return image;
+    }
+
+    private Image buildImage() {
+        return buildImage(DEFAULT_IMAGE_NAME);
+    }
+
+    private Image buildImage(String name) {
+        return Image.builder()
+                .filename(name)
+                .build();
+    }
+
+    /**
+     * Creates directory named after path: {@link com.sda.eventapp.service.ImageService#IMAGES_PATH} if it doesn't already exist.
+     *
+     * @return true in the same manner as {@link java.io.File#mkdirs()}
+     */
+    private boolean createImageDirectory() {
+        return new File(IMAGES_PATH.toString()).mkdirs();
     }
 
     private enum AllowedExtensions {
