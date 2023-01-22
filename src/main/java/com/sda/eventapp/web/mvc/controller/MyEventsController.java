@@ -21,7 +21,7 @@ public class MyEventsController {
     private final EventService eventService;
     private final FiltersService filtersService;
 
-    @GetMapping()
+    @GetMapping
     public String getMyEventView(ModelMap map,
                                  @AuthenticationPrincipal User user,
                                  @Param("participationType") String participationType,

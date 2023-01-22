@@ -26,8 +26,6 @@ public class Event {
     @Column(nullable = false, length = 65535)
     private String description;
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "owner_id")
     private User owner;
