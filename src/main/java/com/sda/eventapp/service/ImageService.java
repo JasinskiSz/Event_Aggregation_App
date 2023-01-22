@@ -49,12 +49,6 @@ public class ImageService {
     }
 
     /**
-     * Creates directory named after path: {@link com.sda.eventapp.service.ImageService#IMAGES_PATH} if it doesn't already exist.
-     *
-     * @return true in the same manner as {@link java.io.File#mkdirs()}
-     */
-
-    /**
      * Taking {@link org.springframework.web.multipart.MultipartFile} and checks its name if it's {@link java.lang.String#isBlank()} or null.
      * <br>
      * If false, it does {@link com.sda.eventapp.service.ImageService#saveImageLocally(MultipartFile)}
@@ -117,6 +111,11 @@ public class ImageService {
                 .build();
     }
 
+    /**
+     * Creates directory named after path: {@link com.sda.eventapp.service.ImageService#IMAGES_PATH} if it doesn't already exist.
+     *
+     * @return true in the same manner as {@link java.io.File#mkdirs()}
+     */
     private boolean createImageDirectory() {
         return new File(IMAGES_PATH.toString()).mkdirs();
     }
