@@ -15,8 +15,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AdminAccountCreatorTest {
-
-
    @InjectMocks
    AdminAccountCreator adminAccountCreator;
 
@@ -47,16 +45,4 @@ class AdminAccountCreatorTest {
       adminAccountCreator.createAdminAccount();
       verify(userRepository, times(1)).save(userTest);
    }
-
-
 }
-
-
-
-
-
-
-
-
-
-
