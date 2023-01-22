@@ -567,51 +567,45 @@ class EventControllerTest {
                 Mockito.when(eventService.findById(testEvent.getId())).thenReturn(testEvent);
             }
 
-            // Sorry, ale za dużo czasu na tym spędziłem, nie jestem pewien czy ten test w ogóle dobrze działał też wcześniej XD
-//            @Test
-//            void shouldNotAllowAccessToUpdateEventIfLoggedUserIsNotOwner() throws Exception {
-//                testEventToUpdate = EventView.builder()
-//                        .id(1L)
-//                        .title("aaa")
-//                        .startingDateTime(LocalDateTime.now())
-//                        .endingDateTime(LocalDateTime.now())
-//                        .description("aaaaaa")
-//                        .usersNicknames(Set.of("abc", "bbb"))
-//                        .ownerNickname(testUser.getUsername())
-//                        .image(new Image())
-//                        .build();
-//
-//                User testNotOwnerUser = User.builder()
-//                        .username("user-not-owner-test")
-//                        .email("user-not-owner-test@gmail.com")
-//                        .password("usernotowner")
-//                        .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
-//                        .build();
-//
-//                Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L)).thenReturn(
-//                        Event.builder()
-//                                .owner(testUser)
-//                                .startingDateTime(LocalDateTime.now().plusDays(1))
-//                                .image(new Image())
-//                                .build()
-//                );
-//
-////                Mockito.doReturn(Event.builder()
-////                        .owner(testUser)
-////                        .startingDateTime(LocalDateTime.now().plusDays(1))
-////                        .image(new Image())
-////                        .build())
-////                                .when(eventService).findByIdFetchOwnerFetchUsersFetchImage(1L);
-//
-//                Mockito.when(eventService.findEventViewById(1L)).thenReturn(testEventToUpdate);
-//
-//                mockMvc.perform(
-//                                MockMvcRequestBuilders.get("/event/update/{id}", 1)
-//                                        .with(user(testNotOwnerUser))
-//                        )
-//                        .andExpect(status().isForbidden())
-//                        .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
-//            }
+            @Test
+            void shouldNotAllowAccessToUpdateEventIfLoggedUserIsNotOwner() throws Exception {
+                EventView testEventToUpdate = EventView.builder()
+                        .id(1L)
+                        .title("aaa")
+                        .startingDateTime(LocalDateTime.now())
+                        .endingDateTime(LocalDateTime.now())
+                        .description("aaaaaa")
+                        .usersNicknames(Set.of("abc", "bbb"))
+                        .ownerNickname(testUser.getUsername())
+                        .image(new Image())
+                        .build();
+
+                User testNotOwnerUser = User.builder()
+                        .username("user-not-owner-test")
+                        .email("user-not-owner-test@gmail.com")
+                        .password("usernotowner")
+                        .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
+                        .build();
+
+                Mockito.when(eventService.findOwnerIdByEventId(1L)).thenReturn(testUser.getId() - 1);
+
+                Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L)).thenReturn(
+                        Event.builder()
+                                .owner(testUser)
+                                .startingDateTime(LocalDateTime.now().plusDays(1))
+                                .image(new Image())
+                                .build()
+                );
+
+                Mockito.when(eventService.findEventViewById(1L)).thenReturn(testEventToUpdate);
+
+                mockMvc.perform(
+                                MockMvcRequestBuilders.get("/event/update/{id}", 1)
+                                        .with(user(testNotOwnerUser))
+                        )
+                        .andExpect(status().isForbidden())
+                        .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
+            }
 
             @Test
             void shouldUpdateEventWithProperImage() throws Exception {

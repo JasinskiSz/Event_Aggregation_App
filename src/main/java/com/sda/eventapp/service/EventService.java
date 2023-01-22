@@ -144,10 +144,6 @@ public class EventService {
         );
     }
 
-    public List<CommentView> findCommentViewsByEventId(Long eventId) {
-        return commentService.findCommentViewsByEventId(eventId);
-    }
-
     public void saveComment(CreateCommentForm form, Long eventId, User loggedUser) {
         commentService.save(form, this.findById(eventId), loggedUser);
     }
