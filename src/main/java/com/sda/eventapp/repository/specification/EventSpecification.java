@@ -2,6 +2,7 @@ package com.sda.eventapp.repository.specification;
 
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.User;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class EventSpecification {
 
     public static Specification<Event> isPast() {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThan(root.get("startingDateTime"), LocalDateTime.now());
+                criteriaBuilder.lessThan(root.get("endingDateTime"), LocalDateTime.now());
     }
 
     public static Specification<Event> isOngoing() {
@@ -40,5 +41,15 @@ public class EventSpecification {
     public static Specification<Event> orderByEventStartingDate() {
         return (root, query, criteriaBuilder) ->
                 query.orderBy(criteriaBuilder.asc(root.get("startingDateTime"))).getRestriction();
+    }
+
+    public static Specification<Event> fetchAllEntities() {
+        return (root, query, criteriaBuilder) -> {
+            root.fetch("users", JoinType.LEFT);
+            root.fetch("image", JoinType.LEFT);
+            root.fetch("owner", JoinType.LEFT);
+            root.fetch("comments", JoinType.LEFT);
+            return query.getRestriction();
+        };
     }
 }
