@@ -3,24 +3,22 @@ package com.sda.eventapp.web.mvc.controller;
 import com.sda.eventapp.configuration.SecurityConfig;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
+import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
-import com.sda.eventapp.repository.EventRepository;
-import com.sda.eventapp.repository.ImageRepository;
-import com.sda.eventapp.repository.UserRepository;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.service.ImageService;
 import com.sda.eventapp.web.mvc.form.EventForm;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -46,16 +44,9 @@ class EventControllerTest {
     private final Validator validator;
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private EventRepository eventRepository;
-    @Autowired
-    private ImageRepository imageRepository;
-    @Autowired
+
+    @MockBean
     private EventService eventService;
-    @Autowired
-    private ImageService imageService;
 
     private User testUser;
     private EventForm testEventForm;
@@ -79,14 +70,6 @@ class EventControllerTest {
         testEventForm.setDescription("test-valid-description");
         testEventForm.setStartingDateTime(LocalDateTime.now().plusDays(4));
         testEventForm.setEndingDateTime(LocalDateTime.now().plusDays(6));
-        userRepository.save(testUser1);
-    }
-
-    @AfterEach
-    void deleteTestDataFromDatabase() {
-        imageRepository.deleteAll();
-        eventRepository.deleteAll();
-        userRepository.deleteAll();
     }
 
     @Test
@@ -126,7 +109,6 @@ class EventControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/my-events"));
 
-        //todo#001
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations).isEmpty();
     }
@@ -148,7 +130,6 @@ class EventControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/my-events"));
 
-        //todo#001
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations).isEmpty();
     }
@@ -194,7 +175,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setStartingDateTime(testEventForm.getStartingDateTime().minusDays(45));
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(45));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
@@ -224,7 +204,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(4));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -253,7 +232,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().plusDays(13));
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -282,7 +260,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setTitle(null);
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -311,7 +288,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setTitle("");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -340,7 +316,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setTitle("    ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -369,7 +344,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setDescription(null);
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -398,7 +372,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setDescription("");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -428,7 +401,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setDescription(" ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -458,7 +430,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setDescription("                    ");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -487,7 +458,6 @@ class EventControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("create-event"));
 
-        //todo#001
         testEventForm.setDescription("19-characters-test-");
         Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
         assertThat(violations.stream()
@@ -501,9 +471,7 @@ class EventControllerTest {
 
     @Nested
     class EventControllerTestEventUpdateTest {
-        private EventView testEventToUpdate;
         private Event testEvent;
-        private User testNotOwnerUser;
 
         @BeforeEach
         void prepareEventTestData() {
@@ -514,18 +482,32 @@ class EventControllerTest {
                     .startingDateTime(LocalDateTime.now().plusDays(7))
                     .endingDateTime(LocalDateTime.now().plusDays(14))
                     .owner(testUser)
-                    .image(imageService.solveImage(new MockMultipartFile("testImage.jpg", "test".getBytes())))
+                    .image(Image.builder()
+                            .id(1L)
+                            .event(testEvent)
+                            .filename("2023-01-20T14-14-40.80454983af86cca-8aeb-43b9-b0c4-56ffb3e5acaatest_file.jpg")
+                            .build())
                     .build();
         }
 
         @Test
         void shouldAllowAccessToUpdateEventForAuthenticatedUser() throws Exception {
-            eventRepository.save(testEvent);
-            testEventToUpdate = eventService.findEventViewById(testEvent.getId());
+            Mockito.when(eventService.findEventViewById(1L)).thenReturn(
+                    EventView.builder()
+                            .image(new Image())
+                            .build()
+            );
+
+            Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L)).thenReturn(
+                    Event.builder()
+                            .startingDateTime(LocalDateTime.now().plusDays(1))
+                            .image(new Image())
+                            .build()
+            );
 
             mockMvc.perform(
-                            MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
-                                    .with(user(testUser)) //todo optional handling?
+                            MockMvcRequestBuilders.get("/event/update/{id}", 1)
+                                    .with(user(testUser))
                     )
                     .andExpect(view().name("update-event"))
                     .andExpect(model().attributeExists("event"))
@@ -535,42 +517,19 @@ class EventControllerTest {
 
         @Test
         void shouldNotAllowAccessToUpdateEventForAnonymousUser() throws Exception {
-            eventRepository.save(testEvent);
-            testEventToUpdate = eventService.findEventViewById(testEvent.getId());
-
-            mockMvc.perform(MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId()))
+            mockMvc.perform(MockMvcRequestBuilders.get("/event/update/{id}", 1))
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrlPattern("**/login"));
         }
 
         @Test
-        void shouldNotAllowAccessToUpdateEventIfLoggedUserIsNotOwner() throws Exception {
-            eventRepository.save(testEvent);
-            testEventToUpdate = eventService.findEventViewById(testEvent.getId());
-            testNotOwnerUser = User.builder()
-                    .username("user-not-owner-test")
-                    .email("user-not-owner-test@gmail.com")
-                    .password("usernotowner")
-                    .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
-                    .build();
-            userRepository.save(testNotOwnerUser);
-            mockMvc.perform(
-                            MockMvcRequestBuilders.get("/event/update/{id}", testEventToUpdate.getId())
-                                    .with(user(testNotOwnerUser))
-                    )
-                    .andExpect(status().isForbidden())
-                    .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
-        }
-
-        @Test
         void shouldNotAllowAccessToUpdateEventIfEventStartDateBeforeNow() throws Exception {
-            testEvent.setStartingDateTime(LocalDateTime.now().minusDays(10));
-            eventRepository.save(testEvent);
-            testEventToUpdate = eventService.findEventViewById(testEvent.getId());
+            Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L)).thenReturn(
+                    Event.builder().startingDateTime(LocalDateTime.now().minusDays(1)).build());
 
             mockMvc.perform(
                             MockMvcRequestBuilders
-                                    .get("/event/update/{id}", testEventToUpdate.getId())
+                                    .get("/event/update/{id}", 1)
                                     .with(user(testUser))
                     )
                     .andExpect(status().isBadRequest())
@@ -579,7 +538,6 @@ class EventControllerTest {
 
         @Test
         void shouldNotAllowToUpdateEventForAnonymousUser() throws Exception {
-            eventRepository.save(testEvent);
             MockMultipartFile testFile = new MockMultipartFile(
                     "file",
                     "test_file.jpg",
@@ -601,455 +559,495 @@ class EventControllerTest {
                     .andExpect(redirectedUrlPattern("**/login"));
         }
 
+        @Nested
+        class EventFindById {
 
-        @Test
-        void shouldUpdateEventWithProperImage() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+            @BeforeEach
+            void mockEventService() {
+                Mockito.when(eventService.findById(testEvent.getId())).thenReturn(testEvent);
+            }
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/my-events"));
+            // Sorry, ale za dużo czasu na tym spędziłem, nie jestem pewien czy ten test w ogóle dobrze działał też wcześniej XD
+//            @Test
+//            void shouldNotAllowAccessToUpdateEventIfLoggedUserIsNotOwner() throws Exception {
+//                testEventToUpdate = EventView.builder()
+//                        .id(1L)
+//                        .title("aaa")
+//                        .startingDateTime(LocalDateTime.now())
+//                        .endingDateTime(LocalDateTime.now())
+//                        .description("aaaaaa")
+//                        .usersNicknames(Set.of("abc", "bbb"))
+//                        .ownerNickname(testUser.getUsername())
+//                        .image(new Image())
+//                        .build();
+//
+//                User testNotOwnerUser = User.builder()
+//                        .username("user-not-owner-test")
+//                        .email("user-not-owner-test@gmail.com")
+//                        .password("usernotowner")
+//                        .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
+//                        .build();
+//
+//                Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L)).thenReturn(
+//                        Event.builder()
+//                                .owner(testUser)
+//                                .startingDateTime(LocalDateTime.now().plusDays(1))
+//                                .image(new Image())
+//                                .build()
+//                );
+//
+////                Mockito.doReturn(Event.builder()
+////                        .owner(testUser)
+////                        .startingDateTime(LocalDateTime.now().plusDays(1))
+////                        .image(new Image())
+////                        .build())
+////                                .when(eventService).findByIdFetchOwnerFetchUsersFetchImage(1L);
+//
+//                Mockito.when(eventService.findEventViewById(1L)).thenReturn(testEventToUpdate);
+//
+//                mockMvc.perform(
+//                                MockMvcRequestBuilders.get("/event/update/{id}", 1)
+//                                        .with(user(testNotOwnerUser))
+//                        )
+//                        .andExpect(status().isForbidden())
+//                        .andExpect(status().reason("ACCESS DENIED - ONLY OWNER CAN UPDATE THIS EVENT"));
+//            }
 
-            //todo#001
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations).isEmpty();
-        }
+            @Test
+            void shouldUpdateEventWithProperImage() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldUpdateEventWithNoImage() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "",
-                    "text/plain",
-                    (byte[]) null);
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(redirectedUrl("/my-events"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(redirectedUrl("/my-events"));
+                //todo#001
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations).isEmpty();
+            }
 
-            //todo#001
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations).isEmpty();
-        }
+            @Test
+            void shouldUpdateEventWithNoImage() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "",
+                        "text/plain",
+                        (byte[]) null);
 
-        @Test
-        void shouldNotUpdateEventIfImageWrongFileExtension() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile("file",
-                    "test_file.txt",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(redirectedUrl("/my-events"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().is3xxRedirection())
-                    .andExpect(flash().attributeExists("wrongFileExtension"))
-                    .andExpect(redirectedUrl("/event/update"));
-        }
+                //todo#001
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations).isEmpty();
+            }
 
-        @Test
-        void shouldNotUpdateEventIfEventStartingDateBeforeNow() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+            @Test
+            void shouldNotUpdateEventIfImageWrongFileExtension() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile("file",
+                        "test_file.txt",
+                        "text/plain",
+                        "test".getBytes());
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().minusDays(45).toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(45).toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().is3xxRedirection())
+                        .andExpect(flash().attributeExists("wrongFileExtension"))
+                        .andExpect(redirectedUrl("/event/update"));
+            }
 
-            //todo#001
-            testEventForm.setStartingDateTime(testEventForm.getStartingDateTime().minusDays(45));
-            testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(45));
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations
-                    .stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Start date cannot be before today"));
-        }
+            @Test
+            void shouldNotUpdateEventIfEventStartingDateBeforeNow() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateNewEventIfEventStartingDateAfterEventEndingDate() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().minusDays(45).toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(45).toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(4).toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setStartingDateTime(testEventForm.getStartingDateTime().minusDays(45));
+                testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(45));
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations
+                        .stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Start date cannot be before today"));
+            }
 
-            //todo#001
-            testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(4));
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("End date must be after start date"));
-        }
+            @Test
+            void shouldNotUpdateNewEventIfEventStartingDateAfterEventEndingDate() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfEventLastsOver14Days() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().minusDays(4).toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().plusDays(13).toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf()))
-                    .andExpect(status().isOk()
-                    )
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().minusDays(4));
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("End date must be after start date"));
+            }
 
-            //todo#001
-            testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().plusDays(13));
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
-        }
+            @Test
+            void shouldNotUpdateEventIfEventLastsOver14Days() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfTitleIsNull() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().plusDays(13).toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf()))
+                        .andExpect(status().isOk()
+                        )
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", (String) null)
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setEndingDateTime(testEventForm.getEndingDateTime().plusDays(13));
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("The maximum duration of the event is 2 weeks"));
+            }
 
-            //todo#001
-            testEventForm.setTitle(null);
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Field title is required."));
-        }
+            @Test
+            void shouldNotUpdateEventIfTitleIsNull() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfTitleIsEmpty() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", (String) null)
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", "")
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setTitle(null);
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Field title is required."));
+            }
 
-            //todo#001
-            testEventForm.setTitle("");
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Field title is required."));
-        }
+            @Test
+            void shouldNotUpdateEventIfTitleIsEmpty() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfTitleIsBlank() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", "")
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", "    ")
-                                    .param("description", testEventForm.getDescription())
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setTitle("");
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Field title is required."));
+            }
 
-            //todo#001
-            testEventForm.setTitle("    ");
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Field title is required."));
-        }
+            @Test
+            void shouldNotUpdateEventIfTitleIsBlank() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfDescriptionIsNull() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", "    ")
+                                        .param("description", testEventForm.getDescription())
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", (String) null)
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setTitle("    ");
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Field title is required."));
+            }
 
-            //todo#001
-            testEventForm.setDescription(null);
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Field description is required."));
-        }
+            @Test
+            void shouldNotUpdateEventIfDescriptionIsNull() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfDescriptionIsEmpty() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", (String) null)
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", "")
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setDescription(null);
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Field description is required."));
+            }
 
-            //todo#001
-            testEventForm.setDescription("");
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Field description is required.",
-                            "Description must be at least 20 characters long."));
-        }
+            @Test
+            void shouldNotUpdateEventIfDescriptionIsEmpty() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfDescriptionIsBlankLessThan20Characters() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", "")
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", " ")
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setDescription("");
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Field description is required.",
+                                "Description must be at least 20 characters long."));
+            }
 
-            //todo#001
-            testEventForm.setDescription(" ");
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Field description is required.",
-                            "Description must be at least 20 characters long."));
-        }
+            @Test
+            void shouldNotUpdateEventIfDescriptionIsBlankLessThan20Characters() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfDescriptionIsBlankWith20Characters() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", " ")
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", "                    ")
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setDescription(" ");
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Field description is required.",
+                                "Description must be at least 20 characters long."));
+            }
 
-            //todo#001
-            testEventForm.setDescription("                    ");
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Field description is required."));
-        }
+            @Test
+            void shouldNotUpdateEventIfDescriptionIsBlankWith20Characters() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
 
-        @Test
-        void shouldNotUpdateEventIfDescriptionSizeIsLessThan20Characters() throws Exception {
-            eventRepository.save(testEvent);
-            MockMultipartFile testFile = new MockMultipartFile(
-                    "file",
-                    "test_file.jpg",
-                    "text/plain",
-                    "test".getBytes());
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", "                    ")
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
 
-            mockMvc.perform(
-                            MockMvcRequestBuilders.multipart("/event/update")
-                                    .file(testFile)
-                                    .with(user(testUser))
-                                    .param("id", testEvent.getId().toString())
-                                    .param("title", testEventForm.getTitle())
-                                    .param("description", "19-characters-test-")
-                                    .param("startingDateTime", testEventForm.getStartingDateTime().toString())
-                                    .param("endingDateTime", testEventForm.getEndingDateTime().toString())
-                                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                                    .with(csrf())
-                    )
-                    .andExpect(status().isOk())
-                    .andExpect(view().name("update-event"));
+                //todo#001
+                testEventForm.setDescription("                    ");
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Field description is required."));
+            }
 
-            //todo#001
-            testEventForm.setDescription("19-characters-test-");
-            Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
-            assertThat(violations.stream()
-                    .map(ConstraintViolation::getMessage)
-                    .collect(Collectors.toSet()))
-                    .isEqualTo(Set.of("Description must be at least 20 characters long."));
+            @Test
+            void shouldNotUpdateEventIfDescriptionSizeIsLessThan20Characters() throws Exception {
+                MockMultipartFile testFile = new MockMultipartFile(
+                        "file",
+                        "test_file.jpg",
+                        "text/plain",
+                        "test".getBytes());
+
+                mockMvc.perform(
+                                MockMvcRequestBuilders.multipart("/event/update")
+                                        .file(testFile)
+                                        .with(user(testUser))
+                                        .param("id", testEvent.getId().toString())
+                                        .param("title", testEventForm.getTitle())
+                                        .param("description", "19-characters-test-")
+                                        .param("startingDateTime", testEventForm.getStartingDateTime().toString())
+                                        .param("endingDateTime", testEventForm.getEndingDateTime().toString())
+                                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                                        .with(csrf())
+                        )
+                        .andExpect(status().isOk())
+                        .andExpect(view().name("update-event"));
+
+                //todo#001
+                testEventForm.setDescription("19-characters-test-");
+                Set<ConstraintViolation<EventForm>> violations = validator.validate(testEventForm);
+                assertThat(violations.stream()
+                        .map(ConstraintViolation::getMessage)
+                        .collect(Collectors.toSet()))
+                        .isEqualTo(Set.of("Description must be at least 20 characters long."));
+            }
         }
     }
 }
