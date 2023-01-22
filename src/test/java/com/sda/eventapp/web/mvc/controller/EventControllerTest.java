@@ -1,12 +1,12 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.configuration.SecurityConfig;
+import com.sda.eventapp.config.SecurityConfig;
 import com.sda.eventapp.dto.EventView;
-import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.Image;
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.dto.form.EventForm;
+import com.sda.eventapp.entities.Event;
+import com.sda.eventapp.entities.Image;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.mvc.form.EventForm;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

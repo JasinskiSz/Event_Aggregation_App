@@ -1,14 +1,14 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.configuration.SecurityConfig;
+import com.sda.eventapp.config.SecurityConfig;
 import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventView;
-import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.Image;
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.dto.form.CreateCommentForm;
+import com.sda.eventapp.entities.Event;
+import com.sda.eventapp.entities.Image;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.service.CommentService;
 import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.mvc.form.CreateCommentForm;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

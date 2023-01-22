@@ -1,6 +1,6 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,6 +1,6 @@
 package com.sda.eventapp.dto;
 
-import com.sda.eventapp.model.Image;
+import com.sda.eventapp.entities.Image;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,9 +1,9 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.mapper.UserMapper;
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.dto.form.CreateUserForm;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.repository.UserRepository;
-import com.sda.eventapp.web.mvc.form.CreateUserForm;
+import com.sda.eventapp.utils.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

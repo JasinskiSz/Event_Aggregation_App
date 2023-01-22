@@ -1,12 +1,12 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.dto.CommentView;
-import com.sda.eventapp.mapper.CommentMapper;
-import com.sda.eventapp.model.Comment;
-import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.dto.form.CreateCommentForm;
+import com.sda.eventapp.entities.Comment;
+import com.sda.eventapp.entities.Event;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.repository.CommentRepository;
-import com.sda.eventapp.web.mvc.form.CreateCommentForm;
+import com.sda.eventapp.utils.mappers.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

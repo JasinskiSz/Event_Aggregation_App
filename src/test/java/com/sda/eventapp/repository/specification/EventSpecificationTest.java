@@ -1,11 +1,9 @@
 package com.sda.eventapp.repository.specification;
 
-import com.sda.eventapp.model.Event;
-import com.sda.eventapp.model.User;
+import com.sda.eventapp.entities.Event;
+import com.sda.eventapp.entities.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.UserRepository;
-import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.web.mvc.controller.FiltersService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
