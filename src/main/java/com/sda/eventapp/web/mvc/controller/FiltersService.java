@@ -64,7 +64,7 @@ public class FiltersService {
             specification = specification.and(EventSpecification.isPast());
         }
 
-        return specification;
+        return specification.and(EventSpecification.fetchAllEntities()).and(EventSpecification.orderByEventStartingDate());
     }
 
     public Specification<Event> prepareSpecification(String title, boolean future, boolean ongoing, boolean past) {
@@ -86,7 +86,7 @@ public class FiltersService {
             specification = specification.or(EventSpecification.isPast());
         }
 
-        return specification.and(EventSpecification.orderByEventStartingDate());
+        return specification.and(EventSpecification.fetchAllEntities()).and(EventSpecification.orderByEventStartingDate());
     }
 
     public EventFilters getEventFilters() {

@@ -1,6 +1,5 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.EventApiWrapper;
 import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.filters.DateType;
@@ -83,10 +82,6 @@ public class EventService {
                 mapper.toEventApiList(
                         repository.findAllEventByDateRange(start, end))
         );
-    }
-
-    public List<CommentView> findCommentViewsByEventId(Long eventId) {
-        return commentService.findCommentViewsByEventId(eventId);
     }
 
     public void saveComment(CreateCommentForm form, Long eventId, User user) {
