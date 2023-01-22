@@ -6,10 +6,6 @@ import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.model.Event;
 import com.sda.eventapp.model.Image;
 import com.sda.eventapp.model.User;
-import com.sda.eventapp.repository.CommentRepository;
-import com.sda.eventapp.repository.EventRepository;
-import com.sda.eventapp.repository.ImageRepository;
-import com.sda.eventapp.repository.UserRepository;
 import com.sda.eventapp.service.CommentService;
 import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.web.mvc.form.CreateCommentForm;
@@ -17,7 +13,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,31 +26,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @Import(SecurityConfig.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
 class EventDetailControllerTest {
-    private final Validator validator;
-    @MockBean
-    EventService eventService;
-    @MockBean
-    CommentService commentService;
-    @Autowired
-    private MockMvc mockMvc;
-    private User testUser1;
     private static final String BLANK_COMMENT = "";
     private static final String COMMENT_WITH_500_CHARACTERS = """
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
@@ -69,6 +53,16 @@ class EventDetailControllerTest {
             ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
             fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis
             vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu1""";
+
+    private final Validator validator;
+    @MockBean
+    private EventService eventService;
+    @MockBean
+    private CommentService commentService;
+    @Autowired
+    private MockMvc mockMvc;
+
+    private User testUser1;
     private User testUser2;
 
     public EventDetailControllerTest() {
