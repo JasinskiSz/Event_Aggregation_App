@@ -26,23 +26,10 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 @SpringBootTest
 @TestPropertySource("/application-test.properties")
 class EventSpecificationTest {
-
     @Autowired
     private EventRepository eventRepository;
-
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private FiltersService filtersService;
-
-    @Autowired
-    private EventService eventService;
-
-
-    EventSpecification eventSpecification;
-
-
     User user1 = User.builder()
             .username("user1")
             .email("user1@gmail.com")
@@ -53,8 +40,7 @@ class EventSpecificationTest {
             .email("user2@gmail.com")
             .password("user2user2")
             .build();
-
-    Event pastEventOwnedByUser1AttendedByUser2 = Event.builder()
+    private final Event pastEventOwnedByUser1AttendedByUser2 = Event.builder()
             .title("Past event owned by user1 attended by user2")
             .description("Past event description")
             .startingDateTime(LocalDateTime.now().minusDays(7))
@@ -62,8 +48,7 @@ class EventSpecificationTest {
             .owner(user1)
             .users(Set.of(user2))
             .build();
-
-    Event pastEventOwnedByUser2AttendedByUser1 = Event.builder()
+    private final Event pastEventOwnedByUser2AttendedByUser1 = Event.builder()
             .title("Past event owned by user2 attended by user1")
             .description("Past event description")
             .startingDateTime(LocalDateTime.now().minusDays(7))
@@ -71,8 +56,7 @@ class EventSpecificationTest {
             .owner(user2)
             .users(Set.of(user1))
             .build();
-
-    Event ongoingEventOwnedByUser1AttendedByUser2 = Event.builder()
+    private final Event ongoingEventOwnedByUser1AttendedByUser2 = Event.builder()
             .title("Ongoing event owned by user1 attended by user2")
             .description("Ongoing event description")
             .startingDateTime(LocalDateTime.now().minusDays(3))
@@ -80,8 +64,7 @@ class EventSpecificationTest {
             .owner(user1)
             .users(Set.of(user2))
             .build();
-
-    Event ongoingEventOwnedByUser2AttendedByUser1 = Event.builder()
+    private final Event ongoingEventOwnedByUser2AttendedByUser1 = Event.builder()
             .title("Ongoing event owned by user2 attended by user1")
             .description("Ongoing event description")
             .startingDateTime(LocalDateTime.now().minusDays(3))
@@ -89,8 +72,7 @@ class EventSpecificationTest {
             .owner(user2)
             .users(Set.of(user1))
             .build();
-
-    Event futureEventOwnedByUser1AttendedByUser2 = Event.builder()
+    private final Event futureEventOwnedByUser1AttendedByUser2 = Event.builder()
             .title("Future event owned by user1 attended by user2")
             .description("Future event description")
             .startingDateTime(LocalDateTime.now().plusDays(2))
@@ -98,8 +80,7 @@ class EventSpecificationTest {
             .owner(user1)
             .users(Set.of(user2))
             .build();
-
-    Event futureEventOwnedByUser2AttendedByUser1 = Event.builder()
+    private final Event futureEventOwnedByUser2AttendedByUser1 = Event.builder()
             .title("Future event owned by user2 attended by user1")
             .description("Future event description")
             .startingDateTime(LocalDateTime.now().plusDays(2))
