@@ -1,5 +1,8 @@
 package com.sda.eventapp.filters;
 
+import lombok.Getter;
+
+@Getter
 public enum DateType {
     FUTURE("Future"),
     FUTURE_AND_ONGOING("Future and Ongoing"),
@@ -12,7 +15,8 @@ public enum DateType {
         this.name = name;
     }
 
-    public String getName() {
+    @Override
+    public String toString() {
         return name;
     }
 }

@@ -40,7 +40,8 @@
                             <select name="participationType">
                                 <option value="0">Participation Filter</option>
                                 <option th:each="participationType: ${participationTypes}"
-                                        th:text="${participationType.name}" th:value="${participationType.name}">
+                                        th:text="${participationType.toString()}"
+                                        th:value="${participationType.toString()}">
                                 </option>
                             </select>
                         </div>
@@ -48,7 +49,7 @@
                             <select name="dateType">
                                 <option value="0">Date Filter</option>
                                 <option th:each="dateType: ${dateTypes}"
-                                        th:text="${dateType.name}" th:value="${dateType.name}">
+                                        th:text="${dateType.toString()}" th:value="${dateType.toString()}">
                                 </option>
                             </select>
                         </div>
@@ -110,7 +111,7 @@
         <div class="container-fluid text-center py-2">
             <div th:unless="${ #strings.equals(eventFilters.dateType,'All') }and ${ #strings.equals(eventFilters.participationType,'All')} ">
                 <h1 class="display-6 fw-bolder text-white mb-2"
-                    th:text="${eventFilters.participationType} + ' ' + ${eventFilters.dateType} + ' Events'"></h1>
+                    th:text="${eventFilters.participationType.getName} + ' ' + ${eventFilters.dateType.getName} + ' Events'"></h1>
             </div>
             <div th:if="${ #strings.equals(eventFilters.dateType,'All') }and ${ #strings.equals(eventFilters.participationType,'All')} ">
                 <h1 class="display-6 fw-bolder text-white mb-2"

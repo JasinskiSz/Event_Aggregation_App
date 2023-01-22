@@ -1,9 +1,12 @@
 package com.sda.eventapp.filters;
 
+import lombok.Getter;
+
+@Getter
 public enum ParticipationType {
-    OWNED_EVENTS("Owned"),
-    ATTENDED_EVENTS("Attended"),
-    ALL_EVENTS("All");
+    OWNED("Owned"),
+    ATTENDED("Attended"),
+    ALL("All");
 
     private final String name;
 
@@ -11,7 +14,8 @@ public enum ParticipationType {
         this.name = name;
     }
 
-    public String getName() {
+    @Override
+    public String toString() {
         return name;
     }
 }

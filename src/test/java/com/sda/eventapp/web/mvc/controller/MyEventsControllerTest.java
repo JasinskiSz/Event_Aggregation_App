@@ -1,6 +1,10 @@
 package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.configuration.SecurityConfig;
+import com.sda.eventapp.dto.EventView;
+import com.sda.eventapp.filters.DateType;
+import com.sda.eventapp.filters.EventFilters;
+import com.sda.eventapp.filters.ParticipationType;
 import com.sda.eventapp.model.User;
 import com.sda.eventapp.service.EventService;
 import org.junit.jupiter.api.Test;
@@ -29,6 +33,8 @@ class MyEventsControllerTest {
 
     @MockBean
     private EventService eventService;
+    @MockBean
+    private FiltersService filterService;
 
     @Test
     void shouldNotAllowAccessForAnonymousUser() throws Exception {
@@ -44,12 +50,19 @@ class MyEventsControllerTest {
     @Test
     void shouldAllowAccessForAuthenticatedUser() throws Exception {
         User user = new User();
+        List<EventView> list = List.of();
         String participationType = "";
         String dateType = "";
+        EventFilters eventFilters = EventFilters.builder()
+                .participationType(ParticipationType.OWNED)
+                .dateType(DateType.FUTURE)
+                .build();
 
         // User should not have primitive type of id value. When this will be changed it will break this code with
         // nullPointerException on the first parameter. Please, changed it to null then.
-        Mockito.when(eventService.findAllEventViews(user.getId(), participationType, dateType)).thenReturn(List.of());
+        Mockito.when(eventService.findAllEventViews(user.getId(), participationType, dateType)).thenReturn(list);
+
+        Mockito.when(filterService.getEventFilters()).thenReturn(eventFilters);
 
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/my-events")
