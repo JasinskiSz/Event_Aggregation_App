@@ -30,11 +30,11 @@ public class Event {
     @JoinColumn(nullable = false, name = "owner_id")
     private User owner;
 
-    @Column(nullable = false, name = "starting_date_time")
+    @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime startingDateTime;
 
-    @Column(nullable = false, name = "ending_date_time")
+    @Column(nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime endingDateTime;
 

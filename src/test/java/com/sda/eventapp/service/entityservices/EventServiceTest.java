@@ -1,9 +1,8 @@
-package com.sda.eventapp.service;
+package com.sda.eventapp.service.entityservices;
 
 import com.sda.eventapp.model.entities.Event;
 import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.EventRepository;
-import com.sda.eventapp.service.entityservices.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,14 +30,13 @@ class EventServiceTest {
     private User testUser1;
     private User testUser2;
     private Event eventTest1;
-    private Event eventTest2;
-    private Set<User> setUsersTest = new HashSet<>();
+    private final Set<User> setUsersTest = new HashSet<>();
 
     @BeforeEach
     void prepareTestData() {
 
         testUser1 = User.builder()
-                .id(1)
+                .id(1L)
                 .username("user-test")
                 .email("user-test@gmail.com")
                 .password("useruser")
@@ -47,7 +45,7 @@ class EventServiceTest {
                 .comments(new HashSet<>())
                 .build();
         testUser2 = User.builder()
-                .id(2)
+                .id(2L)
                 .username("user-test2")
                 .email("user-test2@gmail.com")
                 .password("useruser2")
@@ -61,19 +59,13 @@ class EventServiceTest {
                 .description("description1")
                 .owner(testUser1)
                 .build();
-        eventTest2 = Event.builder()
-                .id(2L)
-                .title("title2")
-                .description("description2")
-                .owner(testUser2)
-                .build();
     }
 
     @Test
     void shouldFindEventById() {
         Long eventId = 1L;
         eventTest1.setId(eventId);
-        Long ownerId = 2L;
+        long ownerId = 2L;
         testUser1.setId(ownerId);
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(eventTest1));
         Event actual = eventService.findById(eventId);
