@@ -16,15 +16,15 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class AdminAccountCreatorTest {
    @InjectMocks
-   AdminAccountCreator adminAccountCreator;
+   private AdminAccountCreator adminAccountCreator;
 
    @Mock
-   PasswordEncoder passwordEncoder;
+   private PasswordEncoder passwordEncoder;
 
    @Mock
-   UserRepository userRepository;
+   private UserRepository userRepository;
 
-   User userTest;
+   private User userTest;
 
    @BeforeEach
    void beforeEach(){

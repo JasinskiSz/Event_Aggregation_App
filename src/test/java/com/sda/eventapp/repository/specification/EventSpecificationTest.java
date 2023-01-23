@@ -28,12 +28,12 @@ class EventSpecificationTest {
     private EventRepository eventRepository;
     @Autowired
     private UserRepository userRepository;
-    User user1 = User.builder()
+    private final User user1 = User.builder()
             .username("user1")
             .email("user1@gmail.com")
             .password("user1user1")
             .build();
-    User user2 = User.builder()
+    private final User user2 = User.builder()
             .username("user2")
             .email("user2@gmail.com")
             .password("user2user2")

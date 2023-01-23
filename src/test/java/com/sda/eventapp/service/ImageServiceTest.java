@@ -8,13 +8,18 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImageServiceTest {
 
-    ImageService imageService;
+    private ImageService imageService;
 
     @BeforeEach
     void beforeEach(){
@@ -25,7 +30,7 @@ class ImageServiceTest {
     @ValueSource(strings = {"image1.jpg", "image2.png", "image3.jpeg"})
     void shouldReturnTrueIfImageExtensionsCorrect(String input) {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         boolean actual = imageService.isImage(multipartFile);
         //then
@@ -35,9 +40,9 @@ class ImageServiceTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"file1.txt", "file2.pdf"})
-    void shouldReturnFalseIfImageExtensionsImcorrect(String input) {
+    void shouldReturnFalseIfImageExtensionsIncorrect(String input) {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         boolean actual = imageService.isImage(multipartFile);
         //then
@@ -55,9 +60,9 @@ class ImageServiceTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void shouldAssignDefaultImageName(String input) {
+    void shouldReturnImageWithDefaultFilename(String input) {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         Image actual = imageService.solveImage(multipartFile);
         //then
@@ -66,14 +71,20 @@ class ImageServiceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"defaultName", ".", ","})
-    void shouldAssignImageName(String input) {
+    void shouldAddImageWithRandomizedName(String input) throws IOException {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         Image actual = imageService.solveImage(multipartFile);
         //then
         assertThat(actual.getFilename().length()).isEqualTo(input.length() + 55);
         assertThat(actual.getFilename()).endsWith(input);
+        //delete files after test
+        Path fullPath = Path.of(
+                Paths.get("").toAbsolutePath().toString(),
+                Path.of("src", "main", "resources", "static", "images").toString(),
+                actual.getFilename());
+        Files.delete(fullPath);
     }
 
 }
