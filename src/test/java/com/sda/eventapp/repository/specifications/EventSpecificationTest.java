@@ -1,6 +1,7 @@
 package com.sda.eventapp.repository.specifications;
 
 import com.sda.eventapp.model.entities.Event;
+import com.sda.eventapp.model.entities.Image;
 import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.UserRepository;
@@ -45,6 +46,7 @@ class EventSpecificationTest {
             .endingDateTime(LocalDateTime.now().minusDays(3))
             .owner(user1)
             .users(Set.of(user2))
+            .image(Image.builder().filename("test").build())
             .build();
     private final Event pastEventOwnedByUser2AttendedByUser1 = Event.builder()
             .title("Past event owned by user2 attended by user1")
@@ -53,6 +55,7 @@ class EventSpecificationTest {
             .endingDateTime(LocalDateTime.now().minusDays(3))
             .owner(user2)
             .users(Set.of(user1))
+            .image(Image.builder().filename("test").build())
             .build();
     private final Event ongoingEventOwnedByUser1AttendedByUser2 = Event.builder()
             .title("Ongoing event owned by user1 attended by user2")
@@ -61,6 +64,7 @@ class EventSpecificationTest {
             .endingDateTime(LocalDateTime.now().plusDays(4))
             .owner(user1)
             .users(Set.of(user2))
+            .image(Image.builder().filename("test").build())
             .build();
     private final Event ongoingEventOwnedByUser2AttendedByUser1 = Event.builder()
             .title("Ongoing event owned by user2 attended by user1")
@@ -69,6 +73,7 @@ class EventSpecificationTest {
             .endingDateTime(LocalDateTime.now().plusDays(4))
             .owner(user2)
             .users(Set.of(user1))
+            .image(Image.builder().filename("test").build())
             .build();
     private final Event futureEventOwnedByUser1AttendedByUser2 = Event.builder()
             .title("Future event owned by user1 attended by user2")
@@ -77,6 +82,7 @@ class EventSpecificationTest {
             .endingDateTime(LocalDateTime.now().plusDays(5))
             .owner(user1)
             .users(Set.of(user2))
+            .image(Image.builder().filename("test").build())
             .build();
     private final Event futureEventOwnedByUser2AttendedByUser1 = Event.builder()
             .title("Future event owned by user2 attended by user1")
@@ -85,6 +91,7 @@ class EventSpecificationTest {
             .endingDateTime(LocalDateTime.now().plusDays(5))
             .owner(user2)
             .users(Set.of(user1))
+            .image(Image.builder().filename("test").build())
             .build();
 
     @BeforeEach
