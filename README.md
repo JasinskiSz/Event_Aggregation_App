@@ -4,6 +4,8 @@
   <img alt="Application logo">
 </picture>
 
+-----
+
 This project is a platform that allows users to create, discover and participate in events created by the members of community.
 
 ### Core features:
@@ -38,3 +40,7 @@ This project is a platform that allows users to create, discover and participate
   - All above parameters can be changed in `application.properties` and/or `application-test.properties`. 
 - Open your project in IDE and run it
 - By default app will be available under this URL: [localhost:8080/home](http://localhost:8080/home)
+
+## Honorable mentions
+
+Project created with [@degorskiprzemyslaw](https://github.com/degorskiprzemyslaw) and [@Adrie0291](https://github.com/Adrie0291) 
