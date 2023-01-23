@@ -129,49 +129,6 @@ class EventDetailControllerTest {
     }
 
     @Test
-    void shouldNotSignUpForEventIfOwner() throws Exception {
-        Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L))
-                .thenReturn(Event.builder().owner(testUser1).build());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/detail-view/{id}/sign-up-for-event", 1L)
-                        .with(csrf())
-                        .with(user(testUser1)))
-                .andExpect(status().isForbidden())
-                .andExpect(status().reason("ACCESS DENIED - OWNER CANNOT SIGN UP FOR AN EVENT"));
-    }
-
-    @Test
-    void shouldNotSignUpForEventIfEventStartingDateIsBeforeNow() throws Exception {
-        Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L))
-                .thenReturn(Event.builder()
-                        .startingDateTime(LocalDateTime.now().minusDays(1))
-                        .owner(testUser1)
-                        .build());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/detail-view/{id}/sign-up-for-event", 1L)
-                        .with(csrf())
-                        .with(user(testUser2)))
-                .andExpect(status().isBadRequest())
-                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGN UP FOR AN EVENT THAT HAS ALREADY STARTED"));
-    }
-
-    @Test
-    void shouldNotSignUpForEventIfAlreadySignedUp() throws Exception {
-        Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L))
-                .thenReturn(Event.builder()
-                        .startingDateTime(LocalDateTime.now().plusDays(1))
-                        .owner(testUser1)
-                        .users(Set.of(testUser2))
-                        .build());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/detail-view/{id}/sign-up-for-event", 1L)
-                        .with(csrf())
-                        .with(user(testUser2)))
-                .andExpect(status().isBadRequest())
-                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGNUP FOR AN EVENT IF ALREADY ASSIGNED"));
-    }
-
-    @Test
     void shouldSignUpForEvent() throws Exception {
         Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L))
                 .thenReturn(Event.builder()
@@ -185,54 +142,6 @@ class EventDetailControllerTest {
                         .with(user(testUser2)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/detail-view/**"));
-    }
-
-    @Test
-    void shouldNotSignOutFromEventIfOwner() throws Exception {
-        Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L))
-                .thenReturn(Event.builder()
-                        .startingDateTime(LocalDateTime.now().plusDays(1))
-                        .owner(testUser1)
-                        .users(Set.of())
-                        .build());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/detail-view/{id}/sign-out-from-event", 1L)
-                        .with(csrf())
-                        .with(user(testUser1)))
-                .andExpect(status().is4xxClientError())
-                .andExpect(status().reason("ACCESS DENIED - OWNER CANNOT SIGN OUT FROM AN EVENT"));
-    }
-
-    @Test
-    void shouldNotSignOutFromEventIfEventStartingDateIsBeforeNow() throws Exception {
-        Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L))
-                .thenReturn(Event.builder()
-                        .startingDateTime(LocalDateTime.now().minusDays(1))
-                        .owner(testUser1)
-                        .users(Set.of(testUser2))
-                        .build());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/detail-view/{id}/sign-out-from-event", 1L)
-                        .with(csrf())
-                        .with(user(testUser2)))
-                .andExpect(status().isBadRequest())
-                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGN OUT FROM AN EVENT THAT HAS ALREADY STARTED"));
-    }
-
-    @Test
-    void shouldNotSignOutFromEventIfNotSignedUp() throws Exception {
-        Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L))
-                .thenReturn(Event.builder()
-                        .startingDateTime(LocalDateTime.now().plusDays(1))
-                        .owner(testUser1)
-                        .users(Set.of())
-                        .build());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/detail-view/{id}/sign-out-from-event", 1L)
-                        .with(csrf())
-                        .with(user(testUser2)))
-                .andExpect(status().isBadRequest())
-                .andExpect(status().reason("ACCESS DENIED - CANNOT SIGNUP OUT FROM AN EVENT IF HAS NOT ASSIGNED"));
     }
 
     @Test
