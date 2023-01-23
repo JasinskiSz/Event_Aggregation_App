@@ -1,7 +1,7 @@
 package com.sda.eventapp.utils.mappers;
 
 import com.sda.eventapp.dto.form.CreateUserForm;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import org.springframework.stereotype.Component;
 
 @Component

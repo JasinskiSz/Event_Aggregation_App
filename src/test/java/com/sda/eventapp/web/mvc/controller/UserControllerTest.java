@@ -2,7 +2,7 @@ package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.config.SecurityConfig;
 import com.sda.eventapp.dto.form.CreateUserForm;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

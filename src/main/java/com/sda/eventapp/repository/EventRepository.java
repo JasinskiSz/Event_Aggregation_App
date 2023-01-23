@@ -1,6 +1,6 @@
 package com.sda.eventapp.repository;
 
-import com.sda.eventapp.entities.Event;
+import com.sda.eventapp.model.entities.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

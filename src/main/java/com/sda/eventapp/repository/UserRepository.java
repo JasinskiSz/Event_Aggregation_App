@@ -1,6 +1,6 @@
 package com.sda.eventapp.repository;
 
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

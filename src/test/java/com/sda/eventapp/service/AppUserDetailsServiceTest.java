@@ -1,6 +1,6 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,10 +25,10 @@ class AppUserDetailsServiceTest {
 
 
     @Autowired
-    AppUserDetailsService appUserDetailsService;
+    private AppUserDetailsService appUserDetailsService;
     @MockBean
-    UserRepository userRepository;
-    User userTest;
+    private UserRepository userRepository;
+    private User userTest;
 
     @BeforeEach
     void beforeEach() {

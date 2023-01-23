@@ -1,6 +1,6 @@
 package com.sda.eventapp.service;
 
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,15 +16,15 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class AdminAccountCreatorTest {
    @InjectMocks
-   AdminAccountCreator adminAccountCreator;
+   private AdminAccountCreator adminAccountCreator;
 
    @Mock
-   PasswordEncoder passwordEncoder;
+   private PasswordEncoder passwordEncoder;
 
    @Mock
-   UserRepository userRepository;
+   private UserRepository userRepository;
 
-   User userTest;
+   private User userTest;
 
    @BeforeEach
    void beforeEach(){

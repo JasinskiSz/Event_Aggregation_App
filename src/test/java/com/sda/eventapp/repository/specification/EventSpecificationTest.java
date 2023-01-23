@@ -1,7 +1,7 @@
 package com.sda.eventapp.repository.specification;
 
-import com.sda.eventapp.entities.Event;
-import com.sda.eventapp.entities.User;
+import com.sda.eventapp.model.entities.Event;
+import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.EventRepository;
 import com.sda.eventapp.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -28,12 +28,12 @@ class EventSpecificationTest {
     private EventRepository eventRepository;
     @Autowired
     private UserRepository userRepository;
-    User user1 = User.builder()
+    private final User user1 = User.builder()
             .username("user1")
             .email("user1@gmail.com")
             .password("user1user1")
             .build();
-    User user2 = User.builder()
+    private final User user2 = User.builder()
             .username("user2")
             .email("user2@gmail.com")
             .password("user2user2")
