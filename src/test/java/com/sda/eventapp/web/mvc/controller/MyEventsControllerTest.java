@@ -1,13 +1,13 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.config.SecurityConfig;
-import com.sda.eventapp.dto.EventView;
-import com.sda.eventapp.filters.DateType;
-import com.sda.eventapp.filters.ParticipationType;
+import com.sda.eventapp.configs.SecurityConfig;
+import com.sda.eventapp.dto.views.EventView;
 import com.sda.eventapp.model.EventFilters;
 import com.sda.eventapp.model.entities.User;
-import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.service.FiltersService;
+import com.sda.eventapp.service.entityservices.EventService;
+import com.sda.eventapp.types.DateType;
+import com.sda.eventapp.types.ParticipationType;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

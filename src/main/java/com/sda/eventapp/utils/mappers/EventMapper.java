@@ -1,8 +1,8 @@
 package com.sda.eventapp.utils.mappers;
 
-import com.sda.eventapp.dto.EventApi;
-import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.dto.form.EventForm;
+import com.sda.eventapp.dto.rest.api.EventApi;
+import com.sda.eventapp.dto.views.EventView;
 import com.sda.eventapp.model.entities.Event;
 import com.sda.eventapp.model.entities.User;
 import org.jetbrains.annotations.NotNull;
