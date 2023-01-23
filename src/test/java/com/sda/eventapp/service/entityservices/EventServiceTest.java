@@ -36,7 +36,7 @@ class EventServiceTest {
     void prepareTestData() {
 
         testUser1 = User.builder()
-                .id(1)
+                .id(1L)
                 .username("user-test")
                 .email("user-test@gmail.com")
                 .password("useruser")
@@ -45,7 +45,7 @@ class EventServiceTest {
                 .comments(new HashSet<>())
                 .build();
         testUser2 = User.builder()
-                .id(2)
+                .id(2L)
                 .username("user-test2")
                 .email("user-test2@gmail.com")
                 .password("useruser2")

@@ -60,6 +60,7 @@ class EventControllerTest {
     @BeforeEach
     void prepareTestData() {
         testUser = User.builder()
+                .id(1L)
                 .username("user-test")
                 .email("user-test@gmail.com")
                 .password("useruser")
@@ -492,6 +493,8 @@ class EventControllerTest {
 
         @Test
         void shouldAllowAccessToUpdateEventForAuthenticatedUser() throws Exception {
+            Mockito.when(eventService.findOwnerIdByEventId(testUser.getId())).thenReturn(testUser.getId());
+
             Mockito.when(eventService.findEventViewById(1L)).thenReturn(
                     EventView.builder()
                             .image(new Image())
@@ -524,6 +527,8 @@ class EventControllerTest {
 
         @Test
         void shouldNotAllowAccessToUpdateEventIfEventStartDateBeforeNow() throws Exception {
+            Mockito.when(eventService.findOwnerIdByEventId(testUser.getId())).thenReturn(testUser.getId());
+
             Mockito.when(eventService.findByIdFetchOwnerFetchUsersFetchImage(1L)).thenReturn(
                     Event.builder().startingDateTime(LocalDateTime.now().minusDays(1)).build());
 
