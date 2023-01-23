@@ -1,10 +1,10 @@
-package com.sda.eventapp.web.mvc.controllers;
+package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.dto.form.EventForm;
+import com.sda.eventapp.dto.views.EventView;
 import com.sda.eventapp.model.entities.User;
-import com.sda.eventapp.service.EventService;
-import com.sda.eventapp.service.ImageService;
+import com.sda.eventapp.service.entityservices.EventService;
+import com.sda.eventapp.service.entityservices.ImageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

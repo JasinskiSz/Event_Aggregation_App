@@ -1,8 +1,8 @@
 package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.config.SecurityConfig;
+import com.sda.eventapp.configs.SecurityConfig;
 import com.sda.eventapp.model.entities.User;
-import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.service.entityservices.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

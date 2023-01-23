@@ -1,16 +1,17 @@
-package com.sda.eventapp.filters;
+package com.sda.eventapp.types;
 
 import lombok.Getter;
 
 @Getter
-public enum ParticipationType {
-    OWNED("Owned"),
-    ATTENDED("Attended"),
+public enum DateType {
+    FUTURE("Future"),
+    FUTURE_AND_ONGOING("Future and Ongoing"),
+    PAST("Past"),
     ALL("All");
 
     private final String name;
 
-    ParticipationType(String name) {
+    DateType(String name) {
         this.name = name;
     }
 

@@ -1,6 +1,7 @@
 package com.sda.eventapp.service;
 
 import com.sda.eventapp.model.entities.Image;
+import com.sda.eventapp.service.entityservices.ImageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -3,6 +3,7 @@ package com.sda.eventapp.service;
 import com.sda.eventapp.model.entities.Event;
 import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.EventRepository;
+import com.sda.eventapp.service.entityservices.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -2,7 +2,7 @@ package com.sda.eventapp.dto.form.validation.validator;
 
 import com.sda.eventapp.dto.form.CreateUserForm;
 import com.sda.eventapp.dto.form.validation.constraint.UniqueEmail;
-import com.sda.eventapp.service.UserService;
+import com.sda.eventapp.service.entityservices.UserService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

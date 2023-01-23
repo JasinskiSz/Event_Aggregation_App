@@ -1,14 +1,15 @@
-package com.sda.eventapp.service;
+package com.sda.eventapp.service.entityservices;
 
-import com.sda.eventapp.dto.EventApiWrapper;
-import com.sda.eventapp.dto.EventView;
 import com.sda.eventapp.dto.form.CreateCommentForm;
 import com.sda.eventapp.dto.form.EventForm;
-import com.sda.eventapp.filters.DateType;
-import com.sda.eventapp.filters.ParticipationType;
+import com.sda.eventapp.dto.rest.api.EventApiWrapper;
+import com.sda.eventapp.dto.views.EventView;
 import com.sda.eventapp.model.entities.Event;
 import com.sda.eventapp.model.entities.User;
 import com.sda.eventapp.repository.EventRepository;
+import com.sda.eventapp.service.FiltersService;
+import com.sda.eventapp.types.DateType;
+import com.sda.eventapp.types.ParticipationType;
 import com.sda.eventapp.utils.mappers.EventMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

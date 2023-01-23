@@ -1,4 +1,4 @@
-package com.sda.eventapp.service;
+package com.sda.eventapp.service.entityservices;
 
 import com.sda.eventapp.model.entities.Image;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class ImageService {
     private final static String DEFAULT_IMAGE_NAME = "default-event-image.jpeg";
 
     /**
-     * Returns {@code true} if the file extension matches with any value in the enum {@link com.sda.eventapp.service.ImageService.AllowedExtensions}.
+     * Returns {@code true} if the file extension matches with any value in the enum {@link ImageService.AllowedExtensions}.
      *
      * @param file A {@link org.springframework.web.multipart.MultipartFile} from which the file extension will be taken
      * @return true if file extension matches any value from AllowedExtensions
@@ -51,7 +51,7 @@ public class ImageService {
     /**
      * Taking {@link org.springframework.web.multipart.MultipartFile} and checks its name if it's {@link java.lang.String#isBlank()} or null.
      * <br>
-     * If false, it does {@link com.sda.eventapp.service.ImageService#saveImageLocally(MultipartFile)}
+     * If false, it does {@link ImageService#saveImageLocally(MultipartFile)}
      *
      * @param file should be checked before if its of required file extension
      * @return {@link Image} build from {@link org.springframework.web.multipart.MultipartFile}
@@ -112,7 +112,7 @@ public class ImageService {
     }
 
     /**
-     * Creates directory named after path: {@link com.sda.eventapp.service.ImageService#IMAGES_PATH} if it doesn't already exist.
+     * Creates directory named after path: {@link ImageService#IMAGES_PATH} if it doesn't already exist.
      *
      * @return true in the same manner as {@link java.io.File#mkdirs()}
      */

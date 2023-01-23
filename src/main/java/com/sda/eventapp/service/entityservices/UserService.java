@@ -1,4 +1,4 @@
-package com.sda.eventapp.service;
+package com.sda.eventapp.service.entityservices;
 
 import com.sda.eventapp.dto.form.CreateUserForm;
 import com.sda.eventapp.model.entities.User;
