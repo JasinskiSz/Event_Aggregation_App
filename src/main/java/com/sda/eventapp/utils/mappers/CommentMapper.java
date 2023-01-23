@@ -1,7 +1,7 @@
 package com.sda.eventapp.utils.mappers;
 
-import com.sda.eventapp.dto.CommentView;
 import com.sda.eventapp.dto.form.CreateCommentForm;
+import com.sda.eventapp.dto.views.CommentView;
 import com.sda.eventapp.model.entities.Comment;
 import com.sda.eventapp.model.entities.Event;
 import com.sda.eventapp.model.entities.User;

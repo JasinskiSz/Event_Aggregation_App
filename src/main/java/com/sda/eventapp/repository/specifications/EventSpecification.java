@@ -1,4 +1,4 @@
-package com.sda.eventapp.repository.specification;
+package com.sda.eventapp.repository.specifications;
 
 import com.sda.eventapp.model.entities.Event;
 import com.sda.eventapp.model.entities.User;

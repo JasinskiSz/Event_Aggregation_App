@@ -1,6 +1,6 @@
-package com.sda.eventapp.web.mvc.controllers;
+package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.service.entityservices.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;

@@ -1,10 +1,10 @@
-package com.sda.eventapp.web.mvc.controllers;
+package com.sda.eventapp.web.mvc.controller;
 
-import com.sda.eventapp.filters.DateType;
-import com.sda.eventapp.filters.ParticipationType;
 import com.sda.eventapp.model.entities.User;
-import com.sda.eventapp.service.EventService;
 import com.sda.eventapp.service.FiltersService;
+import com.sda.eventapp.service.entityservices.EventService;
+import com.sda.eventapp.types.DateType;
+import com.sda.eventapp.types.ParticipationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;

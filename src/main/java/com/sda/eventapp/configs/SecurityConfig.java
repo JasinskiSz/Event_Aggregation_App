@@ -1,4 +1,4 @@
-package com.sda.eventapp.config;
+package com.sda.eventapp.configs;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

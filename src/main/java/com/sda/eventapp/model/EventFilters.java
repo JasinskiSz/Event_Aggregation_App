@@ -1,7 +1,7 @@
 package com.sda.eventapp.model;
 
-import com.sda.eventapp.filters.DateType;
-import com.sda.eventapp.filters.ParticipationType;
+import com.sda.eventapp.types.DateType;
+import com.sda.eventapp.types.ParticipationType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

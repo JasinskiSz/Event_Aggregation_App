@@ -1,9 +1,9 @@
-package com.sda.eventapp.web.mvc.controllers;
+package com.sda.eventapp.web.mvc.controller;
 
 import com.sda.eventapp.dto.form.CreateCommentForm;
 import com.sda.eventapp.model.entities.User;
-import com.sda.eventapp.service.CommentService;
-import com.sda.eventapp.service.EventService;
+import com.sda.eventapp.service.entityservices.CommentService;
+import com.sda.eventapp.service.entityservices.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
