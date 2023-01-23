@@ -25,10 +25,10 @@ class AppUserDetailsServiceTest {
 
 
     @Autowired
-    AppUserDetailsService appUserDetailsService;
+    private AppUserDetailsService appUserDetailsService;
     @MockBean
-    UserRepository userRepository;
-    User userTest;
+    private UserRepository userRepository;
+    private User userTest;
 
     @BeforeEach
     void beforeEach() {
