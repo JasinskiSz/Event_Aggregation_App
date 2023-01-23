@@ -59,8 +59,6 @@ class MyEventsControllerTest {
                 .dateType(DateType.FUTURE)
                 .build();
 
-        // User should not have primitive type of id value. When this will be changed it will break this code with
-        // nullPointerException on the first parameter. Please, changed it to null then.
         Mockito.when(eventService.findAllEventViews(user.getId(), participationType, dateType)).thenReturn(list);
 
         Mockito.when(filterService.getEventFilters()).thenReturn(eventFilters);
