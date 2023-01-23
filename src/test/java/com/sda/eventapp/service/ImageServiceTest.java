@@ -30,7 +30,7 @@ class ImageServiceTest {
     @ValueSource(strings = {"image1.jpg", "image2.png", "image3.jpeg"})
     void shouldReturnTrueIfImageExtensionsCorrect(String input) {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         boolean actual = imageService.isImage(multipartFile);
         //then
@@ -42,7 +42,7 @@ class ImageServiceTest {
     @ValueSource(strings = {"file1.txt", "file2.pdf"})
     void shouldReturnFalseIfImageExtensionsIncorrect(String input) {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         boolean actual = imageService.isImage(multipartFile);
         //then
@@ -60,9 +60,9 @@ class ImageServiceTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "\t", "\n"})
-    void shouldAssignDefaultImageName(String input) {
+    void shouldReturnImageWithDefaultFilename(String input) {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         Image actual = imageService.solveImage(multipartFile);
         //then
@@ -73,7 +73,7 @@ class ImageServiceTest {
     @ValueSource(strings = {"defaultName", ".", ","})
     void shouldAddImageWithRandomizedName(String input) throws IOException {
         //given
-        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, (String) null, (byte[]) null);
+        MockMultipartFile multipartFile = new MockMultipartFile("mockName", input, null, (byte[]) null);
         //when
         Image actual = imageService.solveImage(multipartFile);
         //then
