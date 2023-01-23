@@ -10,6 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class CreateCommentForm {
+
     @Size(max = 500, message = "Comment cannot have more than 500 characters")
     @NotBlank(message = "Comment cannot be empty")
     private String text;
