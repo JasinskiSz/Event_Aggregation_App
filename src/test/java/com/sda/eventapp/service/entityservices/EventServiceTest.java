@@ -30,8 +30,7 @@ class EventServiceTest {
     private User testUser1;
     private User testUser2;
     private Event eventTest1;
-    private Event eventTest2;
-    private Set<User> setUsersTest = new HashSet<>();
+    private final Set<User> setUsersTest = new HashSet<>();
 
     @BeforeEach
     void prepareTestData() {
@@ -60,19 +59,13 @@ class EventServiceTest {
                 .description("description1")
                 .owner(testUser1)
                 .build();
-        eventTest2 = Event.builder()
-                .id(2L)
-                .title("title2")
-                .description("description2")
-                .owner(testUser2)
-                .build();
     }
 
     @Test
     void shouldFindEventById() {
         Long eventId = 1L;
         eventTest1.setId(eventId);
-        Long ownerId = 2L;
+        long ownerId = 2L;
         testUser1.setId(ownerId);
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(eventTest1));
         Event actual = eventService.findById(eventId);
