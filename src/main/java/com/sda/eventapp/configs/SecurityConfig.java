@@ -24,13 +24,14 @@ public class SecurityConfig {
                                 "/api/v1/events",
                                 "/css/**", "/js/**", "/assets/**", "/images/**"
                         ).permitAll()
+                        .requestMatchers("/login")
+                        .anonymous()
                         .anyRequest()
                         .authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/home", true)
-                        .permitAll()
                 )
                 .logout(logout -> logout
                         // custom logout url to not give away on which framework server is running
