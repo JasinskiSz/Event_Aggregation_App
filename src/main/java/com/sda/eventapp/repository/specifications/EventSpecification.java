@@ -51,7 +51,6 @@ public class EventSpecification {
             root.fetch("users", JoinType.LEFT);
             root.fetch("image", JoinType.LEFT);
             root.fetch("owner", JoinType.LEFT);
-            root.fetch("comments", JoinType.LEFT);
             return query.getRestriction();
         };
     }
