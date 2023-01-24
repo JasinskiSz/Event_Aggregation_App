@@ -1,44 +1,46 @@
-# Event_Aggregation_App
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://i.imgur.com/vp6ZNRK.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://i.imgur.com/Lp5HZ3i.png">
+  <img alt="Application logo">
+</picture>
 
-This is the repository for the main application of the project.
-The client application is able to clone from this repository: https://github.com/degorskiprzemyslaw/Event_Aggregation_App_Sample_Rest_Consumer
+-----
 
-Configuration
+This project is a platform that allows users to create, discover and participate in events created by the members of community.
 
-1. Install IntelliJ IDEA Ultimate.
+### Core features:
+- User registration and login
+- Event filtering by past, present and future ones (combinable)
+- Event creation with optional uploaded image
+- Sign-up and sign-out for/from events
+- Commenting on events
+- My Events page allowing to manage owned and attended events
+- REST API for all future events and filtered by dates
+- Thymeleaf frontend
 
-2. Install MySQL Workbench
+### Tools used to create project:
+- IntelliJ IDEA Ultimate
+- MySQL Workbench
+- Github
+- Git
+- Trello
 
-3. Create two schemas in MySQL Workbench:
+## How to install
+- Run your favourite IDE
+- Prepare MySQL Workbench with
+  - One main database
+    - Database name: `event_aggregation_app_db`
+  - One test database
+    - Database name: `event_aggregation_app_db_test`
+  - One user
+    - Username: `agg_event_user`
+    - Password: `ZAQ!2wsx`
+    - Grant user all permissions to above databases
+    ![permission screenshot](https://i.imgur.com/Rqd6ooI.png)
+  - All above parameters can be changed in `application.properties` and/or `application-test.properties`. 
+- Open your project in IDE and run it
+- By default app will be available under this URL: [localhost:8080/home](http://localhost:8080/home)
 
-first schema name: event_aggregation_app_db
-(jdbc:mysql://localhost:3306/event_aggregation_app_db)
+## Honorable mentions
 
-second schema name: event_aggregation_app_db_test
-(jdbc:mysql://localhost:3306/event_aggregation_app_db_test)
-    
-4. Add an account in MYSQL Workbench:
-
-login: agg_event_user
-
-password: ZAQ!2wsx
-
-5. Grant schemas permissions to the created user
-
-6. After starting the program (main APP):
-
-Homepage address: http://localhost:8080/home
-
-7. Client APP:
-
-address homepage: http://localhost:8888/home
-
-8. Admin credentials in main APP:
-
-login: admin@eventapp.com
-
-password: password
-    
-------------------------------------------------------------------------------------------------
-
-Project brief: https://java.pl.sdacademy.pro/e-podrecznik/projekt_koncowy/scenariusz_serwis_agregujacy/
+Project created with [@degorskiprzemyslaw](https://github.com/degorskiprzemyslaw) and [@Adrie0291](https://github.com/Adrie0291) 
