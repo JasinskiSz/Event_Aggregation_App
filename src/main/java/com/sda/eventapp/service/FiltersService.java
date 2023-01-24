@@ -74,16 +74,23 @@ public class FiltersService {
             specification = specification.or(EventSpecification.titleContains(title));
         }
 
-        if (future) {
-            specification = specification.or(EventSpecification.isFuture());
+        if(!future && !past && !ongoing){
+            specification = specification.or(EventSpecification.isFuture()).or(EventSpecification.isOngoing());
         }
 
-        if (ongoing) {
-            specification = specification.or(EventSpecification.isOngoing());
-        }
+        else {
 
-        if (past) {
-            specification = specification.or(EventSpecification.isPast());
+            if (future) {
+                specification = specification.or(EventSpecification.isFuture());
+            }
+
+            if (ongoing) {
+                specification = specification.or(EventSpecification.isOngoing());
+            }
+
+            if (past) {
+                specification = specification.or(EventSpecification.isPast());
+            }
         }
 
         return specification.and(EventSpecification.fetchAllEntities()).and(EventSpecification.orderByEventStartingDate());
