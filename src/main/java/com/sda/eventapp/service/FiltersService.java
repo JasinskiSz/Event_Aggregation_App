@@ -59,7 +59,7 @@ public class FiltersService {
         if (eventFilters.getDateType() == DateType.FUTURE) {
             specification = specification.and(EventSpecification.isFuture());
         } else if (eventFilters.getDateType() == DateType.FUTURE_AND_ONGOING) {
-            specification = specification.and(EventSpecification.isOngoing());
+            specification = specification.and(Specification.where(EventSpecification.isOngoing()).or(EventSpecification.isFuture()));
         } else if (eventFilters.getDateType() == DateType.PAST) {
             specification = specification.and(EventSpecification.isPast());
         }
@@ -69,10 +69,6 @@ public class FiltersService {
 
     public Specification<Event> prepareSpecification(String title, boolean future, boolean ongoing, boolean past) {
         Specification<Event> specification = Specification.where(null);
-
-        if (title != null && !title.isBlank()) {
-            specification = specification.or(EventSpecification.titleContains(title));
-        }
 
         if (future) {
             specification = specification.or(EventSpecification.isFuture());
@@ -84,6 +80,10 @@ public class FiltersService {
 
         if (past) {
             specification = specification.or(EventSpecification.isPast());
+        }
+
+        if (title != null && !title.isBlank()) {
+            specification = specification.and(EventSpecification.titleContains(title));
         }
 
         return specification.and(EventSpecification.fetchAllEntities()).and(EventSpecification.orderByEventStartingDate());
