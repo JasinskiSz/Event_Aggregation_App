@@ -16,17 +16,7 @@ import java.util.stream.Collectors;
 public class EventMapper {
     public List<EventView> toEventViewList(List<Event> events) {
         return events.stream()
-                .map(event -> EventView
-                        .builder()
-                        .id(event.getId())
-                        .title(event.getTitle())
-                        .description(event.getDescription())
-                        .startingDateTime(event.getStartingDateTime())
-                        .endingDateTime(event.getEndingDateTime())
-                        .image(event.getImage())
-                        .usersNicknames(getUsersNicknames(event))
-                        .ownerNickname(getOwnerNickname(event))
-                        .build())
+                .map(this::toEventView)
                 .toList();
     }
 
